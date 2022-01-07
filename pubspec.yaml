@@ -62,7 +62,7 @@ dependencies:
   firebase_messaging: ^11.2.3
   firebase_analytics: ^9.0.3
   swipe_cards: ^0.1.0
-
+  #driver side
 dev_dependencies:
   flutter_test:
     sdk: flutter
