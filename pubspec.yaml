@@ -51,6 +51,7 @@ dependencies:
   cached_network_image: ^3.2.0
   url_launcher: ^6.0.17
   jwt_decoder: ^2.0.1
+  shared_preferences: ^2.0.12
   #map plugins
   google_maps_flutter: ^2.1.1
   flutter_polyline_points: 1.0.0
@@ -62,7 +63,8 @@ dependencies:
   firebase_messaging: ^11.2.3
   firebase_analytics: ^9.0.3
   swipe_cards: ^0.1.0
-  #driver side
+  flutter_animated_dialog: ^2.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

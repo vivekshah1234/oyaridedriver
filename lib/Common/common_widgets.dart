@@ -60,9 +60,17 @@ Widget shimmer(width, height) {
   );
 }
 
-Widget loadingWidget() {
-  return Container(
-    child: Center(child: SpinKitFoldingCube(color: AllColors.redColor)),
+Widget whiteLoadingWidget() {
+  return SizedBox(
+    child: Center(child: SpinKitFadingCircle(color: AllColors.whiteColor)),
+    height: 70,
+    width: 70,
+  );
+}
+
+Widget greenLoadingWidget() {
+  return SizedBox(
+    child: Center(child: SpinKitFadingCircle(color: AllColors.greenColor)),
     height: 70,
     width: 70,
   );
@@ -182,3 +190,21 @@ Widget textFieldWithoutIcon({controller, labelText, errorText}) {
     ),
   );
 }
+
+SnackBar whiteSnackBar(String txt,) => SnackBar(
+  content: Text(
+    txt,
+    style: TextStyle(color: AllColors.blackColor
+        , fontWeight: FontWeight.bold),
+  ),
+  backgroundColor: AllColors.whiteColor,
+);
+
+SnackBar greenSnackBar(String txt,) => SnackBar(
+  content: Text(
+    txt,
+    style: TextStyle(color: AllColors.blackColor
+        , fontWeight: FontWeight.bold),
+  ),
+  backgroundColor: AllColors.greenColor,
+);

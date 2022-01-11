@@ -1,10 +1,13 @@
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
+import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
 
@@ -22,91 +25,105 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPwd = TextEditingController();
   TextEditingController txtNum = TextEditingController();
-  double mediumFontSize=15.0;
+  double mediumFontSize = 15.0;
+
+  SignUpController signUpController = Get.put(SignUpController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget2(""),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: context.heightPct(.02),
-          ),
-          Center(
-            child: textWidget(
-                txt: "Sign Up",
-                fontSize: 32,
-                color: AllColors.greenColor,
-                bold: true,
-                italic: false),
-          ),
-          SizedBox(
-            height: context.heightPct(.015),
-          ),
-          Center(
-            child: textWidget(
-                txt: "Earn More with your Vehicle",
-                fontSize: 18,
-                color: AllColors.blackColor,
-                bold: true,
-                italic: false),
-          ),
-          SizedBox(
-            height: context.heightPct(.10),
-          ),
-          Expanded(child: signUpForm())
-        ],
-      ),
-    );
-  }
-
-  Widget signUpForm() {
-    return Container(
-      //height: double.infinity,
-      decoration: BoxDecoration(
-          color: AllColors.greenColor,
-          borderRadius:  BorderRadius.only(
-              topRight: Radius.circular(40), topLeft: Radius.circular(40))),
-      padding:  EdgeInsets.only(top: 50, bottom: 0, left: 25, right: 25),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-
-            textFieldForNum(
-                controller: txtNum,
-                labelText: "Phone Number",
-                prefixIcon: ImageAssets.phoneIcon),
-            const SizedBox(
-              height: 25,
-            ),
-            textField(
-                controller: txtPwd,
-                prefixIcon: ImageAssets.passwordIcon,
-                labelText: "Password",
-                errorText: "Please enter the password"),
-            SizedBox(
-              height: context.heightPct(.07),
-            ),
-            nextButton(),
-            SizedBox(
-              height: context.heightPct(.07),
-            ),
-            textWidget(
-                txt: "By signing up, you accept our Terms of ",
-                fontSize: mediumFontSize,
-                color: AllColors.whiteColor,
-                italic: false,
-                bold: false),
-            textWidget(
-                txt: "Services and Privacy Policy.",
-                fontSize: mediumFontSize,
-                color: AllColors.whiteColor,
-                italic: false,
-                bold: false),
-          ],
-        ),
-      ),
+      body: GetX<SignUpController>(
+          init: SignUpController(),
+          builder: (controller) {
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: context.heightPct(.02),
+                    ),
+                    Center(
+                      child: textWidget(
+                          txt: "Sign Up",
+                          fontSize: 32,
+                          color: AllColors.greenColor,
+                          bold: true,
+                          italic: false),
+                    ),
+                    SizedBox(
+                      height: context.heightPct(.015),
+                    ),
+                    Center(
+                      child: textWidget(
+                          txt: "Earn More with your Vehicle",
+                          fontSize: 18,
+                          color: AllColors.blackColor,
+                          bold: true,
+                          italic: false),
+                    ),
+                    SizedBox(
+                      height: context.heightPct(.10),
+                    ),
+                    Expanded(
+                        child: Container(
+                      //height: double.infinity,
+                      decoration: BoxDecoration(
+                          color: AllColors.greenColor,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(40),
+                              topLeft: Radius.circular(40))),
+                      padding: EdgeInsets.only(
+                          top: 50, bottom: 0, left: 25, right: 25),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            textFieldForNum(
+                                controller: txtNum,
+                                labelText: "Phone Number",
+                                errorText: ErrorMessage.numberError,
+                                prefixIcon: ImageAssets.phoneIcon),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            textField(
+                                controller: txtPwd,
+                                prefixIcon: ImageAssets.passwordIcon,
+                                labelText: "Password",
+                                errorText: "Please enter the password"),
+                            SizedBox(
+                              height: context.heightPct(.07),
+                            ),
+                            nextButton(),
+                            SizedBox(
+                              height: context.heightPct(.07),
+                            ),
+                            textWidget(
+                                txt: "By signing up, you accept our Terms of ",
+                                fontSize: mediumFontSize,
+                                color: AllColors.whiteColor,
+                                italic: false,
+                                bold: false),
+                            textWidget(
+                                txt: "Services and Privacy Policy.",
+                                fontSize: mediumFontSize,
+                                color: AllColors.whiteColor,
+                                italic: false,
+                                bold: false),
+                          ],
+                        ),
+                      ),
+                    ))
+                  ],
+                ),
+                Visibility(
+                    visible: controller.isLoading.value,
+                    child: Center(child: whiteLoadingWidget()))
+              ],
+            );
+          }),
     );
   }
 
@@ -116,7 +133,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
       margin: const EdgeInsets.only(left: 45, right: 45),
       child: ElevatedButton(
         onPressed: () {
-          Get.to(() => const PersonalInfoScreen());
+          //Get.to(() => const PersonalInfoScreen());
+          if (txtNum.text.isNotEmpty) {
+            if (txtPwd.text.isNotEmpty) {
+              Map<String, dynamic> map = {};
+              map["phoneNo"] =  txtNum.text.toString();
+              map["password"] = txtPwd.text.toString();
+              printInfo(info: map.toString());
+              signUpController.register1(map, context);
+            } else {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
+            }
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
+          }
         },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
@@ -137,6 +169,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  bool showPassWord = true;
+
   Widget textField({controller, labelText, errorText, prefixIcon}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -155,10 +189,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextField(
                 controller: controller,
                 cursorColor: AllColors.whiteColor,
+                obscureText: showPassWord ? true : false,
                 style: TextStyle(color: AllColors.whiteColor),
                 decoration: InputDecoration(
                   labelText: labelText,
-                  labelStyle:  TextStyle(
+                 //123456 filled: true,
+                  suffixIcon: GestureDetector(
+                      onTap: () {
+                        showPassWord = !showPassWord;
+                        setState(() {});
+                      },
+                      child: !showPassWord
+                          ? Icon(
+                              Icons.visibility,
+                              color: AllColors.whiteColor,
+                            )
+                          : Icon(
+                              Icons.visibility_off,
+                              color: AllColors.whiteColor,
+                            )),
+                  labelStyle: TextStyle(
                       color: AllColors.whiteColor, fontSize: mediumFontSize),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: AllColors.whiteColor),
@@ -208,14 +258,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
+                TextFormField(
                   controller: controller,
                   cursorColor: AllColors.whiteColor,
                   keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.deny(RegExp(" ")),
+                    FilteringTextInputFormatter.deny(RegExp("[a-zA-Z]")),
+                    FilteringTextInputFormatter.deny(RegExp("[.,-,`,=,/]")),
+                  ],
+                  textInputAction: TextInputAction.next,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return errorText;
+                    }
+                    return null;
+                  },
                   style: TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle:  TextStyle(
+                    labelStyle: TextStyle(
                         color: AllColors.whiteColor, fontSize: mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.whiteColor),
@@ -256,7 +318,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style:  TextStyle(color: AllColors.whiteColor,fontSize: mediumFontSize),
+                  style: TextStyle(
+                      color: AllColors.whiteColor, fontSize: mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,

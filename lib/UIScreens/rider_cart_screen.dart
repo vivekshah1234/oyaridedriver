@@ -11,6 +11,7 @@ import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:timelines/timelines.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+
 class RiderCartScreen extends StatefulWidget {
   const RiderCartScreen({Key? key}) : super(key: key);
 
@@ -53,6 +54,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
     init();
     super.initState();
   }
+
   init() {
     for (int i = 0; i < _names.length; i++) {
       _swipeItems.add(SwipeItem(
@@ -65,10 +67,8 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
               destinationPoint: destinationPoint[i]),
           likeAction: () {
             printInfo(info: "like");
-           status=0;
-            setState(() {
-
-            });
+            status = 0;
+            setState(() {});
           },
           nopeAction: () {
             printInfo(info: "nope");
@@ -83,19 +83,154 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return status==-1?
-    Container(
-      height: MediaQuery.of(context).size.height*0.38,
-      child: SwipeCards(
-        matchEngine: _matchEngine,
-        itemBuilder: (BuildContext context, int index) {
-          return Container(
+    return status == -1
+        ? SizedBox(
+            height: MediaQuery.of(context).size.height * 0.40,
+            child: SwipeCards(
+              matchEngine: _matchEngine,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: AllColors.whiteColor,
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(30),
+                      topLeft: Radius.circular(30),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      userDetails(
+                          txt: _names[index],
+                          imgUrl: imgUrlList[index],
+                          kiloMeter: kiloMeter[index].toString(),
+                          charge: charge[index].toString()),
+                      Column(
+                        children: [
+                          TimelineTile(
+                            nodeAlign: TimelineNodeAlign.start,
+                            contents: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  textWidget(
+                                      txt: "Pick Up",
+                                      fontSize: 12,
+                                      color: AllColors.greyColor,
+                                      bold: FontWeight.normal,
+                                      italic: false),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  textWidget(
+                                      txt: sourcePoint[index],
+                                      fontSize: 12,
+                                      color: AllColors.greyColor,
+                                      bold: FontWeight.normal,
+                                      italic: false),
+                                ],
+                              ),
+                            ),
+                            node: TimelineNode(
+                                indicator: ContainerIndicator(
+                                    child: CircleAvatar(
+                                  backgroundColor: AllColors.greenColor,
+                                  radius: 4,
+                                )),
+                                endConnector: const DashedLineConnector(
+                                  color: AllColors.greyColor,
+                                )),
+                          ),
+                          TimelineTile(
+                            nodeAlign: TimelineNodeAlign.start,
+                            contents: Container(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  textWidget(
+                                      txt: "Drop off",
+                                      fontSize: 12,
+                                      color: AllColors.greyColor,
+                                      bold: FontWeight.normal,
+                                      italic: false),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  textWidget(
+                                      txt: destinationPoint[index],
+                                      fontSize: 12,
+                                      color: AllColors.greyColor,
+                                      bold: FontWeight.normal,
+                                      italic: false),
+                                ],
+                              ),
+                            ),
+                            node: TimelineNode(
+                              startConnector: const DashedLineConnector(
+                                color: AllColors.greyColor,
+                              ),
+                              indicator: ContainerIndicator(
+                                  child: CircleAvatar(
+                                backgroundColor: AllColors.blueColor,
+                                radius: 4,
+                              )),
+                            ),
+                          ),
+                        ],
+                      ).putPadding(0, 20, context.widthPct(0.15),
+                          context.widthPct(0.15)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          blueButton(
+                              txt: "IGNORE",
+                              function: () {
+                                _matchEngine.currentItem?.nope();
+                                setState(() {});
+                              }),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          greenButton(
+                              txt: "ACCEPT",
+                              function: () {
+                                _matchEngine.currentItem?.like();
+                                status = 0;
+                                setState(() {});
+                              })
+                        ],
+                      ).putPadding(0, 0, 10, 10)
+                    ],
+                  ),
+                );
+              },
+              onStackFinished: () {
+                printInfo(info: "aaaaa");
+                _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+                  content: Text("Stack Finished"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+            ),
+          )
+        : Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: AllColors.whiteColor,
               borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(30),
-                topLeft: Radius.circular(30),
+                topRight: Radius.circular(40),
+                topLeft: Radius.circular(40),
               ),
               boxShadow: [
                 BoxShadow(
@@ -106,187 +241,50 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                 ),
               ],
             ),
+
+            //  padding: EdgeInsets.only(top: 10),
             child: Column(
               children: [
-                userDetails(
-                    txt: _names[index],
-                    imgUrl: imgUrlList[index],
-                    kiloMeter: kiloMeter[index].toString(),
-                    charge: charge[index].toString()),
-                Column(
-                  children: [
-                    TimelineTile(
-                      nodeAlign: TimelineNodeAlign.start,
-                      contents: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            textWidget(
-                                txt: "Pick Up",
-                                fontSize: 12,
-                                color: AllColors.greyColor,
-                                bold: FontWeight.normal,
-                                italic: false),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            textWidget(
-                                txt: sourcePoint[index],
-                                fontSize: 12,
-                                color: AllColors.greyColor,
-                                bold: FontWeight.normal,
-                                italic: false),
-                          ],
-                        ),
-                      ),
-                      node: TimelineNode(
-                          indicator: ContainerIndicator(
-                              child: CircleAvatar(
-                                backgroundColor: AllColors.greenColor,
-                                radius: 4,
-                              )),
-                          endConnector: const DashedLineConnector(
-                            color: AllColors.greyColor,
-                          )),
-                    ),
-                    TimelineTile(
-                      nodeAlign: TimelineNodeAlign.start,
-                      contents: Container(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            textWidget(
-                                txt: "Drop off",
-                                fontSize: 12,
-                                color: AllColors.greyColor,
-                                bold: FontWeight.normal,
-                                italic: false),
-                            const SizedBox(
-                              height: 3,
-                            ),
-                            textWidget(
-                                txt: destinationPoint[index],
-                                fontSize: 12,
-                                color: AllColors.greyColor,
-                                bold: FontWeight.normal,
-                                italic: false),
-                          ],
-                        ),
-                      ),
-                      node: TimelineNode(
-                        startConnector: const DashedLineConnector(
-                          color: AllColors.greyColor,
-                        ),
-                        indicator: ContainerIndicator(
-                            child: CircleAvatar(
-                              backgroundColor: AllColors.blueColor,
-                              radius: 4,
-                            )),
-                      ),
-                    ),
-                  ],
-                ).putPadding(
-                    0, 20, context.widthPct(0.15), context.widthPct(0.15)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    blueButton(
-                        txt: "IGNORE",
-                        function: () {
-                          _matchEngine.currentItem?.nope();
-                          setState(() {
-
-                          });
-                        }),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    greenButton(
-                        txt: "ACCEPT",
-                        function: () {
-                          _matchEngine.currentItem?.like();
-                          status=0;
-                          setState(() {
-
-                          });
-                        })
-                  ],
-                ).putPadding(0, 0, 10, 10)
+                locationDetails(),
+                status < 2
+                    ? userCart()
+                    : status == 2
+                        ? userCart2()
+                        : userCart3(),
+                status < 2
+                    ? Row(
+                        children: [
+                          cancelButton(),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          if (status < 1)
+                            arrivedButton()
+                          else if (status == 1)
+                            pickedUpButton()
+                          else if (status == 2)
+                            Container()
+                          // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
+                        ],
+                      ).putPadding(
+                        0,
+                        20,
+                        context.widthPct(0.08),
+                        context.widthPct(0.08),
+                      )
+                    : status == 2
+                        ? tapWhenDropButton()
+                        : confirmPayment(),
               ],
             ),
           );
-        },
-        onStackFinished: () {
-          printInfo(info: "aaaaa");
-          _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-            content: Text("Stack Finished"),
-            duration: Duration(milliseconds: 500),
-          ));
-        },
-      ),
-    ):
-    Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: AllColors.whiteColor,
-        borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(40),
-          topLeft: Radius.circular(40),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-
-      //  padding: EdgeInsets.only(top: 10),
-      child: Column(
-        children: [
-          locationDetails(),
-          status < 2
-              ? userCart()
-              : status == 2
-                  ? userCart2()
-                  : userCart3(),
-          status < 2
-              ? Row(
-                  children: [
-                    cancelButton(),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if (status < 1)
-                      arrivedButton()
-                    else if (status == 1)
-                      pickedUpButton()
-                    else if (status == 2)
-                      Container()
-                    // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
-                  ],
-                ).putPadding(
-                  0,
-                  20,
-                  context.widthPct(0.08),
-                  context.widthPct(0.08),
-                )
-              : status == 2
-                  ? tapWhenDropButton()
-                  : confirmPayment(),
-        ],
-      ),
-    );
   }
+
   Widget userDetails(
       {required String txt,
-        required String imgUrl,
-        required String charge,
-        required String kiloMeter}) {
+      required String imgUrl,
+      required String charge,
+      required String kiloMeter}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -366,7 +364,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
   }
 
   Widget greenButton({required String txt, function}) {
-    return Container(
+    return SizedBox(
       width: context.widthPct(0.40),
       child: ElevatedButton(
         onPressed: () {
@@ -416,27 +414,24 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container(
-                // width: 100,
-                child: RatingBar.builder(
-                  initialRating: 3,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 15,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: AllColors.greenColor,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
+              RatingBar.builder(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 15,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: AllColors.greenColor,
                 ),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                },
               ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   UrlLauncher.launch("tel://21213123123");
                 },
                 child: Container(
@@ -621,32 +616,29 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                   fontSize: 18,
                   italic: false,
                   color: AllColors.blackColor),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
-              Container(
-                // width: 100,
-                child: RatingBar.builder(
-                  initialRating: 3,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 15,
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: AllColors.greenColor,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
+              RatingBar.builder(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 15,
+                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: AllColors.greenColor,
                 ),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                },
               )
             ],
           ).putPadding(20, 20, 20, 20),
         ),
-        Container(
+        SizedBox(
           width: MediaQuery.of(context).size.width * 0.46,
           height: MediaQuery.of(context).size.height * 0.24,
           child: Card(
@@ -662,7 +654,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                     fontSize: 18,
                     italic: false,
                     color: AllColors.blackColor),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 textWidget(
@@ -706,8 +698,8 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
       children: [
         Container(
           color: Colors.grey.shade50,
-          padding: EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
-          margin: EdgeInsets.all(10),
+          padding:const EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
+          margin: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -766,14 +758,14 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                     italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Divider(
+            const Divider(
               height: 2,
               color: AllColors.greyColor,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Row(
@@ -793,14 +785,14 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                     italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
-            Divider(
+            const Divider(
               height: 2,
               color: AllColors.greyColor,
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Row(
@@ -823,11 +815,11 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
             const SizedBox(
               height: 12,
             ),
-            Divider(
+            const   Divider(
               height: 2,
               color: AllColors.greyColor,
             ),
-            SizedBox(
+            const  SizedBox(
               height: 8,
             ),
           ],

@@ -24,7 +24,7 @@ postAPI(String methodName, Map<String, dynamic> param,
   debugPrint("==Params== $param");
 
   http.post(uri, headers: null, body: param).then((value) {
-    _handleResponse(value, callback);
+    debugPrint("==response== ${value.body}");_handleResponse(value, callback);
   }).onError((error, stackTrace) {
     debugPrint("onError== $error");
     _handleError(error, callback);
@@ -90,4 +90,22 @@ _handleError(value, Function(ResponseAPI) callback) {
       error: value.toString(),
     ));
   }
+}
+
+putAPI(String methodName, Map<String, dynamic> param,
+    Function(ResponseAPI) callback) {
+  var url = ApiConstant.baseUrl + methodName;
+  var uri = Uri.parse(url);
+  debugPrint("==request== $uri");
+  debugPrint("==Params== $param");
+
+  http.put(uri, headers: null, body: param).then((value) {
+    debugPrint("==response== ${value.body}");_handleResponse(value, callback);
+  }).onError((error, stackTrace) {
+    debugPrint("onError== $error");
+    _handleError(error, callback);
+  }).catchError((error) {
+    debugPrint("catchError== $error");
+    _handleError(error, callback);
+  });
 }

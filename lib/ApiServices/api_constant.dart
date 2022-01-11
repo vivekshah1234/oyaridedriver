@@ -1,36 +1,9 @@
 class ApiConstant {
-  static String baseUrl = "http://18.219.37.34:3900/api/";
-
-  static String register = "auth/register";
-
-  static String login = "auth/login";
-  static String changePassword = "user/change-password";
-  static String refreshToken = "auth/refresh-token";
-  static String updateProfile = "user/update-profile";
-  static String verifyFBToken = "auth/verify-fb-token";
-  static String fbLogin = "auth/fb-login";
-  static String forgotPassword = "auth/forgot-password";
-  static String resetPassword = "auth/reset-password";
-  static String addCourierRequest = "shipping/request-courier";
-  static String addReceiverRequest = "shipping/travling-details";
-  static String allRequest = "shipping/my-orders";
-  static String findMyMatch="shipping/find-my-match";
-  static String sendRequest="shipping/send-request";
-
-  static String myRequest="shipping/my-request";
-  static String addDeviceInfo="user/device";
-
-  static String cancelRequest="shipping/cancel-request";
-
-  static String acceptRequest="shipping/accept-request";
-  static String uploadDoc="user/upload-document";
-  static String notification="shipping/notification-list";
-
-  static String updateItemStatus="shipping/update-item-status";
-
-  static String updateTravelStatus="shipping/update-traveling-status";
-
-  static String latestActiveOrder="shipping/latest-active-order";
+  static String baseUrl = "http://18.223.142.216:3000";
+  static String signUp="/or/d1/driver-signup";
+  static String registerPersonalInfo="/or/d1/driver-info-and-vehical-info";
+  static String driverLicenseNumber="/or/d1/driver-licenes-number";
+  static String login="/or/d1/login";
 }
 
 abstract class AppConstants {
@@ -48,7 +21,7 @@ abstract class AppConstants {
   static String address = "address";
   static String deviceID = "deviceID";
   static bool isVerified=false;
-
+  static int registerFormNo=0;
 }
 
 class ApiKeys {

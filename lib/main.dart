@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
+import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiServices/api_constant.dart';
 import 'UIScreens/ChatUI/firebase_chat.dart';
@@ -50,8 +53,8 @@ Future<void> main() async {
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark
-    // transparent status bar
-  ));
+      // transparent status bar
+      ));
   // channel = const AndroidNotificationChannel(
   //   'high_importance_channel', // id
   //   'High Importance Notifications', // title// description
@@ -67,10 +70,31 @@ Future<void> main() async {
   //     .resolvePlatformSpecificImplementation<
   //     AndroidFlutterLocalNotificationsPlugin>()
   //     ?.createNotificationChannel(channel);
+  Widget firstScreen = HomeScreen();
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  AppConstants.userID = sp.getString("user_id") ?? "user_id";
+  print(AppConstants.userID);
 
-  runApp( GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen()));
+  AppConstants.registerFormNo = sp.getInt("registerFormNo") ?? 0;
+
+  if (AppConstants.registerFormNo != 0) {
+    switch (AppConstants.registerFormNo) {
+      case 1:
+        firstScreen = PersonalInfoScreen();
+        break;
+      case 2:
+        firstScreen = LicenceDetailScreen();
+        break;
+      case 3:
+        firstScreen = LoginScreen();
+        break;
+      default:
+        firstScreen = HomeScreen();
+        break;
+    }
+  }
+
+  runApp(GetMaterialApp(debugShowCheckedModeBanner: false, home: firstScreen));
 }
 
 class MyApp extends StatefulWidget {
@@ -81,15 +105,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
 //  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
-  //  firebaseCloudMessagingListeners();
+    //  firebaseCloudMessagingListeners();
     super.initState();
   }
+
   //
   // firebaseCloudMessagingListeners() {
   //   print("1");
@@ -165,12 +188,11 @@ class _MyAppState extends State<MyApp> {
   // }
 
   navigateToScreen(String screen) {
-   // print("switch:::::::::");
+    // print("switch:::::::::");
   }
 }
 
 Future<void> setUserData() async {
-
   //
   // AppConstants.fullName = obj.name;
   // AppConstants.mobileNo = obj.mobileNumber;
@@ -199,11 +221,11 @@ Future<void> setUserData() async {
   DatabaseMethods databaseMethods = DatabaseMethods();
   try {
     final QuerySnapshot result =
-    await databaseMethods.getUserInfo(id: int.parse(AppConstants.userID));
+        await databaseMethods.getUserInfo(id: int.parse(AppConstants.userID));
 
     final List<DocumentSnapshot> documents = result.docs;
 
-    if (documents.length == 0) {
+    if (documents.isEmpty) {
       FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
       String? firebaseToken = await firebaseMessaging.getToken();
 
@@ -218,7 +240,7 @@ Future<void> setUserData() async {
         'unReadMessages': 0
       };
       bool isUserExist =
-      await databaseMethods.checkUserExist(AppConstants.userID);
+          await databaseMethods.checkUserExist(AppConstants.userID);
       if (!isUserExist) {
         databaseMethods.addUserInfo(
             docId: AppConstants.userID, userData: userData);
