@@ -2,6 +2,7 @@ import 'dart:collection';
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -74,7 +75,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.blackColor, borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.only(left: 7, right: 40, top: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
           Icon(
@@ -89,13 +90,13 @@ class _YourTripScreenState extends State<YourTripScreen> {
             children: [
               textWidget(
                   txt: "Total Jobs",
-                  fontSize: smallFontSize,
+                  fontSize: ScreenUtil().setSp(smallFontSize),
                   color: AllColors.whiteColor,
                   bold: FontWeight.normal,
                   italic: false),
               textWidget(
                   txt: "1,432",
-                  fontSize: largeFontSize,
+                  fontSize: ScreenUtil().setSp(largeFontSize),
                   color: AllColors.whiteColor,
                   bold: largeFontWeight,
                   italic: false),
@@ -110,11 +111,12 @@ class _YourTripScreenState extends State<YourTripScreen> {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.only(left: 7, right: 40, top: 10, bottom: 10),
+      padding: EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
           CircleAvatar(
               backgroundColor: AllColors.whiteColor,
+              radius: 18,
               child: Icon(
                 Icons.attach_money,
                 color: AllColors.greenColor,
@@ -128,13 +130,13 @@ class _YourTripScreenState extends State<YourTripScreen> {
             children: [
               textWidget(
                   txt: "Total Earn",
-                  fontSize: smallFontSize,
+                  fontSize: ScreenUtil().setSp(smallFontSize),
                   color: AllColors.whiteColor,
                   bold: normalFontWeight,
                   italic: false),
               textWidget(
                   txt: "\$ 2500",
-                  fontSize: largeFontSize,
+                  fontSize: ScreenUtil().setSp(largeFontSize),
                   color: AllColors.whiteColor,
                   bold: largeFontWeight,
                   italic: false),
@@ -181,13 +183,13 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           children: [
                             textWidget(
                                 txt: "29 Sept 2021",
-                                fontSize: mediumFontSize,
+                                fontSize: ScreenUtil().setSp(mediumFontSize),
                                 color: AllColors.blackColor,
                                 bold: normalFontWeight,
                                 italic: false),
                             textWidget(
                                 txt: "\$60",
-                                fontSize: mediumFontSize,
+                                fontSize: ScreenUtil().setSp(mediumFontSize),
                                 color: AllColors.blackColor,
                                 bold: mediumFontWeight,
                                 italic: false),
@@ -198,7 +200,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           children: [
                             textWidget(
                                 txt: "Seden Car",
-                                fontSize: mediumFontSize,
+                                fontSize: ScreenUtil().setSp(mediumFontSize),
                                 color: AllColors.blackColor,
                                 bold: mediumFontWeight,
                                 italic: false),
@@ -212,7 +214,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                     italic: false),
                                 textWidget(
                                     txt: "Cash",
-                                    fontSize: mediumFontSize,
+                                    fontSize: ScreenUtil().setSp(mediumFontSize),
                                     color: AllColors.blackColor,
                                     bold: mediumFontWeight,
                                     italic: false),
@@ -262,7 +264,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                               children: [
                                 textWidget(
                                     txt: "Source Location",
-                                    fontSize: smallFontSize,
+                                    fontSize: ScreenUtil().setSp(smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: normalFontWeight,
                                     italic: false),
@@ -271,7 +273,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                 ),
                                 textWidget(
                                     txt: "Medical Education Center",
-                                    fontSize: smallFontSize,
+                                    fontSize: ScreenUtil().setSp(smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: normalFontWeight,
                                     italic: false),
@@ -297,7 +299,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                               children: [
                                 textWidget(
                                     txt: "Destination Location",
-                                    fontSize: smallFontSize,
+                                    fontSize: ScreenUtil().setSp(smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: normalFontWeight,
                                     italic: false),
@@ -306,7 +308,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                 ),
                                 textWidget(
                                     txt: "Barthingam Collage",
-                                    fontSize: smallFontSize,
+                                    fontSize: ScreenUtil().setSp(smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: normalFontWeight,
                                     italic: false),

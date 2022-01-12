@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               GestureDetector(
                                   onTap: () {
-                                    Get.to(() => ForgotPasswordScreen());
+                                    Get.to(() => const ForgotPasswordScreen());
                                   },
                                   child: textWidget(
                                       txt: "Forget Password ?",
@@ -119,16 +119,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: AllColors.whiteColor,
                                       italic: false,
                                       bold: false),
-                                  GestureDetector(
-                                      onTap: () {
-                                        Get.to(() => SignUpScreen());
-                                      },
-                                      child: textWidget(
-                                          txt: "Register Here",
-                                          fontSize: mediumFontSize,
-                                          color: AllColors.blueColor,
-                                          italic: false,
-                                          bold: false)),
+                                  Expanded(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          Get.to(() => const SignUpScreen());
+                                        },
+                                        child:  Text("Register Here",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontSize: mediumFontSize,
+                                              color: AllColors.blueColor,
+                                            ))),
+                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -156,13 +158,14 @@ class _LoginScreenState extends State<LoginScreen> {
       margin: const EdgeInsets.only(left: 45, right: 45),
       child: ElevatedButton(
         onPressed: () {
-          if (formKey.currentState!.validate()) {
-            Map<String, dynamic> map = {
-              "phoneNo": txtNum.text,
-              "password": txtPwd.text.toString()
-            };
-            loginController.login(map, context);
-          }
+          // if (formKey.currentState!.validate()) {
+          //   Map<String, dynamic> map = {
+          //     "phoneNo": txtNum.text,
+          //     "password": txtPwd.text.toString()
+          //   };
+          //   loginController.login(map, context);
+          // }
+          Get.to(() => const MapHomeScreen());
         },
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AllColors.blueColor),

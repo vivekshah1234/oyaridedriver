@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/login_screen.dart';
@@ -94,7 +95,9 @@ Future<void> main() async {
     }
   }
 
-  runApp(GetMaterialApp(debugShowCheckedModeBanner: false, home: firstScreen));
+  runApp(ScreenUtilInit(
+      builder: () => GetMaterialApp(
+          debugShowCheckedModeBanner: false, home: firstScreen)));
 }
 
 class MyApp extends StatefulWidget {

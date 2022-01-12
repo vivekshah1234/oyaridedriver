@@ -187,7 +187,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
       body: Stack(
         children: [
           isLoading
-              ? Container(
+              ? SizedBox(
                   height: double.infinity,
                   width: double.infinity,
                  // color: Colors.red,
@@ -205,10 +205,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
-                //  height: MediaQuery.of(context).size.height*0.40,
-                 // color: AllColors.redColor,
-                child: RiderCartScreen()),
+            child: RiderCartScreen(),
           )
         ],
       ),

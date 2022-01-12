@@ -12,6 +12,23 @@ import 'common_widgets.dart';
 import 'image_assets.dart';
 
 
+double childAspectRationFun(double height,context) {
+  print("Screen height===" + height.toString());
+  double height2=0.0;
+  if (height <= 650) {
+    height2= MediaQuery.of(context).size.height*0.50;
+  }else if(height > 650 && height <=700){
+    height2= MediaQuery.of(context).size.height*0.45;
+  }
+  else if(height > 650 && height <=700){
+    height2= MediaQuery.of(context).size.height*0.38;
+  }else
+    {
+    height2= MediaQuery.of(context).size.height*0.35;
+  }
+  return height2;
+}
+
 
 bool isValidEmail(String email) {
   const _emailRegExpString = r'[a-zA-Z0-9\+\.\_\%\-\+]{1,256}\@[a-zA-Z0-9]'

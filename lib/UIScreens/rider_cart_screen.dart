@@ -1,8 +1,10 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
+import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
@@ -85,12 +87,12 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
   Widget build(BuildContext context) {
     return status == -1
         ? SizedBox(
-            height: MediaQuery.of(context).size.height * 0.40,
+            height: childAspectRationFun(
+                MediaQuery.of(context).size.height, context),
             child: SwipeCards(
               matchEngine: _matchEngine,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: AllColors.whiteColor,
                     borderRadius: const BorderRadius.only(
@@ -187,30 +189,34 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                               )),
                             ),
                           ),
+                          // const SizedBox(height: 20,),
                         ],
                       ).putPadding(0, 20, context.widthPct(0.15),
                           context.widthPct(0.15)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          blueButton(
-                              txt: "IGNORE",
-                              function: () {
-                                _matchEngine.currentItem?.nope();
-                                setState(() {});
-                              }),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          greenButton(
-                              txt: "ACCEPT",
-                              function: () {
-                                _matchEngine.currentItem?.like();
-                                status = 0;
-                                setState(() {});
-                              })
-                        ],
-                      ).putPadding(0, 0, 10, 10)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            blueButton(
+                                txt: "IGNORE",
+                                function: () {
+                                  _matchEngine.currentItem?.nope();
+                                  setState(() {});
+                                }),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            greenButton(
+                                txt: "ACCEPT",
+                                function: () {
+                                  _matchEngine.currentItem?.like();
+                                  status = 0;
+                                  setState(() {});
+                                })
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 );
@@ -249,7 +255,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                 status < 2
                     ? userCart()
                     : status == 2
-                        ? userCart2()
+                        ? whileTravelingCart()
                         : userCart3(),
                 status < 2
                     ? Row(
@@ -289,46 +295,56 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(40),
-          topLeft: Radius.circular(40),
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
         ),
       ),
       padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
       child: Row(
         children: [
-          const CircleAvatar(
-            backgroundColor: AllColors.greyColor,
-            backgroundImage: NetworkImage(
-                "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),
-            radius: 35,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          textWidget(
-              txt: txt,
-              bold: FontWeight.w800,
-              fontSize: 18,
-              italic: false,
-              color: AllColors.blackColor),
           Expanded(
-            child: Container(),
+            flex: 6,
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  backgroundColor: AllColors.greyColor,
+                  backgroundImage: NetworkImage(
+                      "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),
+                  radius: 32,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Text(txt,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: ScreenUtil().setSp(17),
+                          color: AllColors.blackColor)),
+                ),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              textWidget(
-                  txt: "\$$charge",
-                  fontSize: 17,
-                  color: AllColors.blackColor,
-                  bold: FontWeight.w800,
-                  italic: false),
-              textWidget(
-                  txt: "$kiloMeter km",
-                  fontSize: 15,
-                  color: AllColors.greyColor,
-                  bold: FontWeight.w600,
-                  italic: false),
-            ],
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                textWidget(
+                    txt: "\$$charge",
+                    fontSize: ScreenUtil().setSp(17),
+                    color: AllColors.blackColor,
+                    bold: FontWeight.w800,
+                    italic: false),
+                textWidget(
+                    txt: "$kiloMeter km",
+                    fontSize: ScreenUtil().setSp(15),
+                    color: AllColors.greyColor,
+                    bold: FontWeight.w600,
+                    italic: false),
+              ],
+            ),
           )
         ],
       ),
@@ -403,12 +419,15 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
               const SizedBox(
                 width: 20,
               ),
-              textWidget(
-                  txt: "Stella Josan",
-                  bold: FontWeight.w600,
-                  fontSize: 18,
-                  italic: false,
-                  color: AllColors.blackColor),
+              Expanded(
+                child: Text("Stella Josh",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: ScreenUtil().setSp(18),
+                        color: AllColors.blackColor)),
+              )
             ],
           ).putPadding(10, 10, 25, 25),
           Row(
@@ -593,77 +612,82 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
     );
   }
 
-  Widget userCart2() {
+  Widget whileTravelingCart() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       //  crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          shadowColor: Colors.grey.shade900,
-          child: Column(
-            children: [
-              const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg"),
-                radius: 35,
-              ).putPadding(10, 10, 25, 25),
-              // SizedBox(height: 10,),
-              textWidget(
-                  txt: "Stella Josan",
-                  bold: FontWeight.w600,
-                  fontSize: 18,
-                  italic: false,
-                  color: AllColors.blackColor),
-              const SizedBox(
-                height: 10,
-              ),
-              RatingBar.builder(
-                initialRating: 3,
-                minRating: 1,
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 15,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: AllColors.greenColor,
-                ),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                },
-              )
-            ],
-          ).putPadding(20, 20, 20, 20),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.46,
-          height: MediaQuery.of(context).size.height * 0.24,
+        Expanded(
+          flex: 2,
           child: Card(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             shadowColor: Colors.grey.shade900,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      "https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg"),
+                  radius: 35,
+                ).putPadding(10, 10, 25, 25),
+                // SizedBox(height: 10,),
                 textWidget(
-                    txt: "Waiting",
-                    bold: FontWeight.w500,
+                    txt: "Stella Josan",
+                    bold: FontWeight.w600,
                     fontSize: 18,
                     italic: false,
                     color: AllColors.blackColor),
                 const SizedBox(
                   height: 10,
                 ),
-                textWidget(
-                    txt: "00:00:00",
-                    bold: FontWeight.w500,
-                    fontSize: 18,
-                    italic: false,
-                    color: AllColors.blackColor),
+                RatingBar.builder(
+                  initialRating: 3,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 15,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: AllColors.greenColor,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
+                )
               ],
+            ).putPadding(20, 20, 20, 20),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.30,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              shadowColor: Colors.grey.shade900,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  textWidget(
+                      txt: "Waiting",
+                      bold: FontWeight.w500,
+                      fontSize: 18,
+                      italic: false,
+                      color: AllColors.blackColor),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  textWidget(
+                      txt: "00:00:00",
+                      bold: FontWeight.w500,
+                      fontSize: 18,
+                      italic: false,
+                      color: AllColors.blackColor),
+                ],
+              ),
             ),
           ),
         ),
@@ -698,7 +722,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
       children: [
         Container(
           color: Colors.grey.shade50,
-          padding:const EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
+          padding: const EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
           margin: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -815,11 +839,11 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
             const SizedBox(
               height: 12,
             ),
-            const   Divider(
+            const Divider(
               height: 2,
               color: AllColors.greyColor,
             ),
-            const  SizedBox(
+            const SizedBox(
               height: 8,
             ),
           ],

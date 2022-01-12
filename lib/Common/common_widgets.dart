@@ -77,7 +77,7 @@ Widget greenLoadingWidget() {
 }
 
 Widget greenButton({required String txt, function}) {
-  return Container(
+  return SizedBox(
     width: double.infinity,
   //  margin: const EdgeInsets.only(left: 45, right: 45),
     child: ElevatedButton(

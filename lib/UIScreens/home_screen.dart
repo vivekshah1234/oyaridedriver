@@ -5,7 +5,7 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/login_screen.dart';
 import 'package:oyaridedriver/UIScreens/sign_up_screen.dart';
-// ignore_for_file: prefer_const_constructors
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],),
           Expanded(flex: 4,child: Container(),),
           greenButton(txt: "LOGIN",function: (){
-            Get.to(()=>  LoginScreen());
+            Get.to(()=>  const LoginScreen());
 
 
           }).paddingOnly(left:40,right: 40),
