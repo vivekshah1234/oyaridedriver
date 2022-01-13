@@ -20,30 +20,43 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
   final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final List<String> _names = [
-    "Ian Somerholder",
-    "Paul Wesley",
-    "Damon Salvtore",
-    "Stefan",
-    "Nina dobrev"
+  List<Map<String, dynamic>> dataList = [
+    {
+      "name": "Ian Somerholder",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Paul Welsey",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Nina Doberev",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Tony Somerholder",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    }
+
   ];
-  final List<String> imgUrlList = [imgUrl, imgUrl, imgUrl, imgUrl, imgUrl];
-  final List<double> charge = [50.0, 40.0, 40.0, 50.0, 10.0];
-  final List<double> kiloMeter = [15.0, 23.0, 22.0, 25.0, 45.0];
-  final List<String> sourcePoint = [
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center"
-  ];
-  final List<String> destinationPoint = [
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College"
-  ];
+
+
 
   @override
   void initState() {
@@ -52,21 +65,19 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
   }
 
   init() {
-    for (int i = 0; i < _names.length; i++) {
+    for (int i = 0; i < dataList.length; i++) {
       _swipeItems.add(SwipeItem(
           content: Content(
-              name: _names[i],
-              imgurl: imgUrlList[i],
-              charge: charge[i],
-              kiloMeter: kiloMeter[i],
-              pickUpPoint: sourcePoint[i],
-              destinationPoint: destinationPoint[i]),
+              name: dataList[i]["name"],
+              imgurl: dataList[i]["imgUrl"],
+              charge:dataList[i]["charge"],
+              kiloMeter: dataList[i]["kiloMeter"],
+              pickUpPoint: dataList[i]["sourcePoint"],
+              destinationPoint: dataList[i]["destinationPoint"]),
           likeAction: () {
             printInfo(info: "like");
-            isAccepted=true;
-            setState(() {
-
-            });
+            isAccepted = true;
+            setState(() {});
           },
           nopeAction: () {
             printInfo(info: "nope");
@@ -82,7 +93,7 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height*0.38,
+      height: MediaQuery.of(context).size.height * 0.38,
       child: SwipeCards(
         matchEngine: _matchEngine,
         itemBuilder: (BuildContext context, int index) {
@@ -106,10 +117,10 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
             child: Column(
               children: [
                 userDetails(
-                    txt: _names[index],
-                    imgUrl: imgUrlList[index],
-                    kiloMeter: kiloMeter[index].toString(),
-                    charge: charge[index].toString()),
+                    txt: dataList[index]["name"],
+                    imgUrl: dataList[index]["imgUrl"],
+                    kiloMeter:dataList[index]["kiloMeter"],
+                    charge:dataList[index]["charge"]),
                 Column(
                   children: [
                     TimelineTile(
@@ -129,7 +140,7 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
                               height: 3,
                             ),
                             textWidget(
-                                txt: sourcePoint[index],
+                                txt: dataList[index]["sourcePoint"],
                                 fontSize: 12,
                                 color: AllColors.greyColor,
                                 bold: FontWeight.normal,
@@ -164,7 +175,7 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
                               height: 3,
                             ),
                             textWidget(
-                                txt: destinationPoint[index],
+                                txt: dataList[index]["destinationPoint"],
                                 fontSize: 12,
                                 color: AllColors.greyColor,
                                 bold: FontWeight.normal,
@@ -217,8 +228,6 @@ class _RiderListCartScreenState extends State<RiderListCartScreen> {
         },
       ),
     );
-
-
   }
 
   Widget userDetails(

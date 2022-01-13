@@ -26,29 +26,39 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
   final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-  final List<String> _names = [
-    "Ian Somerholder",
-    "Paul Wesley",
-    "Damon Salvtore",
-    "Stefan",
-    "Nina dobrev"
-  ];
-  final List<String> imgUrlList = [imgUrl, imgUrl, imgUrl, imgUrl, imgUrl];
-  final List<double> charge = [50.0, 40.0, 40.0, 50.0, 10.0];
-  final List<double> kiloMeter = [15.0, 23.0, 22.0, 25.0, 45.0];
-  final List<String> sourcePoint = [
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center",
-    "Medical Education Center"
-  ];
-  final List<String> destinationPoint = [
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College",
-    "Barthimam College"
+  List<Map<String, dynamic>> dataList = [
+    {
+      "name": "Ian Somerholder",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Paul Welsey",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Nina Doberev",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    },
+    {
+      "name": "Tony Somerholder",
+      "imgUrl": imgUrl,
+      "charge": 50.0,
+      "kiloMeter": 15.0,
+      "sourcePoint": "Medical Education Center",
+      "destinationPoint": "Barthimam College"
+    }
   ];
 
   @override
@@ -58,15 +68,15 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
   }
 
   init() {
-    for (int i = 0; i < _names.length; i++) {
+    for (int i = 0; i < dataList.length; i++) {
       _swipeItems.add(SwipeItem(
           content: Content(
-              name: _names[i],
-              imgurl: imgUrlList[i],
-              charge: charge[i],
-              kiloMeter: kiloMeter[i],
-              pickUpPoint: sourcePoint[i],
-              destinationPoint: destinationPoint[i]),
+              name: dataList[i]["name"],
+              imgurl: dataList[i]["imgUrl"],
+              charge: dataList[i]["charge"],
+              kiloMeter: dataList[i]["kiloMeter"],
+              pickUpPoint: dataList[i]["sourcePoint"],
+              destinationPoint: dataList[i]["destinationPoint"]),
           likeAction: () {
             printInfo(info: "like");
             status = 0;
@@ -112,10 +122,10 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                   child: Column(
                     children: [
                       userDetails(
-                          txt: _names[index],
-                          imgUrl: imgUrlList[index],
-                          kiloMeter: kiloMeter[index].toString(),
-                          charge: charge[index].toString()),
+                          txt: dataList[index]["name"],
+                          imgUrl: dataList[index]["imgUrl"],
+                          kiloMeter: dataList[index]["kiloMeter"],
+                          charge: dataList[index]["charge"]),
                       Column(
                         children: [
                           TimelineTile(
@@ -135,7 +145,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                                     height: 3,
                                   ),
                                   textWidget(
-                                      txt: sourcePoint[index],
+                                      txt: dataList[index]["sourcePoint"],
                                       fontSize: 12,
                                       color: AllColors.greyColor,
                                       bold: FontWeight.normal,
@@ -170,7 +180,7 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                                     height: 3,
                                   ),
                                   textWidget(
-                                      txt: destinationPoint[index],
+                                      txt: dataList[index]["destinationPoint"],
                                       fontSize: 12,
                                       color: AllColors.greyColor,
                                       bold: FontWeight.normal,
@@ -191,29 +201,41 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                           ),
                           // const SizedBox(height: 20,),
                         ],
-                      ).putPadding(0, 20, context.widthPct(0.15),
+                      ).putPadding(0, 15, context.widthPct(0.15),
                           context.widthPct(0.15)),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10.0,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            blueButton(
-                                txt: "IGNORE",
-                                function: () {
-                                  _matchEngine.currentItem?.nope();
-                                  setState(() {});
-                                }),
+                            SmallButton(
+                              text: "IGNORE",
+                              color: AllColors.blueColor,
+                              onPressed: () {
+                                _matchEngine.currentItem?.nope();
+                                setState(() {});
+                              },
+                            ),
+                            // blueButton(
+                            //     txt: "IGNORE",
+                            //     function: () {
+                            //
+                            //     }),
                             const SizedBox(
                               width: 10,
                             ),
-                            greenButton(
-                                txt: "ACCEPT",
-                                function: () {
-                                  _matchEngine.currentItem?.like();
-                                  status = 0;
-                                  setState(() {});
-                                })
+                            SmallButton(
+                              text: "ACCEPT",
+                              color: AllColors.greenColor,
+                              onPressed: () {
+                                _matchEngine.currentItem?.like();
+                                status = 0;
+                                setState(() {});
+                              },
+                            ),
+
                           ],
                         ),
                       )
@@ -260,14 +282,34 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                 status < 2
                     ? Row(
                         children: [
-                          cancelButton(),
+                          SmallButton(
+                            text: "CANCEL",
+                            color: AllColors.blueColor,
+                            onPressed: () {},
+                          ),
                           const SizedBox(
                             width: 10,
                           ),
                           if (status < 1)
-                            arrivedButton()
+                            SmallButton(
+                              text: "ARRIVED",
+                              color: AllColors.greenColor,
+                              onPressed: () {
+                                status = 1;
+                                print("tap");
+                                setState(() {});
+                              },
+                            )
                           else if (status == 1)
-                            pickedUpButton()
+                            SmallButton(
+                              text: "PICKED UP",
+                              color: AllColors.greenColor,
+                              onPressed: () {
+                                status = 2;
+                                print("tap");
+                                setState(() {});
+                              },
+                            )
                           else if (status == 2)
                             Container()
                           // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
@@ -279,8 +321,22 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                         context.widthPct(0.08),
                       )
                     : status == 2
-                        ? tapWhenDropButton()
-                        : confirmPayment(),
+                        ? ConfirmButton(
+                            txt: "TAP WHEN DROP",
+                            onPressed: () {
+                              status = 3;
+                              print("tap");
+                              setState(() {});
+                            },
+                          )
+                        : ConfirmButton(
+                            txt: "CONFIRM PAYMENT",
+                            onPressed: () {
+                              status = 4;
+                              print("tap");
+                              setState(() {});
+                            },
+                          ),
               ],
             ),
           );
@@ -289,8 +345,8 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
   Widget userDetails(
       {required String txt,
       required String imgUrl,
-      required String charge,
-      required String kiloMeter}) {
+      required double charge,
+      required double kiloMeter}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -332,13 +388,13 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
             child: Column(
               children: [
                 textWidget(
-                    txt: "\$$charge",
+                    txt: "\$${charge.toString()}",
                     fontSize: ScreenUtil().setSp(17),
                     color: AllColors.blackColor,
                     bold: FontWeight.w800,
                     italic: false),
                 textWidget(
-                    txt: "$kiloMeter km",
+                    txt: "${kiloMeter.toString()} km",
                     fontSize: ScreenUtil().setSp(15),
                     color: AllColors.greyColor,
                     bold: FontWeight.w600,
@@ -347,59 +403,6 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  Widget blueButton({required String txt, function}) {
-    return SizedBox(
-      // padding: const EdgeInsets.only(left: 45, right: 45),
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: () {
-          function();
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-            return RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25));
-          }),
-
-          //
-        ),
-        child: Text(
-          txt,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-
-  Widget greenButton({required String txt, function}) {
-    return SizedBox(
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: () {
-          function();
-        },
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AllColors.greenColor),
-          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-            return RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25));
-          }),
-        ),
-        child: Text(
-          txt,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
       ),
     );
   }
@@ -548,70 +551,6 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
     );
   }
 
-  Widget cancelButton() {
-    return SizedBox(
-      // padding: const EdgeInsets.only(left: 45, right: 45),
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: () {
-          //  function();
-        },
-        style: buttonStyleBLue(),
-        child: const Text(
-          "CANCEL",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-
-  Widget arrivedButton() {
-    return SizedBox(
-      // padding: const EdgeInsets.only(left: 45, right: 45),
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: () {
-          status = 1;
-          print("tap");
-          setState(() {});
-        },
-        style: buttonStyleGreen(),
-        child: const Text(
-          "ARRIVED",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-
-  Widget pickedUpButton() {
-    return SizedBox(
-      // padding: const EdgeInsets.only(left: 45, right: 45),
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: () {
-          status = 2;
-          print("tap");
-          setState(() {});
-        },
-        style: buttonStyleGreen(),
-        child: const Text(
-          "PICKED UP",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-
   Widget whileTravelingCart() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -692,28 +631,6 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget tapWhenDropButton() {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          status = 3;
-          print("tap");
-          setState(() {});
-        },
-        style: buttonStyleGreen(),
-        child: const Text(
-          "TAP WHEN DROP",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
     );
   }
 
@@ -852,28 +769,6 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
     );
   }
 
-  Widget confirmPayment() {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          status = 4;
-          print("tap");
-          setState(() {});
-        },
-        style: buttonStyleGreen(),
-        child: const Text(
-          "CONFIRM PAYMENT",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-
   Widget textWidget(
       {required String txt,
       required double fontSize,
@@ -887,6 +782,69 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
         fontSize: fontSize,
         fontWeight: bold,
         fontStyle: italic ? FontStyle.italic : FontStyle.normal,
+      ),
+    );
+  }
+}
+
+class ConfirmButton extends StatelessWidget {
+  final GestureTapCallback onPressed;
+  final String txt;
+
+  const ConfirmButton({
+    required this.onPressed,
+    required this.txt,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: buttonStyleGreen(),
+        child: Text(
+          txt,
+          style: const TextStyle(
+              color: AllColors.whiteColor,
+              fontSize: 17,
+              fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+}
+
+class SmallButton extends StatelessWidget {
+  final String text;
+  final GestureTapCallback onPressed;
+  final Color color;
+
+  const SmallButton(
+      {required this.text, required this.color, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      // padding: const EdgeInsets.only(left: 45, right: 45),
+      width: context.widthPct(0.40),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+            return RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25));
+          }),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: AllColors.whiteColor,
+              fontSize: 17,
+              fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }

@@ -39,7 +39,7 @@ bool isValidEmail(String email) {
 bool isValidPassword(String value) {
   String pattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$';
-  RegExp regExp = new RegExp(pattern);
+  RegExp regExp = RegExp(pattern);
   return regExp.hasMatch(value);
 }
 
@@ -67,6 +67,6 @@ handleError(value, context) {
     },
     animationType: DialogTransitionType.slideFromBottomFade,
     curve: Curves.fastOutSlowIn,
-    duration:  Duration(milliseconds: 500),
+    duration:  const Duration(milliseconds: 500),
   );
 }
