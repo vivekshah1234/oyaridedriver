@@ -31,5 +31,6 @@ class ImageAssets {
   static String logoutIcon="assets/logoutIcon.png";
   static String settingIcon="assets/settingIcon.png";
 static String driverCarIcon="assets/driverCarIcon.png";
+static String greenLocationPin="assets/locationPin.png";
 }
 String imgUrl="https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg";

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sized_context/src/extensions.dart';
+import 'package:timelines/timelines.dart';
 import 'all_colors.dart';
+import 'image_assets.dart';
 // ignore_for_file: prefer_const_constructors
 
 toast(String txt) {
@@ -30,14 +34,14 @@ Widget textWidget(
     {required String txt,
     required double fontSize,
     required Color color,
-    required bool bold,
+    required FontWeight bold,
     required bool italic}) {
   return Text(
     txt,
     style: TextStyle(
       color: color,
       fontSize: fontSize,
-      fontWeight: bold ? FontWeight.w600 : FontWeight.normal,
+      fontWeight: bold,
       fontStyle: italic ? FontStyle.italic : FontStyle.normal,
     ),
   );
@@ -112,7 +116,7 @@ AppBar appBarWidget(txt,GlobalKey<ScaffoldState> scaffoldKey) {
         ),
       ),
     ),
-    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: true, italic: false),
+    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
     centerTitle: true,
   );
 }
@@ -129,44 +133,11 @@ AppBar appBarWidget2(txt) {
 
           child: Icon(Icons.arrow_back_ios,color: AllColors.blackColor,size: 35,)),
     ),
-    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: true, italic: false),
+    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
     centerTitle: true,
   );
 }
-//
-// Widget blueButton({required String text, function}) {
-//   return Container(
-//     width: double.infinity,
-//     margin: const EdgeInsets.only(left: 45, right: 45),
-//     child: ElevatedButton(
-//       onPressed: () {
-//         function();
-//       },
-//       style: buttonStyleBLue(),
-//       child: Text(
-//         text,
-//         style: const TextStyle(
-//             color: AllColors.whiteColor,
-//             fontSize: 17,
-//             fontWeight: FontWeight.w500),
-//       ),
-//     ),
-//   );
-// }
 
-ButtonStyle buttonStyleBLue() => ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-      shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-        return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
-      }),
-    );
-
-ButtonStyle buttonStyleGreen() => ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(AllColors.greenColor),
-  shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-    return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
-  }),
-);
 Widget textFieldWithoutIcon({controller, labelText, errorText}) {
   return TextField(
     controller: controller,
@@ -210,6 +181,313 @@ SnackBar greenSnackBar(String txt,) => SnackBar(
   backgroundColor: AllColors.greenColor,
 );
 
+
+class SwipeItem2 extends StatelessWidget {
+  final String name;
+  final String imgUrl;
+  final double price;
+  final double km;
+  final String pickUpPoint;
+  final String dropOffPoint;
+  final GestureTapCallback acceptOnTap;
+  final GestureTapCallback ignoreOnTap;
+
+  const SwipeItem2(
+      {required this.name,
+        required this.imgUrl,
+        required this.price,
+        required this.km,
+        required this.pickUpPoint,
+        required this.dropOffPoint,
+        required this.acceptOnTap,
+        required this.ignoreOnTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AllColors.whiteColor,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          userDetails(txt: name, imgUrl: imgUrl, kiloMeter: km, charge: price),
+          Column(
+            children: [
+              TimelineTile(
+                nodeAlign: TimelineNodeAlign.start,
+                contents: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textWidget(
+                          txt: "Pick Up",
+                          fontSize: 12,
+                          color: AllColors.greyColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      textWidget(
+                          txt: pickUpPoint,
+                          fontSize: 12,
+                          color: AllColors.greyColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                    ],
+                  ),
+                ),
+                node: TimelineNode(
+                    indicator: ContainerIndicator(
+                        child: CircleAvatar(
+                          backgroundColor: AllColors.greenColor,
+                          radius: 4,
+                        )),
+                    endConnector: const DashedLineConnector(
+                      color: AllColors.greyColor,
+                    )),
+              ),
+              TimelineTile(
+                nodeAlign: TimelineNodeAlign.start,
+                contents: Container(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textWidget(
+                          txt: "Drop off",
+                          fontSize: 12,
+                          color: AllColors.greyColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      textWidget(
+                          txt: dropOffPoint,
+                          fontSize: 12,
+                          color: AllColors.greyColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                    ],
+                  ),
+                ),
+                node: TimelineNode(
+                  startConnector: const DashedLineConnector(
+                    color: AllColors.greyColor,
+                  ),
+                  indicator: ContainerIndicator(
+                      child: CircleAvatar(
+                        backgroundColor: AllColors.blueColor,
+                        radius: 4,
+                      )),
+                ),
+              ),
+              // const SizedBox(height: 20,),
+            ],
+          ).putPadding(0, 15, context.widthPct(0.15), context.widthPct(0.15)),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SmallButton(
+                  text: "IGNORE",
+                  color: AllColors.blueColor,
+                  onPressed: ignoreOnTap,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                SmallButton(
+                    text: "ACCEPT",
+                    color: AllColors.greenColor,
+                    onPressed: acceptOnTap),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget userDetails(
+      {required String txt,
+        required String imgUrl,
+        required double charge,
+        required double kiloMeter}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
+        ),
+      ),
+      padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 6,
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  backgroundColor: AllColors.greyColor,
+                  backgroundImage: NetworkImage(
+                      "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),
+                  radius: 32,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Text(txt,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: ScreenUtil().setSp(17),
+                          color: AllColors.blackColor)),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                textWidget(
+                    txt: "\$${charge.toString()}",
+                    fontSize: ScreenUtil().setSp(17),
+                    color: AllColors.blackColor,
+                    bold: FontWeight.w800,
+                    italic: false),
+                textWidget(
+                    txt: "${kiloMeter.toString()} km",
+                    fontSize: ScreenUtil().setSp(15),
+                    color: AllColors.greyColor,
+                    bold: FontWeight.w600,
+                    italic: false),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class RiderDetails extends StatelessWidget {
+  String name;
+  final GestureTapCallback callButton;
+
+  RiderDetails({required this.name, required this.callButton});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      shadowColor: Colors.grey.shade900,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(imgUrl),
+                radius: 35,
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                child: Text(name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: ScreenUtil().setSp(18),
+                        color: AllColors.blackColor)),
+              )
+            ],
+          ).putPadding(10, 10, 25, 25),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GiveRatingWidget(
+                initialRating: 3,
+                onRatingUpdate: (val) {
+                  printInfo(info: val.toString());
+                },
+              ),
+              GestureDetector(
+                onTap: callButton,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AllColors.greenColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.only(top: 2, bottom: 2),
+                  width: 100,
+                  child: const Icon(
+                    Icons.phone,
+                    color: AllColors.whiteColor,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ).putPadding(10, 10, 10, 10),
+    ).putPadding(10, 10, 25, 25);
+  }
+}
+
+class GiveRatingWidget extends StatefulWidget {
+  final double initialRating;
+  final onRatingUpdate;
+
+  GiveRatingWidget({required this.initialRating, required this.onRatingUpdate});
+
+  @override
+  State<GiveRatingWidget> createState() => _GiveRatingWidgetState();
+}
+
+class _GiveRatingWidgetState extends State<GiveRatingWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return RatingBar.builder(
+      initialRating: widget.initialRating,
+      minRating: 1,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemCount: 5,
+      itemSize: 15,
+      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+      itemBuilder: (context, _) => Icon(
+        Icons.star,
+        color: AllColors.greenColor,
+      ),
+      onRatingUpdate: (rating) {
+        widget.onRatingUpdate(rating);
+      },
+    );
+  }
+}
 
 
 class AppButton extends StatelessWidget {

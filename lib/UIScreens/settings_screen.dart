@@ -94,7 +94,7 @@ class SettingOptions extends StatelessWidget {
             txt: title,
             fontSize: 16,
             color: AllColors.greenColor,
-            bold: true,
+            bold: FontWeight.w600,
             italic: false),
         Padding(
           padding: const EdgeInsets.only(right: 18.0),

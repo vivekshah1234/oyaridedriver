@@ -59,7 +59,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               txt: "Personal information",
                               fontSize: 26,
                               color: AllColors.blackColor,
-                              bold: true,
+                              bold: FontWeight.w600,
                               italic: false),
                         ),
                         Center(
@@ -67,7 +67,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               txt: "and vehicle details",
                               fontSize: 25,
                               color: AllColors.blackColor,
-                              bold: true,
+                              bold: FontWeight.w600,
                               italic: false),
                         ),
                         const SizedBox(
@@ -78,7 +78,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               txt: "Only your first name and Vehicle",
                               fontSize: 16,
                               color: Colors.black54,
-                              bold: false,
+                              bold: FontWeight.normal,
                               italic: false),
                         ),
                         Center(
@@ -87,7 +87,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                   "details  are visible to clients during booking.",
                               fontSize: 16,
                               color: Colors.black54,
-                              bold: false,
+                              bold: FontWeight.normal,
                               italic: false),
                         ),
                         Padding(

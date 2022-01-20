@@ -142,7 +142,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                           txt: "\$60",
                           fontSize: ScreenUtil().setSp(17),
                           color: AllColors.blackColor,
-                          bold: true,
+                          bold: FontWeight.w600,
                           italic: false),
 
                     ],
@@ -184,7 +184,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                               txt: "Kilometer : 45 km",
                               fontSize: ScreenUtil().setSp(15),
                               color: AllColors.whiteColor,
-                              bold: true,
+                              bold: FontWeight.w600,
                               italic: false),
                         ),
                       ),

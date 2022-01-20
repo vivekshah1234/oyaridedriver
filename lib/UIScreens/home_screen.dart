@@ -43,17 +43,17 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
             textWidget(txt: "Earn More,", fontSize: 22, color: AllColors.blackColor,
-                bold: true,italic: false),
+                bold: FontWeight.w600,italic: false),
             textWidget(txt: " when you", fontSize: 22, color: AllColors.blackColor,
-                bold: false,italic: true)
+                bold: FontWeight.normal,italic: true)
           ],),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               textWidget(txt: "drive with ", fontSize: 22, color: AllColors.blackColor,
-                  bold: false,italic: true),
+                  bold: FontWeight.normal,italic: true),
               textWidget(txt: "Oyaride", fontSize: 22, color: AllColors.blackColor,
-                  bold: true,italic: false)
+                  bold: FontWeight.w600,italic: false)
             ],),
           Expanded(flex: 4,child: Container(),),
           AppButton(text: "LOGIN",onPressed:  (){
@@ -66,14 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               textWidget(txt: "Need to create an account?", fontSize: 15, color: AllColors.blackColor
-                  , bold: false, italic: false),
+                  , bold: FontWeight.normal, italic: false),
               GestureDetector(
                 onTap: (){
                   Get.to(()=>  SignUpScreen());
 
                 },
                 child: textWidget(txt: " Register Here", fontSize: 15, color: AllColors.greenColor
-                    , bold: false, italic: false),
+                    , bold: FontWeight.normal, italic: false),
               )
             ],
           ),

@@ -37,9 +37,9 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                 labelText: "Vehicle Brand",
                 errorText: "Please Enter Vehicle Brand."),
             SizedBox(height: 20,),
-          textWidget(txt: "Model", fontSize: 13, color: AllColors.greyColor, bold: false, italic: false),
+          textWidget(txt: "Model", fontSize: 13, color: AllColors.greyColor, bold: FontWeight.normal, italic: false),
           modelDropDown(),
-            textWidget(txt: "Year", fontSize: 13, color: AllColors.greyColor, bold: false, italic: false),
+            textWidget(txt: "Year", fontSize: 13, color: AllColors.greyColor, bold: FontWeight.normal, italic: false),
 
             yearDropDown(),
             textFieldWithoutIcon(controller: txtCarNumber,labelText: "Car Number",errorText: "Please Enter Car Number."),

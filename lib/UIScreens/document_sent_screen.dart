@@ -25,9 +25,9 @@ class _DocumentSentScreenState extends State<DocumentSentScreen> {
           Image.asset(ImageAssets.documentSentICon,scale: 10,),
           const SizedBox(height: 25,),
           textWidget(txt: "Documents", fontSize: 35, color: AllColors.blackColor,
-              bold: true, italic: false),
+              bold: FontWeight.w600, italic: false),
           textWidget(txt: "has sent", fontSize: 35, color: AllColors.blackColor,
-              bold: true, italic: false),
+              bold: FontWeight.w600, italic: false),
         ],),
       ),
 

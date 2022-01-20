@@ -62,6 +62,7 @@ dependencies:
   location:
   geolocator: 8.0.1
   geocoding: 2.0.1
+  maps_toolkit: ^2.0.0
   #firebase plugins
   cloud_firestore: ^3.1.4
   firebase_messaging: ^11.2.3

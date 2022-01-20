@@ -47,7 +47,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                             txt: "Legal details",
                             fontSize: 26,
                             color: AllColors.blackColor,
-                            bold: true,
+                            bold: FontWeight.w600,
                             italic: false),
                       ),
                       const SizedBox(
@@ -58,7 +58,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                             txt: "Only your first name and Vehicle details",
                             fontSize: 16,
                             color: Colors.black54,
-                            bold: false,
+                            bold: FontWeight.normal,
                             italic: false),
                       ),
                       Center(
@@ -66,7 +66,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                             txt: "are visible to clients during booking.",
                             fontSize: 16,
                             color: Colors.black54,
-                            bold: false,
+                            bold: FontWeight.normal,
                             italic: false),
                       ),
                       textField(
@@ -78,7 +78,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                           child: textWidget(
                                   txt: "Licence details are kept private",
                                   fontSize: 13,
-                                  bold: false,
+                                  bold: FontWeight.normal,
                                   italic: true,
                                   color: AllColors.greyColor)
                               .putPadding(5, 0, 0, 35)),
@@ -184,7 +184,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                   txt: "Documents",
                   fontSize: 26,
                   color: AllColors.blackColor,
-                  bold: true,
+                  bold: FontWeight.w600,
                   italic: false),
             ),
             const SizedBox(
@@ -216,13 +216,13 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     txt: "expires",
                     fontSize: 13,
                     color: AllColors.greyColor,
-                    bold: false,
+                    bold: FontWeight.normal,
                     italic: true),
                 textWidget(
                     txt: "Required*",
                     fontSize: 12,
                     color: AllColors.redColor,
-                    bold: false,
+                    bold: FontWeight.normal,
                     italic: false),
               ],
             ),
@@ -251,7 +251,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     txt: "Required*",
                     fontSize: 12,
                     color: AllColors.redColor,
-                    bold: false,
+                    bold: FontWeight.normal,
                     italic: false),
               ],
             ),

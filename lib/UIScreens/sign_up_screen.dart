@@ -51,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           txt: "Sign Up",
                           fontSize: 32,
                           color: AllColors.greenColor,
-                          bold: true,
+                          bold: FontWeight.w600,
                           italic: false),
                     ),
                     SizedBox(
@@ -62,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           txt: "Earn More with your Vehicle",
                           fontSize: 18,
                           color: AllColors.blackColor,
-                          bold: true,
+                          bold: FontWeight.w600,
                           italic: false),
                     ),
                     SizedBox(
@@ -125,13 +125,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 fontSize: mediumFontSize,
                                 color: AllColors.whiteColor,
                                 italic: false,
-                                bold: false),
+                                bold: FontWeight.normal),
                             textWidget(
                                 txt: "Services and Privacy Policy.",
                                 fontSize: mediumFontSize,
                                 color: AllColors.whiteColor,
                                 italic: false,
-                                bold: false),
+                                bold: FontWeight.w600),
                           ],
                         ),
                       ),

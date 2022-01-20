@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       fontSize: mediumFontSize,
                                       color: AllColors.whiteColor,
                                       italic: false,
-                                      bold: false)),
+                                      bold: FontWeight.normal)),
                               SizedBox(
                                 height: context.heightPct(.02),
                               ),
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       fontSize: mediumFontSize,
                                       color: AllColors.whiteColor,
                                       italic: false,
-                                      bold: false),
+                                      bold: FontWeight.normal),
                                   Expanded(
                                     child: GestureDetector(
                                         onTap: () {

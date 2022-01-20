@@ -36,7 +36,9 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
               const SizedBox(
                 height: 20,
               ),
-              addNewVehicle()
+              AppButton(onPressed: (){
+                Get.to(()=> const AddNewVehicleScreen());
+              }, text: "ADD NEW VEHICLE", color: AllColors.greenColor)
             ],
           ),
         ),
@@ -109,23 +111,4 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
         });
   }
 
-  Widget addNewVehicle() {
-    return Container(
-      padding: const EdgeInsets.only(left: 35, right: 35, bottom: 15),
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          Get.to(()=> const AddNewVehicleScreen());
-        },
-        style: buttonStyleGreen(),
-        child: const Text(
-          "ADD NEW VEHICLE",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
 }

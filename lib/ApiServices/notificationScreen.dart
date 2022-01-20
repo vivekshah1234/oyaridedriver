@@ -34,7 +34,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             txt: "You rider is waiting for you.",
                             fontSize: 13,
                             color: AllColors.whiteColor,
-                            bold: true,
+                            bold: FontWeight.w600,
                             italic: false),
                         const SizedBox(
                           height: 5,
@@ -45,7 +45,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 txt: "22/12/2021",
                                 fontSize: 11,
                                 color: AllColors.blackColor,
-                                bold: false,
+                                bold: FontWeight.normal,
                                 italic: false))
                       ],
                     ).putPadding(10, 10, 12, 12),

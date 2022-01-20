@@ -33,7 +33,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               txt: "Forget Password",
               fontSize: 25,
               color: AllColors.blackColor,
-              bold: true,
+              bold: FontWeight.w600,
               italic: false),
           SizedBox(
             height: 20,

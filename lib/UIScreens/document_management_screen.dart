@@ -39,7 +39,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
                   txt: "Documents",
                   fontSize: 26,
                   color: AllColors.blackColor,
-                  bold: true,
+                  bold: FontWeight.w600,
                   italic: false),
             ),
             const SizedBox(
@@ -70,8 +70,8 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-                textWidget(txt: "expires", fontSize: 13, color: AllColors.greyColor, bold: false, italic: true),
-                textWidget(txt: "Required*", fontSize: 12, color: AllColors.redColor, bold: false, italic: false),
+                textWidget(txt: "expires", fontSize: 13, color: AllColors.greyColor, bold: FontWeight.normal, italic: true),
+                textWidget(txt: "Required*", fontSize: 12, color: AllColors.redColor, bold: FontWeight.normal, italic: false),
 
               ],),
             textField(txtLine1),
@@ -91,7 +91,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
                         fontSize: 22,
                         color: AllColors.blackColor,
                         fontWeight: FontWeight.w500)),
-                textWidget(txt: "Required*", fontSize: 12, color: AllColors.redColor, bold: false, italic: false),
+                textWidget(txt: "Required*", fontSize: 12, color: AllColors.redColor, bold: FontWeight.normal, italic: false),
 
               ],
             ),
