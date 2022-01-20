@@ -6,6 +6,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/forgot_password_screen.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/sign_up_screen.dart';
 import 'package:oyaridedriver/controllers/login_controller.dart';
 import 'package:sized_context/src/extensions.dart';
@@ -106,7 +107,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 height: context.heightPct(.02),
                               ),
-                              loginButton(),
+                              AppButton(
+                                      onPressed: () {
+                                        // if (formKey.currentState!.validate()) {
+                                        //   Map<String, dynamic> map = {
+                                        //     "phoneNo": txtNum.text,
+                                        //     "password": txtPwd.text.toString()
+                                        //   };
+                                        //   loginController.login(map, context);
+                                        // }
+                                        Get.to(() => const MapHomeScreen());
+                                      },
+                                      text: "LOGIN",
+                                      color: AllColors.blueColor)
+                                  .paddingSymmetric(horizontal: 45),
                               SizedBox(
                                 height: context.heightPct(.02),
                               ),
@@ -124,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         onTap: () {
                                           Get.to(() => const SignUpScreen());
                                         },
-                                        child:  Text("Register Here",
+                                        child: Text("Register Here",
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
                                               fontSize: mediumFontSize,
@@ -152,39 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget loginButton() {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 45, right: 45),
-      child: ElevatedButton(
-        onPressed: () {
-          // if (formKey.currentState!.validate()) {
-          //   Map<String, dynamic> map = {
-          //     "phoneNo": txtNum.text,
-          //     "password": txtPwd.text.toString()
-          //   };
-          //   loginController.login(map, context);
-          // }
-          Get.to(() => const MapHomeScreen());
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
-            }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 10, bottom: 10))),
-        child: const Text(
-          "LOGIN",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
+
   bool showPassWord = true;
 
   Widget textField({controller, labelText, errorText, prefixIcon}) {
@@ -210,7 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     return errorText;
                   }
                   return null;
-                }, style: TextStyle(color: AllColors.whiteColor),
+                },
+                style: TextStyle(color: AllColors.whiteColor),
                 obscureText: showPassWord ? true : false,
                 decoration: InputDecoration(
                   labelText: labelText,
@@ -221,13 +204,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: !showPassWord
                           ? const Icon(
-                        Icons.visibility,
-                        color: AllColors.whiteColor,
-                      )
+                              Icons.visibility,
+                              color: AllColors.whiteColor,
+                            )
                           : const Icon(
-                        Icons.visibility_off,
-                        color: AllColors.whiteColor,
-                      )),
+                              Icons.visibility_off,
+                              color: AllColors.whiteColor,
+                            )),
                   labelStyle: TextStyle(
                       color: AllColors.whiteColor, fontSize: mediumFontSize),
                   border: const UnderlineInputBorder(
@@ -287,7 +270,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       return errorText;
                     }
                     return null;
-                  }, style: TextStyle(color: AllColors.whiteColor),
+                  },
+                  style: TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
                     labelStyle: TextStyle(

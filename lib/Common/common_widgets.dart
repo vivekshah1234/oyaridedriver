@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sized_context/src/extensions.dart';
 import 'all_colors.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -75,24 +76,24 @@ Widget greenLoadingWidget() {
     width: 70,
   );
 }
-
-Widget greenButton({required String txt, function}) {
-  return SizedBox(
-    width: double.infinity,
-  //  margin: const EdgeInsets.only(left: 45, right: 45),
-    child: ElevatedButton(
-      onPressed: function,
-      style: buttonStyleGreen(),
-      child: Text(
-        txt,
-        style: const TextStyle(
-            color: AllColors.whiteColor,
-            fontSize: 19,
-            fontWeight: FontWeight.w500),
-      ),
-    ),
-  );
-}
+//
+// Widget greenButton({required String txt, function}) {
+//   return SizedBox(
+//     width: double.infinity,
+//   //  margin: const EdgeInsets.only(left: 45, right: 45),
+//     child: ElevatedButton(
+//       onPressed: function,
+//       style: buttonStyleGreen(),
+//       child: Text(
+//         txt,
+//         style: const TextStyle(
+//             color: AllColors.whiteColor,
+//             fontSize: 19,
+//             fontWeight: FontWeight.w500),
+//       ),
+//     ),
+//   );
+// }
 
 AppBar appBarWidget(txt,GlobalKey<ScaffoldState> scaffoldKey) {
   return AppBar(
@@ -132,26 +133,26 @@ AppBar appBarWidget2(txt) {
     centerTitle: true,
   );
 }
-
-Widget blueButton({required String text, function}) {
-  return Container(
-    width: double.infinity,
-    margin: const EdgeInsets.only(left: 45, right: 45),
-    child: ElevatedButton(
-      onPressed: () {
-        function();
-      },
-      style: buttonStyleBLue(),
-      child: Text(
-        text,
-        style: const TextStyle(
-            color: AllColors.whiteColor,
-            fontSize: 17,
-            fontWeight: FontWeight.w500),
-      ),
-    ),
-  );
-}
+//
+// Widget blueButton({required String text, function}) {
+//   return Container(
+//     width: double.infinity,
+//     margin: const EdgeInsets.only(left: 45, right: 45),
+//     child: ElevatedButton(
+//       onPressed: () {
+//         function();
+//       },
+//       style: buttonStyleBLue(),
+//       child: Text(
+//         text,
+//         style: const TextStyle(
+//             color: AllColors.whiteColor,
+//             fontSize: 17,
+//             fontWeight: FontWeight.w500),
+//       ),
+//     ),
+//   );
+// }
 
 ButtonStyle buttonStyleBLue() => ButtonStyle(
       backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
@@ -208,3 +209,75 @@ SnackBar greenSnackBar(String txt,) => SnackBar(
   ),
   backgroundColor: AllColors.greenColor,
 );
+
+
+
+class AppButton extends StatelessWidget {
+  final GestureTapCallback onPressed;
+  final String text;
+  final Color color;
+  const AppButton({
+    required this.onPressed,
+    required this.text,
+    required this.color
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      //padding: const EdgeInsets.only(left: 15, right: 15,),
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+            return RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25));
+          }),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: AllColors.whiteColor,
+              fontSize: 17,
+              fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+}
+
+class SmallButton extends StatelessWidget {
+  final String text;
+  final GestureTapCallback onPressed;
+  final Color color;
+
+  const SmallButton(
+      {required this.text, required this.color, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      // padding: const EdgeInsets.only(left: 45, right: 45),
+      width: context.widthPct(0.40),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+            return RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25));
+          }),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: AllColors.whiteColor,
+              fontSize: 17,
+              fontWeight: FontWeight.w500),
+        ),
+      ),
+    );
+  }
+}

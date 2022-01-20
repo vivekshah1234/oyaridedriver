@@ -2,12 +2,14 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
+import 'package:oyaridedriver/UIScreens/rider_details_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_list_cart_screen.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
@@ -102,144 +104,149 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
             child: SwipeCards(
               matchEngine: _matchEngine,
               itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: AllColors.whiteColor,
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(30),
-                      topLeft: Radius.circular(30),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
+                return GestureDetector(
+                  onTap: (){
+                    Get.to(()=> const RiderDetailScreen());
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AllColors.whiteColor,
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(30),
+                        topLeft: Radius.circular(30),
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      userDetails(
-                          txt: dataList[index]["name"],
-                          imgUrl: dataList[index]["imgUrl"],
-                          kiloMeter: dataList[index]["kiloMeter"],
-                          charge: dataList[index]["charge"]),
-                      Column(
-                        children: [
-                          TimelineTile(
-                            nodeAlign: TimelineNodeAlign.start,
-                            contents: Container(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  textWidget(
-                                      txt: "Pick Up",
-                                      fontSize: 12,
-                                      color: AllColors.greyColor,
-                                      bold: FontWeight.normal,
-                                      italic: false),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  textWidget(
-                                      txt: dataList[index]["sourcePoint"],
-                                      fontSize: 12,
-                                      color: AllColors.greyColor,
-                                      bold: FontWeight.normal,
-                                      italic: false),
-                                ],
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset:
+                              const Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        userDetails(
+                            txt: dataList[index]["name"],
+                            imgUrl: dataList[index]["imgUrl"],
+                            kiloMeter: dataList[index]["kiloMeter"],
+                            charge: dataList[index]["charge"]),
+                        Column(
+                          children: [
+                            TimelineTile(
+                              nodeAlign: TimelineNodeAlign.start,
+                              contents: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    textWidget(
+                                        txt: "Pick Up",
+                                        fontSize: 12,
+                                        color: AllColors.greyColor,
+                                        bold: FontWeight.normal,
+                                        italic: false),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    textWidget(
+                                        txt: dataList[index]["sourcePoint"],
+                                        fontSize: 12,
+                                        color: AllColors.greyColor,
+                                        bold: FontWeight.normal,
+                                        italic: false),
+                                  ],
+                                ),
                               ),
+                              node: TimelineNode(
+                                  indicator: ContainerIndicator(
+                                      child: CircleAvatar(
+                                    backgroundColor: AllColors.greenColor,
+                                    radius: 4,
+                                  )),
+                                  endConnector: const DashedLineConnector(
+                                    color: AllColors.greyColor,
+                                  )),
                             ),
-                            node: TimelineNode(
+                            TimelineTile(
+                              nodeAlign: TimelineNodeAlign.start,
+                              contents: Container(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    textWidget(
+                                        txt: "Drop off",
+                                        fontSize: 12,
+                                        color: AllColors.greyColor,
+                                        bold: FontWeight.normal,
+                                        italic: false),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    textWidget(
+                                        txt: dataList[index]["destinationPoint"],
+                                        fontSize: 12,
+                                        color: AllColors.greyColor,
+                                        bold: FontWeight.normal,
+                                        italic: false),
+                                  ],
+                                ),
+                              ),
+                              node: TimelineNode(
+                                startConnector: const DashedLineConnector(
+                                  color: AllColors.greyColor,
+                                ),
                                 indicator: ContainerIndicator(
                                     child: CircleAvatar(
-                                  backgroundColor: AllColors.greenColor,
+                                  backgroundColor: AllColors.blueColor,
                                   radius: 4,
                                 )),
-                                endConnector: const DashedLineConnector(
-                                  color: AllColors.greyColor,
-                                )),
-                          ),
-                          TimelineTile(
-                            nodeAlign: TimelineNodeAlign.start,
-                            contents: Container(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  textWidget(
-                                      txt: "Drop off",
-                                      fontSize: 12,
-                                      color: AllColors.greyColor,
-                                      bold: FontWeight.normal,
-                                      italic: false),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  textWidget(
-                                      txt: dataList[index]["destinationPoint"],
-                                      fontSize: 12,
-                                      color: AllColors.greyColor,
-                                      bold: FontWeight.normal,
-                                      italic: false),
-                                ],
                               ),
                             ),
-                            node: TimelineNode(
-                              startConnector: const DashedLineConnector(
-                                color: AllColors.greyColor,
-                              ),
-                              indicator: ContainerIndicator(
-                                  child: CircleAvatar(
-                                backgroundColor: AllColors.blueColor,
-                                radius: 4,
-                              )),
-                            ),
-                          ),
-                          // const SizedBox(height: 20,),
-                        ],
-                      ).putPadding(0, 15, context.widthPct(0.15),
-                          context.widthPct(0.15)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SmallButton(
-                              text: "IGNORE",
-                              color: AllColors.blueColor,
-                              onPressed: () {
-                                _matchEngine.currentItem?.nope();
-                                setState(() {});
-                              },
-                            ),
-                            // blueButton(
-                            //     txt: "IGNORE",
-                            //     function: () {
-                            //
-                            //     }),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            SmallButton(
-                              text: "ACCEPT",
-                              color: AllColors.greenColor,
-                              onPressed: () {
-                                _matchEngine.currentItem?.like();
-                                status = 0;
-                                setState(() {});
-                              },
-                            ),
-
+                            // const SizedBox(height: 20,),
                           ],
-                        ),
-                      )
-                    ],
+                        ).putPadding(0, 15, context.widthPct(0.15),
+                            context.widthPct(0.15)),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SmallButton(
+                                text: "IGNORE",
+                                color: AllColors.blueColor,
+                                onPressed: () {
+                                  _matchEngine.currentItem?.nope();
+                                  setState(() {});
+                                },
+                              ),
+                              // blueButton(
+                              //     txt: "IGNORE",
+                              //     function: () {
+                              //
+                              //     }),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              SmallButton(
+                                text: "ACCEPT",
+                                color: AllColors.greenColor,
+                                onPressed: () {
+                                  _matchEngine.currentItem?.like();
+                                  status = 0;
+                                  setState(() {});
+                                },
+                              ),
+
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
@@ -321,22 +328,24 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
                         context.widthPct(0.08),
                       )
                     : status == 2
-                        ? ConfirmButton(
-                            txt: "TAP WHEN DROP",
+                        ? AppButton(
+                            text: "TAP WHEN DROP",
+
                             onPressed: () {
                               status = 3;
                               print("tap");
                               setState(() {});
-                            },
-                          )
-                        : ConfirmButton(
-                            txt: "CONFIRM PAYMENT",
+                            },color: AllColors.greenColor
+
+                          ).paddingSymmetric(horizontal: 15)
+                        : AppButton(
+                            text: "CONFIRM PAYMENT",
                             onPressed: () {
                               status = 4;
                               print("tap");
                               setState(() {});
-                            },
-                          ),
+                            },color: AllColors.greenColor
+                          ).paddingSymmetric(horizontal: 15),
               ],
             ),
           );
@@ -782,69 +791,6 @@ class _RiderCartScreenState extends State<RiderCartScreen> {
         fontSize: fontSize,
         fontWeight: bold,
         fontStyle: italic ? FontStyle.italic : FontStyle.normal,
-      ),
-    );
-  }
-}
-
-class ConfirmButton extends StatelessWidget {
-  final GestureTapCallback onPressed;
-  final String txt;
-
-  const ConfirmButton({
-    required this.onPressed,
-    required this.txt,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: buttonStyleGreen(),
-        child: Text(
-          txt,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
-}
-
-class SmallButton extends StatelessWidget {
-  final String text;
-  final GestureTapCallback onPressed;
-  final Color color;
-
-  const SmallButton(
-      {required this.text, required this.color, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      // padding: const EdgeInsets.only(left: 45, right: 45),
-      width: context.widthPct(0.40),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color),
-          shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-            return RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25));
-          }),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
       ),
     );
   }

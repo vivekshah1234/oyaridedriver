@@ -4,6 +4,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/sign_up_screen.dart';
 
 
@@ -55,11 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   bold: true,italic: false)
             ],),
           Expanded(flex: 4,child: Container(),),
-          greenButton(txt: "LOGIN",function: (){
+          AppButton(text: "LOGIN",onPressed:  (){
             Get.to(()=>  const LoginScreen());
 
 
-          }).paddingOnly(left:40,right: 40),
+          },color: AllColors.greenColor).paddingOnly(left:40,right: 40),
           Expanded(flex: 4,child: Container(),),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

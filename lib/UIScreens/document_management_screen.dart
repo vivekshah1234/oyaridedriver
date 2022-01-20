@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 
 import 'drawer_screen.dart';
 
@@ -109,7 +110,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
                 alignment: Alignment.centerRight,
                 child:file2!=null?fileWidget2() :uploadFile2()),
             const SizedBox(height: 15,),
-            nextButton()
+            AppButton(onPressed: (){}, text: "UPDATE", color: AllColors.blueColor).putPadding(0, 0, 45, 45)
           ],
         ).putPadding(0, 0, 25, 25),
       ),
@@ -191,31 +192,41 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
 
     );
   }
-  Widget nextButton(){
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 45, right: 45),
-      child: ElevatedButton(
-        onPressed: (){
-          //Get.to(()=> const MapHomeScreen());
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
-            }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 10, bottom: 10))),
-        child:const Text(
-          "UPDATE",
-          style:  TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
+
+
+  var file;
+  pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    try {
+      XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+      if (image != null) {
+        setState(() {
+          file = XFile(image.path);
+        });
+        // toast( image!.path.toString());
+      }
+
+    }catch(ex){
+      debugPrint(ex.toString());
+    }
+  }
+  var file2;
+  pickImage2() async {
+    final ImagePicker _picker2 = ImagePicker();
+    try {
+      XFile? image2 = await _picker2.pickImage(source: ImageSource.camera);
+
+      if (image2 != null) {
+        setState(() {
+          file2 = XFile(image2.path);
+        });
+        // toast( image!.path.toString());
+      }
+
+    }catch(ex){
+      debugPrint(ex.toString());
+    }
   }
 
   Widget uploadFile(){
@@ -249,43 +260,6 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
 
       ),
     );
-  }
-  var file;
-
-  pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    try {
-      XFile? image = await _picker.pickImage(source: ImageSource.camera);
-
-      if (image != null) {
-        setState(() {
-          file = XFile(image.path);
-        });
-        // toast( image!.path.toString());
-      }
-
-    }catch(ex){
-      debugPrint(ex.toString());
-    }
-  }
-
-  var file2;
-
-  pickImage2() async {
-    final ImagePicker _picker2 = ImagePicker();
-    try {
-      XFile? image2 = await _picker2.pickImage(source: ImageSource.camera);
-
-      if (image2 != null) {
-        setState(() {
-          file2 = XFile(image2.path);
-        });
-        // toast( image!.path.toString());
-      }
-
-    }catch(ex){
-      debugPrint(ex.toString());
-    }
   }
   Widget uploadFile2(){
     return  SizedBox(

@@ -70,7 +70,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
     setState(() {
       _polyLine.add(Polyline(
           polylineId: const PolylineId("poly"),
-          color: AllColors.greenColor,
+          color: AllColors.blueColor,
           width: 3,
           points: polylineCoordinates));
     });

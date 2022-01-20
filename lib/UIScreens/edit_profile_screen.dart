@@ -9,6 +9,7 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -88,7 +89,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             SizedBox(
               height: 25,
             ),
-            greenButton(txt: "REGISTER", function: () {})
+            AppButton(text: "REGISTER", onPressed:  () {},color: AllColors.greenColor)
                 .paddingSymmetric(horizontal: 30),
             // const Expanded(
             //     flex: 2,

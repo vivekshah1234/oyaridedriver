@@ -53,6 +53,9 @@ dependencies:
   jwt_decoder: ^2.0.1
   shared_preferences: ^2.0.12
   flutter_screenutil: ^5.0.3
+  swipe_cards: ^0.1.0
+  flutter_animated_dialog: ^2.0.1
+  permission_handler: ^8.3.0
   #map plugins
   google_maps_flutter: ^2.1.1
   flutter_polyline_points: 1.0.0
@@ -63,8 +66,7 @@ dependencies:
   cloud_firestore: ^3.1.4
   firebase_messaging: ^11.2.3
   firebase_analytics: ^9.0.3
-  swipe_cards: ^0.1.0
-  flutter_animated_dialog: ^2.0.1
+
 
 dev_dependencies:
   flutter_test:

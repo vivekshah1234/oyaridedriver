@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:sized_context/src/extensions.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -50,7 +51,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           SizedBox(
             height: context.heightPct(0.1),
           ),
-          greenButton(txt: "SEND MAIL", function: () {}),
+          AppButton(text: "SEND MAIL", onPressed:  () {},color: AllColors.greenColor),
           SizedBox(
             height: 40,
           ),

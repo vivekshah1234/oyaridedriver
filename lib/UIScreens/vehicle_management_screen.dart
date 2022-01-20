@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
-import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/add_new_vehicle_screen.dart';
 
 import 'drawer_screen.dart';
@@ -17,7 +16,7 @@ class VehicleManagementScreen extends StatefulWidget {
 
 class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
 
   @override
@@ -26,7 +25,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
       key:_scaffoldKey ,
       appBar: appBarWidget("Vehicle Management",_scaffoldKey),
 
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
       body: Container(
         color: Colors.grey.shade100,
         height: double.infinity,
@@ -34,7 +33,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
           child: Column(
             children: [
               vehicleListView(),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               addNewVehicle()
@@ -67,9 +66,9 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                       CircleAvatar(
                         backgroundColor: AllColors.greenColor,
                         radius: 23,
-                        child: Icon(Icons.car_rental,color: AllColors.whiteColor,),
+                        child: const Icon(Icons.car_rental,color: AllColors.whiteColor,),
                       ),
-                      SizedBox(width: 10,),
+                      const SizedBox(width: 10,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: const [

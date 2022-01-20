@@ -7,6 +7,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
@@ -96,7 +97,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             SizedBox(
                               height: context.heightPct(.07),
                             ),
-                            nextButton(),
+                            AppButton(
+                                onPressed: () {
+                                  if (txtNum.text.isNotEmpty) {
+                                    if (txtPwd.text.isNotEmpty) {
+                                      Map<String, dynamic> map = {};
+                                      map["phoneNo"] = txtNum.text.toString();
+                                      map["password"] = txtPwd.text.toString();
+                                      printInfo(info: map.toString());
+                                      signUpController.register1(map, context);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
+                                  }
+                                },
+                                text: "NEXT",
+                                color: AllColors.blueColor).paddingSymmetric(horizontal: 45),
                             SizedBox(
                               height: context.heightPct(.07),
                             ),
@@ -127,47 +147,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget nextButton() {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 45, right: 45),
-      child: ElevatedButton(
-        onPressed: () {
-          //Get.to(() => const PersonalInfoScreen());
-          if (txtNum.text.isNotEmpty) {
-            if (txtPwd.text.isNotEmpty) {
-              Map<String, dynamic> map = {};
-              map["phoneNo"] =  txtNum.text.toString();
-              map["password"] = txtPwd.text.toString();
-              printInfo(info: map.toString());
-              signUpController.register1(map, context);
-            } else {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
-            }
-          } else {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
-          }
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
-            }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 10, bottom: 10))),
-        child: const Text(
-          "NEXT",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
-      ),
-    );
-  }
+  // Widget nextButton() {
+  //   return Container(
+  //     width: double.infinity,
+  //     margin: const EdgeInsets.only(left: 45, right: 45),
+  //     child: ElevatedButton(
+  //       onPressed: () {
+  //         //Get.to(() => const PersonalInfoScreen());
+  //         if (txtNum.text.isNotEmpty) {
+  //           if (txtPwd.text.isNotEmpty) {
+  //             Map<String, dynamic> map = {};
+  //             map["phoneNo"] = txtNum.text.toString();
+  //             map["password"] = txtPwd.text.toString();
+  //             printInfo(info: map.toString());
+  //             signUpController.register1(map, context);
+  //           } else {
+  //             ScaffoldMessenger.of(context)
+  //                 .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
+  //           }
+  //         } else {
+  //           ScaffoldMessenger.of(context)
+  //               .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
+  //         }
+  //       },
+  //       style: ButtonStyle(
+  //           backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
+  //           shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
+  //             return RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(25));
+  //           }),
+  //           padding: MaterialStateProperty.all<EdgeInsets>(
+  //               const EdgeInsets.only(top: 10, bottom: 10))),
+  //       child: const Text(
+  //         "NEXT",
+  //         style: TextStyle(
+  //             color: AllColors.whiteColor,
+  //             fontSize: 17,
+  //             fontWeight: FontWeight.w500),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   bool showPassWord = true;
 
@@ -193,7 +213,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: AllColors.whiteColor),
                 decoration: InputDecoration(
                   labelText: labelText,
-                 //123456 filled: true,
+                  //123456 filled: true,
                   suffixIcon: GestureDetector(
                       onTap: () {
                         showPassWord = !showPassWord;

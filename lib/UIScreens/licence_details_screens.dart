@@ -9,6 +9,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 
@@ -84,9 +85,9 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      greenButton(
-                              txt: "NEXT",
-                              function: registerLicensePlate)
+                      AppButton(
+                              text: "NEXT",
+                              onPressed:  registerLicensePlate,color: AllColors.greenColor)
                           .paddingOnly(
                               left: context.widthPct(.15),
                               right: context.widthPct(.15))
@@ -104,6 +105,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
 
 
   registerLicensePlate(){
+
     if(txtLicenceNumber.text.isNotEmpty){
     Map<String , dynamic> _map={
       "driverId": AppConstants.userID,
@@ -272,7 +274,9 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
             const SizedBox(
               height: 15,
             ),
-            nextButton()
+            AppButton(onPressed: (){
+              Get.to(() => const MapHomeScreen());
+            }, text: "NEXT", color: AllColors.blueColor).paddingSymmetric(horizontal: 45)
           ],
         ).putPadding(0, 0, 25, 25),
       ),

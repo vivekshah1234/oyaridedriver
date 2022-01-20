@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
+import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/payment_history_screen.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_tripe_screen.dart';
@@ -16,6 +19,7 @@ import 'package:sized_context/src/extensions.dart';
 import 'document_management_screen.dart';
 import 'edit_profile_screen.dart';
 import 'help_screen.dart';
+import 'login_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
 class DrawerScreen extends StatefulWidget {
@@ -30,14 +34,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
     DrawerItems(
         0, ImageAssets.paymentIcon, "Home", MapHomeScreen()),
 
-    DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", YourTripScreen()),
-    DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management",
+    DrawerItems(1, ImageAssets.yourTripeIcon, "Your Trip", YourTripScreen()),
+    DrawerItems(2, ImageAssets.yourTripeIcon, "Vehicle Management",
         VehicleManagementScreen()),
-    DrawerItems(4, ImageAssets.yourTripeIcon, "Document Management",
+    DrawerItems(3, ImageAssets.yourTripeIcon, "Document Management",
         DocumentManagementScreen(true)),
-    DrawerItems(5, ImageAssets.chatIcon, "Message", ChatScreen()),
-    DrawerItems(6, ImageAssets.settingIcon, "Settings", SettingScreen()),
-    DrawerItems(8, ImageAssets.logoutIcon, "Logout",  Container()),
+    DrawerItems(4, ImageAssets.chatIcon, "Message", ChatScreen()),
+    DrawerItems(5, ImageAssets.settingIcon, "Settings", SettingScreen()),
+    DrawerItems(6, ImageAssets.logoutIcon, "Logout",  Container()),
   ];
 
   @override
@@ -115,13 +119,46 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
               onTap: () {
-                Get.offAll(() => drawerList[index].screen);
+                if (drawerList[index].id < 6) {
+                  Get.offAll(() => drawerList[index].screen);
+                } else {
+                  logoutDialog();
+                }
               },
             );
           }),
     );
   }
-
+   logoutDialog() {
+     showAnimatedDialog(
+       context: context,
+       barrierColor: Colors.transparent,
+       builder: (BuildContext context) {
+         return Column(
+           children: [
+             textWidget(
+                 txt: "Are you sure you want to logout?",
+                 fontSize: 14,
+                 color: AllColors.blueColor,
+                 bold: FontWeight.bold,
+                  italic: false
+             ),
+             SizedBox(
+               height: 15,
+             ),
+             AppButton(
+                 text: "Logout".toUpperCase(),color: AllColors.greenColor,
+                 onPressed: () {
+                   Get.offAll(() => LoginScreen());
+                 })
+           ],
+         ).alertCard(context);
+       },
+       animationType: DialogTransitionType.slideFromBottomFade,
+       curve: Curves.fastOutSlowIn,
+       duration: const Duration(milliseconds: 500),
+     );
+   }
   Widget textWidget(
       {required String txt,
       required double fontSize,
@@ -130,6 +167,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       required bool italic}) {
     return Text(
       txt,
+      textAlign: TextAlign.center,
       style: TextStyle(
         color: color,
         fontSize: fontSize,

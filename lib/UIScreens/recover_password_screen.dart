@@ -3,6 +3,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:sized_context/src/extensions.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
@@ -53,7 +54,7 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
           SizedBox(
             height: 40,
           ),
-          greenButton(txt: "CHANGE PASSWORD", function: () {}),
+          AppButton(text: "CHANGE PASSWORD", onPressed: () {},color: AllColors.greenColor),
           SizedBox(
             height: 40,
           ),

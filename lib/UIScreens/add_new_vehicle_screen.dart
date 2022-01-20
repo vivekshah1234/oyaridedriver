@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
 
@@ -45,9 +46,9 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
             textFieldWithoutIcon(controller: txtColor,labelText: "Colour",errorText: "Please Enter Car Colour."),
             textFieldWithoutIcon(controller: txtTaxiType,labelText: "Taxi Type",errorText: "Please Enter Taxi Type."),
             SizedBox(height: 20,),
-            greenButton(txt: "ADD",function: (){
+            AppButton(text: "ADD",onPressed: (){
               //Get.to(()=> const LicenceDetailScreen());
-            }),
+            },color: AllColors.greenColor),
           ],).putPadding(20, 20, 30, 30),
       ),
     );

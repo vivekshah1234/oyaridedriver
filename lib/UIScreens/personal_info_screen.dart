@@ -8,6 +8,7 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
+import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/search_city_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
@@ -150,9 +151,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                       labelText: "Vehicle color"),
                                 ],
                               ).putPadding(0, 20, 5, 25),
-                              greenButton(
-                                      txt: "NEXT",
-                                      function: registerPersonalInfo)
+                              AppButton(
+                                      text: "NEXT",color: AllColors.greenColor,
+                                      onPressed:  registerPersonalInfo)
                                   .paddingOnly(
                                       left: context.widthPct(.15),
                                       right: context.widthPct(.15)),
