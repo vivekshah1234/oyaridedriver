@@ -490,7 +490,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
         anchor: Offset(0.5, 0.5),
         icon: BitmapDescriptor.defaultMarker));
 
-    getBounds(_markers);
+
     setState(() {});
   }
 
