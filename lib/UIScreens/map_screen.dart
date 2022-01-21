@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'package:badges/badges.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +16,6 @@ import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
@@ -22,10 +23,13 @@ import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:oyaridedriver/UIScreens/rider_details_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_list_cart_screen.dart';
+import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
-import 'package:timelines/timelines.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
+
+import '../main.dart';
+import 'map_screen2.dart';
 // ignore_for_file: prefer_const_constructors
 
 class MapHomeScreen extends StatefulWidget {
@@ -35,9 +39,8 @@ class MapHomeScreen extends StatefulWidget {
   _MapHomeScreenState createState() => _MapHomeScreenState();
 }
 
-bool isAccepted = false;
 
-class _MapHomeScreenState extends State<MapHomeScreen> {
+class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
   final Completer<GoogleMapController> _controller = Completer();
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
@@ -51,7 +54,8 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
   int status = -1;
   final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
-  List<Map<String, dynamic>> dataList = [
+  List<Map<String, dynamic>> dataList =
+  [
     {
       "name": "Ian Somerholder",
       "imgUrl": imgUrl,
@@ -97,6 +101,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
       "destinationLatLong": LatLng(23.0145, 72.5929),
     }
   ];
+  HomeController homeController = Get.put(HomeController());
 
   @override
   void initState() {
@@ -104,40 +109,6 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
     getCurrentPosition();
     init();
     //   setPolyline();
-  }
-
-  init() {
-    for (int i = 0; i < dataList.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: Content(
-              name: dataList[i]["name"],
-              imgurl: dataList[i]["imgUrl"],
-              charge: dataList[i]["charge"],
-              kiloMeter: dataList[i]["kiloMeter"],
-              pickUpPoint: dataList[i]["sourcePoint"],
-              destinationPoint: dataList[i]["destinationPoint"]),
-          likeAction: () {
-            printInfo(info: "like");
-            acceptRequest(i);
-          },
-          nopeAction: () {
-            setMarker(
-                source: dataList[i + 1]["sourceLatLong"],
-                destination: dataList[i + 1]["destinationLatLong"]);
-            setPolyline(dataList[i + 1]["route"]);
-            printInfo(info: "nope");
-          },
-          superlikeAction: () {
-            printInfo(info: "super Like");
-          }));
-    }
-    polylinePoints = PolylinePoints();
-    setMarker(
-        source: dataList[0]["sourceLatLong"],
-        destination: dataList[0]["destinationLatLong"]);
-    setPolyline(dataList[0]["route"]);
-
-    _matchEngine = MatchEngine(swipeItems: _swipeItems);
   }
 
   getCurrentPosition() async {
@@ -180,21 +151,39 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: GestureDetector(
-              onTap: () {
-                Get.to(() => NotificationScreen());
+          GestureDetector(
+            onTap: () {
+              notificationCounterValueNotifier.value = 0;
+              setState(() {});
+            },
+            child: ValueListenableBuilder(
+              builder: (BuildContext context, int newNotificationCounterValue,
+                  Widget? child) {
+                printInfo(info: "data===========");
+
+                return Badge(
+                  badgeColor: AllColors.redColor,
+                  toAnimate: true,
+                  badgeContent: Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Container()),
+                  showBadge: newNotificationCounterValue == 0 ? false : true,
+                  //  showBadge: true,
+                  child: CircleAvatar(
+                    backgroundColor: AllColors.whiteColor,
+                    child: const Icon(
+                      Icons.notifications_none_sharp,
+                      size: 30,
+                      color: AllColors.blackColor,
+                    ),
+                  ),
+                );
               },
-              child: CircleAvatar(
-                backgroundColor: AllColors.whiteColor,
-                child: const Icon(
-                  Icons.notifications_none_sharp,
-                  size: 30,
-                  color: AllColors.blackColor,
-                ),
-              ),
+              valueListenable: notificationCounterValueNotifier,
             ),
+          ),
+          const SizedBox(
+            width: 10,
           ),
           !isOnline
               ? GestureDetector(
@@ -265,185 +254,267 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
           )
         ],
       ),
-      body: Stack(
-        children: [
-          isLoading
-              ? SizedBox(
-                  height: double.infinity,
-                  width: double.infinity,
-                  child: greenLoadingWidget(),
-                )
-              : GoogleMap(
-                  mapType: MapType.terrain,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                  markers: _markers,
-                  polylines: _polyLine,
-                ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: status == -1
-                ? SizedBox(
-                    height: calculateHeight(
-                        MediaQuery.of(context).size.height, context),
-                    child: SwipeCards(
-                      matchEngine: _matchEngine,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                            onTap: () {
-                              Get.to(() => const RiderDetailScreen());
-                            },
-                            child: SwipeItem2(
-                              name: dataList[index]["name"],
-                              imgUrl: dataList[index]["imgUrl"],
-                              km: dataList[index]["kiloMeter"],
-                              price: dataList[index]["charge"],
-                              pickUpPoint: dataList[index]["sourcePoint"],
-                              dropOffPoint: dataList[index]["destinationPoint"],
-                              acceptOnTap: () {
-                                _matchEngine.currentItem?.like();
-                                acceptRequest(index);
-                                setState(() {});
-                              },
-                              ignoreOnTap: () {
-                                printInfo(info: "aaaaa");
-                                _matchEngine.currentItem?.nope();
-                                if (index != dataList.length - 1) {
-                                  setMarker(
-                                      source: dataList[index + 1]
-                                          ["sourceLatLong"],
-                                      destination: dataList[index + 1]
-                                          ["destinationLatLong"]);
-                                  setPolyline(dataList[index + 1]["route"]);
-                                }
-                                setState(() {});
-                              },
-                            ));
-                      },
-                      onStackFinished: () {
-                        _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-                          content: Text("Stack Finished"),
-                          duration: Duration(milliseconds: 500),
-                        ));
-
-                        polyLineCoordinates.clear();
-                        _polyLine.clear();
-                        _markers.clear();
-                        setState(() {});
-                      },
-                    ),
-                  )
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: AllColors.whiteColor,
-                      borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(40),
-                        topLeft: Radius.circular(40),
+      body: GetX<HomeController>(
+          init: HomeController(),
+          builder: (controller) {
+            if(controller.isLoading.value){
+              return Center(child: greenLoadingWidget());
+            }
+            return Stack(
+              children: [
+                isLoading
+                    ? SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+                        child: greenLoadingWidget(),
+                      )
+                    : GoogleMap(
+                        mapType: MapType.terrain,
+                        initialCameraPosition: _kGooglePlex,
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                        markers: _markers,
+                        polylines: _polyLine,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
+                Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: NotificationListener(
+                      onNotification: (notification) {
+                        printInfo(info: "Bubble");
+                        init();
 
-                    //  padding: EdgeInsets.only(top: 10),
-                    child: Column(
-                      children: [
-                        locationDetails(),
-                        status < 2
-                            ? RiderDetails(
-                                name: "Stella Josh",
-                                callButton: () {
-                                  url_launcher.launch("tel://21213123123");
-                                },
-                              )
-                            : status == 2
-                                ? whileTravelingCart()
-                                : userCart3(),
-                        status < 2
-                            ? Row(
-                                children: [
-                                  SmallButton(
-                                    text: "CANCEL",
-                                    color: AllColors.blueColor,
-                                    onPressed: () {
-                                      printInfo(info: "************stop***********");
-                                      _locationSubscription?.cancel();
-                                     // _locationTracker.
-                                      setState(() {
-                                        _locationSubscription = null;
-                                      });
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  if (status < 1)
-                                    SmallButton(
-                                      text: "ARRIVED",
-                                      color: AllColors.greenColor,
-                                      onPressed: () {
-                                        status = 1;
-                                        print("tap");
-                                        setState(() {});
-                                      },
-                                    )
-                                  else if (status == 1)
-                                    SmallButton(
-                                      text: "PICKED UP",
-                                      color: AllColors.greenColor,
-                                      onPressed: () {
-                                        status = 2;
-                                        print("tap");
-                                        setState(() {});
-                                      },
-                                    )
-                                  else if (status == 2)
-                                    Container()
-                                  // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
-                                ],
-                              ).putPadding(
-                                0,
-                                20,
-                                context.widthPct(0.08),
-                                context.widthPct(0.08),
-                              )
-                            : status == 2
-                                ? AppButton(
-                                        text: "TAP WHEN DROP",
-                                        onPressed: () {
-                                          status = 3;
-                                          print("tap");
+                        return true;
+                      },
+                      child: _swipeItems.isEmpty
+                          ? Container()
+                          : Container(
+                              child: status == -1
+                                  ? SizedBox(
+                                      height: calculateHeight(
+                                          MediaQuery.of(context).size.height,
+                                          context),
+                                      child: SwipeCards(
+                                        matchEngine: _matchEngine,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return GestureDetector(
+                                              onTap: () {
+                                                Get.to(() =>
+                                                    const RiderDetailScreen());
+                                              },
+                                              child: SwipeItem2(
+                                                name: dataList[index]["name"],
+                                                imgUrl: dataList[index]
+                                                    ["imgUrl"],
+                                                km: dataList[index]
+                                                    ["kiloMeter"],
+                                                price: dataList[index]
+                                                    ["charge"],
+                                                pickUpPoint: dataList[index]
+                                                    ["sourcePoint"],
+                                                dropOffPoint: dataList[index]
+                                                    ["destinationPoint"],
+                                                acceptOnTap: () {
+                                                  _matchEngine.currentItem
+                                                      ?.like();
+                                                  acceptRequest(index);
+                                                  setState(() {});
+                                                },
+                                                ignoreOnTap: () {
+                                                  printInfo(info: "aaaaa");
+                                                  _matchEngine.currentItem
+                                                      ?.nope();
+                                                  if (index !=
+                                                      dataList.length - 1) {
+                                                    setMarker(
+                                                        source: dataList[index +
+                                                            1]["sourceLatLong"],
+                                                        destination: dataList[
+                                                                index + 1][
+                                                            "destinationLatLong"]);
+                                                    setPolyline(
+                                                        dataList[index + 1]
+                                                            ["route"]);
+                                                  }
+                                                  setState(() {});
+                                                },
+                                              ));
+                                        },
+                                        onStackFinished: () {
+                                          // _scaffoldKey.currentState
+                                          //     ?.showSnackBar(const SnackBar(
+                                          //   content: Text("Stack Finished"),
+                                          //   duration: Duration(milliseconds: 500),
+                                          // ));
+
+                                          polyLineCoordinates.clear();
+                                          _polyLine.clear();
+                                          _markers.clear();
                                           setState(() {});
                                         },
-                                        color: AllColors.greenColor)
-                                    .paddingSymmetric(horizontal: 15)
-                                : AppButton(
-                                        text: "CONFIRM PAYMENT",
-                                        onPressed: () {
-                                          status = 4;
-                                          print("tap");
-                                          setState(() {});
-                                        },
-                                        color: AllColors.greenColor)
-                                    .paddingSymmetric(horizontal: 15),
-                      ],
-                    ),
-                  ),
-          )
-        ],
-      ),
+                                      ),
+                                    )
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        color: AllColors.whiteColor,
+                                        borderRadius: const BorderRadius.only(
+                                          topRight: Radius.circular(40),
+                                          topLeft: Radius.circular(40),
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.5),
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: const Offset(0,
+                                                3), // changes position of shadow
+                                          ),
+                                        ],
+                                      ),
+
+                                      //  padding: EdgeInsets.only(top: 10),
+                                      child: Column(
+                                        children: [
+                                          locationDetails(),
+                                          status < 2
+                                              ? RiderDetails(
+                                                  name: "Stella Josh",
+                                                  callButton: () {
+                                                    url_launcher.launch(
+                                                        "tel://21213123123");
+                                                  },
+                                                )
+                                              : status == 2
+                                                  ? whileTravelingCart()
+                                                  : userCart3(),
+                                          status < 2
+                                              ? Row(
+                                                  children: [
+                                                    SmallButton(
+                                                      text: "CANCEL",
+                                                      color:
+                                                          AllColors.blueColor,
+                                                      onPressed: () {
+                                                        printInfo(
+                                                            info:
+                                                                "************stop***********");
+                                                        _locationSubscription
+                                                            ?.cancel();
+                                                        // _locationTracker.
+                                                        setState(() {
+                                                          _locationSubscription =
+                                                              null;
+                                                        });
+                                                      },
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    if (status < 1)
+                                                      SmallButton(
+                                                        text: "ARRIVED",
+                                                        color: AllColors
+                                                            .greenColor,
+                                                        onPressed: () {
+                                                          status = 1;
+                                                          print("tap");
+                                                          setState(() {});
+                                                        },
+                                                      )
+                                                    else if (status == 1)
+                                                      SmallButton(
+                                                        text: "PICKED UP",
+                                                        color: AllColors
+                                                            .greenColor,
+                                                        onPressed: () {
+                                                          status = 2;
+                                                          print("tap");
+                                                          setState(() {});
+                                                        },
+                                                      )
+                                                    else if (status == 2)
+                                                      Container()
+                                                    // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
+                                                  ],
+                                                ).putPadding(
+                                                  0,
+                                                  20,
+                                                  context.widthPct(0.08),
+                                                  context.widthPct(0.08),
+                                                )
+                                              : status == 2
+                                                  ? AppButton(
+                                                          text: "TAP WHEN DROP",
+                                                          onPressed: () {
+                                                            status = 3;
+                                                            print("tap");
+                                                            setState(() {});
+                                                          },
+                                                          color: AllColors
+                                                              .greenColor)
+                                                      .paddingSymmetric(
+                                                          horizontal: 15)
+                                                  : AppButton(
+                                                          text:
+                                                              "CONFIRM PAYMENT",
+                                                          onPressed: () {
+                                                            status = 4;
+                                                            print("tap");
+                                                            setState(() {});
+                                                          },
+                                                          color: AllColors
+                                                              .greenColor)
+                                                      .paddingSymmetric(
+                                                          horizontal: 15),
+                                        ],
+                                      ),
+                                    ),
+                            ),
+                    ))
+              ],
+            );
+          }),
     );
+  }
+
+  init() {
+    for (int i = 0; i < dataList.length; i++) {
+      _swipeItems.add(SwipeItem(
+          content: Content(
+              name: dataList[i]["name"],
+              imgurl: dataList[i]["imgUrl"],
+              charge: dataList[i]["charge"],
+              kiloMeter: dataList[i]["kiloMeter"],
+              pickUpPoint: dataList[i]["sourcePoint"],
+              destinationPoint: dataList[i]["destinationPoint"]),
+          likeAction: () {
+            printInfo(info: "like");
+            acceptRequest(i);
+          },
+          nopeAction: () {
+            setMarker(
+                source: dataList[i + 1]["sourceLatLong"],
+                destination: dataList[i + 1]["destinationLatLong"]);
+            setPolyline(dataList[i + 1]["route"]);
+            printInfo(info: "nope");
+          },
+          superlikeAction: () {
+            printInfo(info: "super Like");
+          }));
+    }
+    polylinePoints = PolylinePoints();
+    if(dataList.isNotEmpty) {
+      setMarker(
+          source: dataList[0]["sourceLatLong"],
+          destination: dataList[0]["destinationLatLong"]);
+      setPolyline(dataList[0]["route"]);
+    }
+    _matchEngine = MatchEngine(swipeItems: _swipeItems);
+    setState(() {});
   }
 
   acceptRequest(i) {
@@ -490,11 +561,8 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
         anchor: Offset(0.5, 0.5),
         icon: BitmapDescriptor.defaultMarker));
 
-
     setState(() {});
   }
-
-
 
   void updateMarkerAndCircle(var newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
@@ -514,34 +582,36 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
   StreamSubscription<LocationData>? _locationSubscription;
 
   final Location _locationTracker = Location();
+
   startLiveTracking() async {
     try {
       var location = await determinePosition();
       _lastMapPosition = LatLng(location.latitude, location.longitude);
-      Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon,100);
+      Uint8List? imageData =
+          await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
 
       _locationSubscription =
           _locationTracker.onLocationChanged.handleError((onError) {
-            print(onError);
-            _locationSubscription?.cancel();
-            setState(() {
-              _locationSubscription = null;
-            });
-          }).listen((newLocalData) async {
-            if (_controller != null) {
-              final GoogleMapController controller = await _controller.future;
-              _lastMapPosition =
-                  LatLng(newLocalData.latitude!, newLocalData.longitude!);
-              controller.animateCamera(CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                      bearing: 192.833,
-                      target: _lastMapPosition,
-                      tilt: 0,
-                      zoom: 12)));
+        print(onError);
+        _locationSubscription?.cancel();
+        setState(() {
+          _locationSubscription = null;
+        });
+      }).listen((newLocalData) async {
+        if (_controller != null) {
+          final GoogleMapController controller = await _controller.future;
+          _lastMapPosition =
+              LatLng(newLocalData.latitude!, newLocalData.longitude!);
+          controller.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  bearing: 192.833,
+                  target: _lastMapPosition,
+                  tilt: 0,
+                  zoom: 12)));
 
-              updateMarkerAndCircle(newLocalData, imageData!);
-            }
-          });
+          updateMarkerAndCircle(newLocalData, imageData!);
+        }
+      });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         debugPrint("Permission Denied");
@@ -834,12 +904,5 @@ class _MapHomeScreenState extends State<MapHomeScreen> {
     super.dispose();
   }
 
-  @override
-  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    if (state == AppLifecycleState.resumed) {
-      final GoogleMapController controller = await _controller.future;
 
-      controller.setMapStyle("[]");
-    }
-  }
 }

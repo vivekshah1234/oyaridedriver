@@ -346,7 +346,7 @@ class SwipeItem2 extends StatelessWidget {
             flex: 6,
             child: Row(
               children: [
-                const CircleAvatar(
+                 CircleAvatar(
                   backgroundColor: AllColors.greyColor,
                   backgroundImage: NetworkImage(
                       "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),

@@ -107,7 +107,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget2("Trip Details"),
+      appBar: appBarWidget2("Rider Details"),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
