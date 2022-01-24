@@ -1,9 +1,13 @@
 class ApiConstant {
-  static String baseUrl = "http://18.223.142.216:3000";
-  static String signUp = "/or/d1/driver-signup";
+  static String baseUrl = "http://3.13.6.132:3900/api";
+  static String signUp = "/auth/register";
   static String registerPersonalInfo = "/or/d1/driver-info-and-vehical-info";
   static String driverLicenseNumber = "/or/d1/driver-licenes-number";
-  static String login = "/or/d1/login";
+  static String login = "/auth/login";
+  static String forgotPassword = "auth/forgot-password";
+  static String resetPassword = "auth/reset-password";
+  static String refreshToken = "auth/refresh-token";
+
 }
 
 abstract class AppConstants {

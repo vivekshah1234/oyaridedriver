@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:badges/badges.dart';
+import 'package:fcm_config/fcm_config.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as poly_util;
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
-import 'package:oyaridedriver/ApiServices/notificationScreen.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
@@ -27,9 +24,7 @@ import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-
 import '../main.dart';
-import 'map_screen2.dart';
 // ignore_for_file: prefer_const_constructors
 
 class MapHomeScreen extends StatefulWidget {
@@ -40,7 +35,7 @@ class MapHomeScreen extends StatefulWidget {
 }
 
 
-class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
+class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin, FCMNotificationClickMixin {
   final Completer<GoogleMapController> _controller = Completer();
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
@@ -54,53 +49,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
   int status = -1;
   final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
-  List<Map<String, dynamic>> dataList =
-  [
-    {
-      "name": "Ian Somerholder",
-      "imgUrl": imgUrl,
-      "charge": 50.0,
-      "kiloMeter": 15.0,
-      "sourcePoint": "Medical Education Center",
-      "destinationPoint": "Barthimam College",
-      "route": DummyData.route1,
-      "sourceLatLong": LatLng(22.9960, 72.4997),
-      "destinationLatLong": LatLng(23.0585, 72.5175),
-    },
-    {
-      "name": "Paul Welsey",
-      "imgUrl": imgUrl,
-      "charge": 50.0,
-      "kiloMeter": 15.0,
-      "sourcePoint": "Medical Education Center",
-      "destinationPoint": "Barthimam College",
-      "route": DummyData.route2,
-      "sourceLatLong": LatLng(22.9960, 72.4997),
-      "destinationLatLong": LatLng(23.0145, 72.5929),
-    },
-    {
-      "name": "Nina Doberev",
-      "imgUrl": imgUrl,
-      "charge": 50.0,
-      "kiloMeter": 15.0,
-      "sourcePoint": "Medical Education Center",
-      "destinationPoint": "Barthimam College",
-      "route": DummyData.route1,
-      "sourceLatLong": LatLng(22.9960, 72.4997),
-      "destinationLatLong": LatLng(23.0585, 72.5175),
-    },
-    {
-      "name": "Tony Somerholder",
-      "imgUrl": imgUrl,
-      "charge": 50.0,
-      "kiloMeter": 15.0,
-      "sourcePoint": "Medical Education Center",
-      "destinationPoint": "Barthimam College",
-      "route": DummyData.route2,
-      "sourceLatLong": LatLng(22.9960, 72.4997),
-      "destinationLatLong": LatLng(23.0145, 72.5929),
-    }
-  ];
+  List<Map<String, dynamic>> dataList =[];
   HomeController homeController = Get.put(HomeController());
 
   @override
@@ -123,6 +72,60 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
 
     isLoading = false;
     setState(() {});
+  }
+  @override
+  void onNotify(RemoteMessage notification) {
+    printInfo(info: "notifying========="+notification.notification!.body.toString());
+    dataList.addAll( [
+      {
+        "name": "Ian Somerholder",
+        "imgUrl": imgUrl,
+        "charge": 50.0,
+        "kiloMeter": 15.0,
+        "sourcePoint": "Medical Education Center",
+        "destinationPoint": "Barthimam College",
+        "route": DummyData.route1,
+        "sourceLatLong": LatLng(22.9960, 72.4997),
+        "destinationLatLong": LatLng(23.0585, 72.5175),
+      },
+      {
+        "name": "Paul Welsey",
+        "imgUrl": imgUrl,
+        "charge": 50.0,
+        "kiloMeter": 15.0,
+        "sourcePoint": "Medical Education Center",
+        "destinationPoint": "Barthimam College",
+        "route": DummyData.route2,
+        "sourceLatLong": LatLng(22.9960, 72.4997),
+        "destinationLatLong": LatLng(23.0145, 72.5929),
+      },
+      {
+        "name": "Nina Doberev",
+        "imgUrl": imgUrl,
+        "charge": 50.0,
+        "kiloMeter": 15.0,
+        "sourcePoint": "Medical Education Center",
+        "destinationPoint": "Barthimam College",
+        "route": DummyData.route1,
+        "sourceLatLong": LatLng(22.9960, 72.4997),
+        "destinationLatLong": LatLng(23.0585, 72.5175),
+      },
+      {
+        "name": "Tony Somerholder",
+        "imgUrl": imgUrl,
+        "charge": 50.0,
+        "kiloMeter": 15.0,
+        "sourcePoint": "Medical Education Center",
+        "destinationPoint": "Barthimam College",
+        "route": DummyData.route2,
+        "sourceLatLong": LatLng(22.9960, 72.4997),
+        "destinationLatLong": LatLng(23.0145, 72.5929),
+      }
+    ]);
+    init();
+    setState(() {
+
+    });
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -305,7 +308,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
                                                 Get.to(() =>
                                                     const RiderDetailScreen());
                                               },
-                                              child: SwipeItem2(
+                                              child: RiderRequest(
                                                 name: dataList[index]["name"],
                                                 imgUrl: dataList[index]
                                                     ["imgUrl"],
@@ -324,7 +327,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
                                                   setState(() {});
                                                 },
                                                 ignoreOnTap: () {
-                                                  printInfo(info: "aaaaa");
+
                                                   _matchEngine.currentItem
                                                       ?.nope();
                                                   if (index !=
@@ -592,7 +595,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
 
       _locationSubscription =
           _locationTracker.onLocationChanged.handleError((onError) {
-        print(onError);
+        printInfo(info: "Error====="+onError);
         _locationSubscription?.cancel();
         setState(() {
           _locationSubscription = null;
@@ -902,6 +905,11 @@ class _MapHomeScreenState extends State<MapHomeScreen> with ChangeNotifier {
     printInfo(info: "dispose============");
 
     super.dispose();
+  }
+
+  @override
+  void onClick(RemoteMessage notification) {
+    // TODO: implement onClick
   }
 
 

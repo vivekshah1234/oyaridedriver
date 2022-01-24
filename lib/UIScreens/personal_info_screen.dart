@@ -6,9 +6,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/search_city_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
@@ -36,6 +34,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   SignUpController signUpController = Get.put(SignUpController());
   final formKey = GlobalKey<FormState>();
   double cityLatitude = 0.0, cityLongitude = 0.0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -90,79 +89,78 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               bold: FontWeight.normal,
                               italic: false),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                      child: textField(
-                                          controller: txtFName,
-                                          prefixIcon: ImageAssets.personIcon,
-                                          errorText: ErrorMessage.fNameError,
-                                          labelText: "First Name")),
-                                  const SizedBox(
-                                    width: 7,
-                                  ),
-                                  Expanded(
-                                      child: textFieldWithoutIcon(
-                                          controller: txtLName,
-                                          errorText: ErrorMessage.lNameError,
-                                          labelText: "Last Name")),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: textField(
+                                        controller: txtFName,
+                                        prefixIcon: ImageAssets.personIcon,
+                                        errorText: ErrorMessage.fNameError,
+                                        labelText: "First Name")),
+                                const SizedBox(
+                                  width: 7,
+                                ),
+                                Expanded(
+                                    child: textFieldWithoutIcon(
+                                        controller: txtLName,
+                                        errorText: ErrorMessage.lNameError,
+                                        labelText: "Last Name")),
 
-                                  // textField(controller: txtLName,prefixIcon: ""),
-                                ],
-                              ),
-                              textField(
-                                  controller: txtEmail,
-                                  prefixIcon: ImageAssets.emailIcon,
-                                  errorText: ErrorMessage.emailError,
-                                  labelText: "Email"),
-                              textFieldForCity(
-                                  controller: txtCity,
-                                  prefixIcon: ImageAssets.cityIcon,
-                                  errorText: ErrorMessage.cityError,
-                                  labelText: "City"),
-                              Column(
-                                children: [
-                                  referralCode(
-                                      controller: txtReferralCode,
-                                      labelText: "Referral code"),
-                                  textFieldWithoutIcon(
-                                      controller: txtVehicleMF,
-                                      errorText: ErrorMessage.vmanuFactureError,
-                                      labelText: "Vehicle manufacturer"),
-                                  textFieldWithoutIcon(
-                                      controller: txtVehicleModel,
-                                      errorText: ErrorMessage.vModel,
-                                      labelText: "Vehicle model"),
-                                  textFieldWithoutIcon(
-                                      controller: txtVehicleYear,
-                                      errorText: ErrorMessage.vYear,
-                                      labelText: "Vehicle year"),
-                                  textFieldWithoutIcon(
-                                      controller: txtLicensePlate,
-                                      errorText: ErrorMessage.licencePlate,
-                                      labelText: "License plate"),
-                                  textFieldWithoutIcon(
-                                      controller: txtVehicleColor,
-                                      errorText: ErrorMessage.vColor,
-                                      labelText: "Vehicle color"),
-                                ],
-                              ).putPadding(0, 20, 5, 25),
-                              AppButton(
-                                      text: "NEXT",color: AllColors.greenColor,
-                                      onPressed:  registerPersonalInfo)
-                                  .paddingOnly(
-                                      left: context.widthPct(.15),
-                                      right: context.widthPct(.15)),
-                              const SizedBox(
-                                height: 20,
-                              )
-                            ],
-                          ),
-                        )
+                                // textField(controller: txtLName,prefixIcon: ""),
+                              ],
+                            ),
+                            textField(
+                                controller: txtEmail,
+                                prefixIcon: ImageAssets.emailIcon,
+                                errorText: ErrorMessage.emailError,
+                                labelText: "Email"),
+                            textFieldForCity(
+                                controller: txtCity,
+                                prefixIcon: ImageAssets.cityIcon,
+                                errorText: ErrorMessage.cityError,
+                                labelText: "City"),
+                            Column(
+                              children: [
+                                referralCode(
+                                    controller: txtReferralCode,
+                                    labelText: "Referral code"),
+                                textFieldWithoutIcon(
+                                    controller: txtVehicleMF,
+                                    errorText: ErrorMessage.vmanuFactureError,
+                                    labelText: "Vehicle manufacturer"),
+                                textFieldWithoutIcon(
+                                    controller: txtVehicleModel,
+                                    errorText: ErrorMessage.vModel,
+                                    labelText: "Vehicle model"),
+                                textFieldWithoutIcon(
+                                    controller: txtVehicleYear,
+                                    errorText: ErrorMessage.vYear,
+                                    labelText: "Vehicle year"),
+                                textFieldWithoutIcon(
+                                    controller: txtLicensePlate,
+                                    errorText: ErrorMessage.licencePlate,
+                                    labelText: "License plate"),
+                                textFieldWithoutIcon(
+                                    controller: txtVehicleColor,
+                                    errorText: ErrorMessage.vColor,
+                                    labelText: "Vehicle color"),
+                              ],
+                            ).paddingOnly(bottom: 20, left: 25, right: 5),
+
+                            AppButton(
+                                    text: "NEXT",
+                                    color: AllColors.greenColor,
+                                    onPressed: registerPersonalInfo)
+                                .paddingOnly(
+                                    left: context.widthPct(.15),
+                                    right: context.widthPct(.15)),
+                            const SizedBox(
+                              height: 20,
+                            )
+                          ],
+                        ).paddingAll(15)
                       ],
                     ),
                   ),
@@ -182,23 +180,24 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       if (isValid) {
         Map<String, dynamic> _map = {
           "driverId": AppConstants.userID,
-          "firstName": txtFName.text,
-          "lastName": txtLName.text,
+          "first_name": txtFName.text,
+          "last_name": txtLName.text,
           "email": txtEmail.text,
-          "cityName": txtCity.text,
-          "cityLatitude": cityLatitude.toString(),
-          "cityLongitude": cityLongitude.toString(),
+          "city": txtCity.text,
+          //"cityLatitude": cityLatitude.toString(),
+          // "cityLongitude": cityLongitude.toString(),
           "language": "english",
-          "referralCode": txtReferralCode.text.isNotEmpty
+          "referral_code": txtReferralCode.text.isNotEmpty
               ? txtReferralCode.text
               : "referralCode",
-          "vehicalManufacture": txtVehicleMF.text,
-          "vehicalModel": txtVehicleModel.text,
-          "vehicalYear": txtVehicleYear.text.toString(),
-          "licenesPlate": txtLicensePlate.text,
-          "vehicalColor": txtVehicleColor.text
+          "vehicle_manufacturer": txtVehicleMF.text,
+          "vehicle_model": txtVehicleModel.text,
+          "vehicle_year": txtVehicleYear.text.toString(),
+          "licence_plate": txtLicensePlate.text,
+          "vehicle_color": txtVehicleColor.text
         };
-        signUpController.register2(_map, context);
+        //  signUpController.register2(_map, context);
+        Get.to(() => const LicenceDetailScreen());
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(greenSnackBar(ErrorMessage.emailError2));
@@ -367,4 +366,22 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       ),
     );
   }
+
+
+  @override
+  void dispose() {
+    txtFName.dispose();
+    txtLName.dispose();
+    txtEmail.dispose();
+    txtCity.dispose();
+    txtLanguage.dispose();
+    txtReferralCode.dispose();
+    txtVehicleMF.dispose();
+    txtVehicleModel.dispose();
+    txtVehicleYear.dispose();
+    txtLicensePlate.dispose();
+    txtVehicleColor.dispose();
+    super.dispose();
+  }
+
 }

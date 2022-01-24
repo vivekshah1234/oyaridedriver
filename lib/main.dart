@@ -140,7 +140,7 @@ class _MyAppState extends State<MyApp> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("2");
+      printInfo(info: "2");
 
       RemoteNotification? notification = message.notification;
       printInfo(info: 'A new onMessage event was published!');
@@ -149,13 +149,11 @@ class _MyAppState extends State<MyApp> {
       //    MyCustomNotification(notificationCounterValueNotifier.value);
       notificationCounterValueNotifier.value++;
       notificationCounterValueNotifier.notifyListeners();
-
-
       printInfo(info: notificationCounterValueNotifier.value.toString());
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("3");
+      printInfo(info: "3");
       printInfo(info: 'A new onMessageOpenedApp event was published!');
       // notify listeners here so ValueListenableBuilder will build the widget.
 

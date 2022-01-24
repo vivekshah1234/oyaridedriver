@@ -13,18 +13,19 @@ class SignUpController extends GetxController {
   RxBool isLoading = false.obs;
 
   register1(Map<String, dynamic> map, context) async {
+    printInfo(info: "Inside");
     isLoading(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     postAPI(ApiConstant.signUp, map, (value) {
       if (value.code == 200) {
         Map<String, dynamic> valueMap = json.decode(value.response);
         if (valueMap["status"] == 200) {
-          SignupModel signupModel = SignupModel.fromJson(valueMap);
-          AppConstants.userID = signupModel.data[0].driverId.toString();
-
-          prefs.setInt("registerFormNo", 1);
-          prefs.setString("user_id", signupModel.data[0].driverId.toString());
-          Get.offAll(() => const PersonalInfoScreen());
+          // SignupModel signupModel = SignupModel.fromJson(valueMap);
+          // AppConstants.userID = signupModel.data[0].driverId.toString();
+          //
+          // prefs.setInt("registerFormNo", 1);
+          // prefs.setString("user_id", signupModel.data[0].driverId.toString());
+          // Get.offAll(() => const PersonalInfoScreen());
           isLoading(false);
         } else {
           isLoading(false);

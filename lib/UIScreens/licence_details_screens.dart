@@ -8,8 +8,7 @@ import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
+
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 
@@ -81,18 +80,19 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                                   bold: FontWeight.normal,
                                   italic: true,
                                   color: AllColors.greyColor)
-                              .putPadding(5, 0, 0, 35)),
+                              .paddingOnly(top: 5, left: 35)),
                       const SizedBox(
                         height: 20,
                       ),
                       AppButton(
                               text: "NEXT",
-                              onPressed:  registerLicensePlate,color: AllColors.greenColor)
+                              onPressed: registerLicensePlate,
+                              color: AllColors.greenColor)
                           .paddingOnly(
                               left: context.widthPct(.15),
                               right: context.widthPct(.15))
                     ],
-                  ).putPadding(0, 0, 15, 15),
+                  ).paddingOnly(left: 15, right: 15),
                 ),
                 Visibility(
                     visible: controller.isLoading.value,
@@ -103,17 +103,15 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
     );
   }
 
-
-  registerLicensePlate(){
-
-    if(txtLicenceNumber.text.isNotEmpty){
-    Map<String , dynamic> _map={
-      "driverId": AppConstants.userID,
-      "driverLicenesNo": txtLicenceNumber.text.toString()
-    };
-    printInfo(info: _map.toString());
-    signUpController.register3(_map,context);
-    }else{
+  registerLicensePlate() {
+    if (txtLicenceNumber.text.isNotEmpty) {
+      Map<String, dynamic> _map = {
+        "driverId": AppConstants.userID,
+        "licence_number": txtLicenceNumber.text.toString()
+      };
+      printInfo(info: _map.toString());
+      signUpController.register3(_map, context);
+    } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(greenSnackBar(ErrorMessage.licenceNumber));
     }
@@ -274,11 +272,15 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
             const SizedBox(
               height: 15,
             ),
-            AppButton(onPressed: (){
-              Get.to(() => const MapHomeScreen());
-            }, text: "NEXT", color: AllColors.blueColor).paddingSymmetric(horizontal: 45)
+            AppButton(
+                    onPressed: () {
+                      Get.to(() => const MapHomeScreen());
+                    },
+                    text: "NEXT",
+                    color: AllColors.blueColor)
+                .paddingSymmetric(horizontal: 45)
           ],
-        ).putPadding(0, 0, 25, 25),
+        ).paddingOnly(left:  25,right:  25),
       ),
     );
   }

@@ -182,7 +182,7 @@ SnackBar greenSnackBar(String txt,) => SnackBar(
 );
 
 
-class SwipeItem2 extends StatelessWidget {
+class RiderRequest extends StatelessWidget {
   final String name;
   final String imgUrl;
   final double price;
@@ -192,7 +192,7 @@ class SwipeItem2 extends StatelessWidget {
   final GestureTapCallback acceptOnTap;
   final GestureTapCallback ignoreOnTap;
 
-  const SwipeItem2(
+  const RiderRequest(
       {required this.name,
         required this.imgUrl,
         required this.price,
