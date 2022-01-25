@@ -96,7 +96,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                 ),
                 Visibility(
                     visible: controller.isLoading.value,
-                    child: Center(child: greenLoadingWidget()))
+                    child: greenLoadingWidget())
               ],
             );
           }),
@@ -105,8 +105,8 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
 
   registerLicensePlate() {
     if (txtLicenceNumber.text.isNotEmpty) {
-      Map<String, dynamic> _map = {
-        "driverId": AppConstants.userID,
+      Map<String, String> _map = {
+        "id": AppConstants.userID,
         "licence_number": txtLicenceNumber.text.toString()
       };
       printInfo(info: _map.toString());
@@ -168,121 +168,163 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
   TextEditingController txtLine2 = TextEditingController();
   TextEditingController txtLine3 = TextEditingController();
   FontWeight bold1 = FontWeight.w400;
+  SignUpController signUpController = Get.put(SignUpController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget2(""),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: GetX<SignUpController>(builder: (controller) {
+        return Stack(
+          alignment: Alignment.center,
           children: [
-            Center(
-              child: textWidget(
-                  txt: "Documents",
-                  fontSize: 26,
-                  color: AllColors.blackColor,
-                  bold: FontWeight.w600,
-                  italic: false),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: Text(
-                  "We're legally required to ask for some documents to sign you up as a driver. Documents scans and quality photos are accepted.",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 16, color: Colors.black54, fontWeight: bold1)),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text("Driver's License",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 22,
-                    color: AllColors.blackColor,
-                    fontWeight: FontWeight.w500)),
-            const SizedBox(
-              height: 7,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                textWidget(
-                    txt: "expires",
-                    fontSize: 13,
-                    color: AllColors.greyColor,
-                    bold: FontWeight.normal,
-                    italic: true),
-                textWidget(
-                    txt: "Required*",
-                    fontSize: 12,
-                    color: AllColors.redColor,
-                    bold: FontWeight.normal,
-                    italic: false),
-              ],
-            ),
-            textField(txtLine1),
-            textField(txtLine2),
-            textField(txtLine3),
-            const SizedBox(
-              height: 15,
-            ),
-            Align(
-                alignment: Alignment.centerRight,
-                child: file != null ? fileWidget() : uploadFile()),
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                const Text("Driver's License",
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 22,
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: textWidget(
+                        txt: "Documents",
+                        fontSize: 26,
                         color: AllColors.blackColor,
-                        fontWeight: FontWeight.w500)),
-                textWidget(
-                    txt: "Required*",
-                    fontSize: 12,
-                    color: AllColors.redColor,
-                    bold: FontWeight.normal,
-                    italic: false),
-              ],
+                        bold: FontWeight.w600,
+                        italic: false),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: Text(
+                        "We're legally required to ask for some documents to sign you up as a driver. Documents scans and quality photos are accepted.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            fontWeight: bold1)),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text("Driver's License",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                          fontSize: 22,
+                          color: AllColors.blackColor,
+                          fontWeight: FontWeight.w500)),
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      textWidget(
+                          txt: "expires",
+                          fontSize: 13,
+                          color: AllColors.greyColor,
+                          bold: FontWeight.normal,
+                          italic: true),
+                      textWidget(
+                          txt: "Required*",
+                          fontSize: 12,
+                          color: AllColors.redColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                    ],
+                  ),
+                  textField(txtLine1),
+                  textField(txtLine2),
+                  textField(txtLine3),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child:
+                          licencePhoto != null ? fileWidget() : uploadFile()),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Text("Driver's License",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: 22,
+                              color: AllColors.blackColor,
+                              fontWeight: FontWeight.w500)),
+                      textWidget(
+                          txt: "Required*",
+                          fontSize: 12,
+                          color: AllColors.redColor,
+                          bold: FontWeight.normal,
+                          italic: false),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  Center(
+                    child: Text(
+                        "Please provide a clear portrait picture(not a full body picture) of yourself. It should show your full face, front view, with eyes open.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                            fontWeight: bold1)),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Align(
+                      alignment: Alignment.centerRight,
+                      child:
+                          selfiePhoto != null ? fileWidget2() : uploadFile2()),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  AppButton(
+                          onPressed: register,
+                          text: "NEXT",
+                          color: AllColors.blueColor)
+                      .paddingSymmetric(horizontal: 45)
+                ],
+              ).paddingOnly(left: 25, right: 25),
             ),
-            const SizedBox(
-              height: 7,
-            ),
-            Center(
-              child: Text(
-                  "Please provide a clear portrait picture(not a full body picture) of yourself. It should show your full face, front view, with eyes open.",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 16, color: Colors.black54, fontWeight: bold1)),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Align(
-                alignment: Alignment.centerRight,
-                child: file2 != null ? fileWidget2() : uploadFile2()),
-            const SizedBox(
-              height: 15,
-            ),
-            AppButton(
-                    onPressed: () {
-                      Get.to(() => const MapHomeScreen());
-                    },
-                    text: "NEXT",
-                    color: AllColors.blueColor)
-                .paddingSymmetric(horizontal: 45)
+            Visibility(
+                visible: controller.isLoading.value,
+                child: greenLoadingWidget())
           ],
-        ).paddingOnly(left:  25,right:  25),
-      ),
+        );
+      }),
     );
+  }
+
+  register() {
+    if (txtLine1.text.isNotEmpty) {
+      if (licencePhoto != null) {
+        if (selfiePhoto != null) {
+          Map<String, String> _map = {};
+          _map["licence_expire_date"] = txtLine1.text.toString();
+          _map["id"]=AppConstants.userID;
+
+          signUpController.register4(
+              map: _map,
+              context: context,
+              profilePic: selfiePhoto,
+              licencePhoto: licencePhoto);
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(greenSnackBar(ErrorMessage.selfiePhotoError));
+        }
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(greenSnackBar(ErrorMessage.licencePhotoError));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(greenSnackBar(ErrorMessage.expireDate));
+    }
   }
 
   Widget textField(
@@ -320,7 +362,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         children: [
           Expanded(
             child: Text(
-              file.name.toString().substring(0, 20),
+              licencePhoto.name.toString().substring(0, 20),
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: AllColors.whiteColor, fontSize: 14),
             ),
@@ -330,7 +372,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
           ),
           GestureDetector(
               onTap: () {
-                file = null;
+                licencePhoto = null;
                 setState(() {});
               },
               child: const Icon(
@@ -352,7 +394,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         children: [
           Expanded(
             child: Text(
-              file2.name.toString().substring(0, 20),
+              selfiePhoto.name.toString().substring(0, 20),
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: AllColors.whiteColor, fontSize: 14),
             ),
@@ -362,7 +404,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
           ),
           GestureDetector(
               onTap: () {
-                file2 = null;
+                selfiePhoto = null;
                 setState(() {});
               },
               child: const Icon(
@@ -370,33 +412,6 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                 color: Colors.white,
               ))
         ],
-      ),
-    );
-  }
-
-  Widget nextButton() {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(left: 45, right: 45),
-      child: ElevatedButton(
-        onPressed: () {
-          Get.to(() => const MapHomeScreen());
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(AllColors.blueColor),
-            shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
-            }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 10, bottom: 10))),
-        child: const Text(
-          "NEXT",
-          style: TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
-        ),
       ),
     );
   }
@@ -436,7 +451,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
     );
   }
 
-  var file;
+  var licencePhoto;
 
   pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -445,7 +460,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
 
       if (image != null) {
         setState(() {
-          file = XFile(image.path);
+          licencePhoto = XFile(image.path);
         });
         // toast( image!.path.toString());
       }
@@ -454,7 +469,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
     }
   }
 
-  var file2;
+  var selfiePhoto;
 
   pickImage2() async {
     final ImagePicker _picker2 = ImagePicker();
@@ -463,7 +478,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
 
       if (image2 != null) {
         setState(() {
-          file2 = XFile(image2.path);
+          selfiePhoto = XFile(image2.path);
         });
         // toast( image!.path.toString());
       }

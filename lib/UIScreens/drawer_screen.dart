@@ -1,24 +1,20 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
+import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/chat_screen.dart';
-import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/map_screen.dart';
-import 'package:oyaridedriver/UIScreens/payment_history_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_tripe_screen.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
-
 import 'document_management_screen.dart';
-import 'edit_profile_screen.dart';
-import 'help_screen.dart';
 import 'login_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -64,15 +60,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
               padding: const EdgeInsets.only(left: 30.0, bottom: 20),
               child: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(imgUrl),
+                  AppConstants.profilePic!="profilePic"? CircleAvatar(
+                    backgroundImage: NetworkImage( AppConstants.profilePic),
+                    backgroundColor: AllColors.greenColor,
+                    radius: 28,
+                  ):CircleAvatar(
+                    backgroundImage: NetworkImage( imgUrl),
+                    backgroundColor: AllColors.blueColor,
                     radius: 28,
                   ),
                   SizedBox(
                     width: 15,
                   ),
                   textWidget(
-                      txt: "Bernard Alverdaro",
+                      txt: AppConstants.fullName,
                       fontSize: 18,
                       color: AllColors.blackColor,
                       bold: FontWeight.w900,
@@ -148,7 +149,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
              ),
              AppButton(
                  text: "Logout".toUpperCase(),color: AllColors.greenColor,
-                 onPressed: () {
+                 onPressed: () async {
+                   AppConstants.userToken = "userToken";
+                   SharedPreferences sp = await SharedPreferences.getInstance();
+                   FirebaseMessaging _firebaseMessaging =
+                       FirebaseMessaging.instance;
+                   _firebaseMessaging.deleteToken();
+                   destroyData();
+                   sp.remove("token");
+                   sp.remove("userData");
+                   sp.remove("currentRole");
+
+
                    Get.offAll(() => LoginScreen());
                  })
            ],
@@ -176,6 +188,19 @@ class _DrawerScreenState extends State<DrawerScreen> {
       ),
     );
   }
+}
+
+
+destroyData() {
+  AppConstants.userToken = "userToken";
+  AppConstants.profilePic = "profilePic";
+  AppConstants.userID = "user_id";
+   AppConstants.email = "email_id";
+  AppConstants.fullName = "fullName";
+  AppConstants.countryCode = "countryCode";
+  AppConstants.mobileNo = "mobileNo";
+  AppConstants.isVerified = false;
+
 }
 
 class DrawerItems {

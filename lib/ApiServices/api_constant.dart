@@ -4,17 +4,24 @@ class ApiConstant {
   static String registerPersonalInfo = "/or/d1/driver-info-and-vehical-info";
   static String driverLicenseNumber = "/or/d1/driver-licenes-number";
   static String login = "/auth/login";
-  static String forgotPassword = "auth/forgot-password";
+
   static String resetPassword = "auth/reset-password";
   static String refreshToken = "auth/refresh-token";
 
+  static String addDeviceInfo = "/user/device";
+  static String userStatus="/user/online-status";
+  static String updateLocation="/user/update-location";
+  static String getVehicle="/user/vehicle";
+  static String addVehicle="/user/vehicle";
+  static String vehicleTypes="/user/vehicle-type";
+  static String forgetPassword="/auth/forgot-password";
 }
 
 abstract class AppConstants {
   static const String appName = 'ShipX';
   static const String noInternet = "Internet is not connected.";
   static String userToken = "userToken";
-  static String profilePic = "imageUrl";
+  static String profilePic = "profilePic";
   static String noDataFound = "No data found";
   static String userData = "user_data";
   static String userID = "user_id";
@@ -26,6 +33,7 @@ abstract class AppConstants {
   static String deviceID = "deviceID";
   static bool isVerified = false;
   static int registerFormNo = 0;
+  static bool userOnline=true;
 }
 
 class ApiKeys {

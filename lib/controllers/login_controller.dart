@@ -4,8 +4,12 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
+import 'package:oyaridedriver/Models/login_modal.dart';
+import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/map_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../main.dart';
 
 class LoginController extends GetxController{
 
@@ -19,11 +23,13 @@ class LoginController extends GetxController{
       if (value.code == 200) {
         Map<String, dynamic> valueMap = json.decode(value.response);
         if (valueMap["status"] == 200) {
-          // SignupModel signupModel = SignupModel.fromJson(valueMap);
-          // AppConstants.userID = signupModel.data[0].driverId.toString();
-          //
-          // prefs.setInt("registerFormNo", 1);
-          // prefs.setString("user_id", signupModel.data[0].driverId.toString());
+         LoginModel loginModel=LoginModel.fromJson(valueMap);
+           AppConstants.userID = loginModel.data.user.id.toString();
+
+          saveTokenAndUserData(
+              token: loginModel.data.token.toString(),
+              user: loginModel.data.user,context: context);
+
           Get.offAll(() => const MapHomeScreen());
           isLoading(false);
         } else {
@@ -36,5 +42,15 @@ class LoginController extends GetxController{
       }
     });
   }
+  saveTokenAndUserData({required String token, required User user,context}) async {
+    AppConstants.userToken = token;
+    String jsonString = jsonEncode(user);
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("token", AppConstants.userToken);
+    prefs.setString("userData", jsonString);
+    prefs.setBool("userOnline", true);
+    setUserData(user);
+    sendTokenToBackend(context);
+  }
 }

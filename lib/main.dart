@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,18 +9,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiServices/api_constant.dart';
-import 'Common/image_assets.dart';
 import 'UIScreens/ChatUI/firebase_chat.dart';
 import 'UIScreens/home_screen.dart';
-import 'UIScreens/map_screen.dart';
-import 'UIScreens/rider_list_cart_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -76,8 +74,8 @@ Future<void> main() async {
 
   Widget firstScreen = MyApp();
   SharedPreferences sp = await SharedPreferences.getInstance();
+  AppConstants.userOnline=sp.getBool("userOnline")??true;
   AppConstants.userID = sp.getString("user_id") ?? "user_id";
-  print(AppConstants.userID);
 
   AppConstants.registerFormNo = sp.getInt("registerFormNo") ?? 0;
 
@@ -90,14 +88,26 @@ Future<void> main() async {
         firstScreen = LicenceDetailScreen();
         break;
       case 3:
-        firstScreen = LoginScreen();
+        firstScreen = LicenceDocumentScreen();
         break;
       default:
         firstScreen = MyApp();
         break;
     }
   }
+  var token = sp.getString("token");
 
+  if (token != null) {
+    AppConstants.userToken = token;
+    var userData = sp.getString("userData");
+    if (userData != null) {
+      Map<String, dynamic> data = json.decode(userData);
+
+      User user = User.fromJson(data);
+      setUserData(user);
+      firstScreen=MapHomeScreen();
+    }
+  }
   runApp(ScreenUtilInit(
       builder: () => GetMaterialApp(
           debugShowCheckedModeBanner: false, home: firstScreen)));
@@ -127,25 +137,23 @@ class _MyAppState extends State<MyApp> {
   }
 
   firebaseCloudMessagingListeners() {
-    print("1");
+
     if (Platform.isIOS) iOSPermission();
 
-    var initialzationSettingsAndroid =
+    var initializationSettingsAndroid =
         AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS =
         IOSInitializationSettings(
             onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
-        android: initialzationSettingsAndroid, iOS: initializationSettingsIOS);
+        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      printInfo(info: "2");
-
-      RemoteNotification? notification = message.notification;
+     RemoteNotification? notification = message.notification;
       printInfo(info: 'A new onMessage event was published!');
       _showNotification(1234, notification!.title.toString(),
-          notification.body.toString(), "GET PAYLOAD FROM message OBJECT");
+          notification.body.toString(), "GET PAYLOAD FROM message userECT");
       //    MyCustomNotification(notificationCounterValueNotifier.value);
       notificationCounterValueNotifier.value++;
       notificationCounterValueNotifier.notifyListeners();
@@ -202,32 +210,19 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-Future<void> setUserData() async {
+Future<void> setUserData(User user) async {
   //
-  // AppConstants.fullName = obj.name;
-  // AppConstants.mobileNo = obj.mobileNumber;
-  // AppConstants.email = obj.email;
-  // AppConstants.countryCode = obj.countryCode;
-  // AppConstants.userID = obj.id.toString();
-  // AppConstants.stripeCustomerId=obj.stripeCustomerId;
-  // AppConstants.stripeAccountId=obj.stripeAccountId;
-  //
-  // if (obj.profilePic != null) {
-  //
-  //   AppConstants.profilePic = obj.profilePic;
-  // }
-  // if(obj.isAccountLinked!=null){
-  //   AppConstants.isAccountLinked = obj.isAccountLinked;
-  // }else{
-  //   AppConstants.isAccountLinked =false;
-  // }
-  //
-  // if (obj.hasValidDocument == true) {
-  //   AppConstants.isVerified = true;
-  // }
-  // notificationCounterValueNotifer.value=obj.unreadCount;
-  // RatingController ratingController=Get.put(RatingController());
-  // ratingController.getRatingForCurrentUser();
+  AppConstants.fullName = user.firstName+" "+user.lastName;
+  AppConstants.mobileNo = user.mobileNumber;
+  AppConstants.email = user.email;
+  AppConstants.countryCode = user.countryCode;
+  AppConstants.userID = user.id.toString();
+
+  if (user.profilePic != null) {
+
+    AppConstants.profilePic = user.profilePic;
+  }
+
   DatabaseMethods databaseMethods = DatabaseMethods();
   try {
     final QuerySnapshot result =

@@ -1,11 +1,21 @@
 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:oyaridedriver/ApiServices/api_constant.dart';
+import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
+import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'all_colors.dart';
 import 'common_widgets.dart';
@@ -108,4 +118,70 @@ Future<Position> determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   return await Geolocator.getCurrentPosition();
+}
+
+sendTokenToBackend(context) async {
+  FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+  String? firebaseToken = await firebaseMessaging.getToken();
+  Map<String, dynamic> map = {};
+  if (Platform.isAndroid) {
+    map["device_type"] = "1";
+  } else if (Platform.isIOS) {
+    map["device_type"] = "2";
+  }
+  map["device_token"] = firebaseToken;
+  postAPIWithHeader(ApiConstant.addDeviceInfo, map, (value) {
+    Map<String, dynamic> valueMap = json.decode(value.response);
+
+    if (value.code == 200) {
+      if (valueMap["status"] == 200) {
+        // Get.to(() => TabBarScreen());
+      } else {
+        //  printError(info: valueMap["message"]);
+      }
+    } else {
+      handleError(
+          value.error == null ? valueMap["message"] : value.error.toString(),
+          context);
+    }
+  });
+}
+
+
+Future<String> refreshTokenApi() async {
+  Map<String, dynamic> param = {};
+  param["token"] = AppConstants.userToken;
+  String token = "userToken";
+
+  var url = ApiConstant.baseUrl + ApiConstant.refreshToken;
+  var uri = Uri.parse(url);
+  print("==request== $uri");
+  print("==Params== $param");
+  try {
+    var response = await http.post(uri, headers: null, body: param);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      print("==response== ${response.body}");
+      if (map["status"] == 200) {
+        token = map["data"]["token"];
+      } else {
+        toast("Token is not refreshed");
+      }
+    } else {
+      toast("Server Error please login in again.");
+      AppConstants.userToken = "userToken";
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+      _firebaseMessaging.deleteToken();
+      destroyData();
+      sp.remove("token");
+      sp.remove("userData");
+      Get.offAll(() => LoginScreen());
+      return "";
+    }
+  } catch (ex) {
+    print("Error==$ex");
+  }
+  //print("2===" + token.toString());
+  return token;
 }

@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as poly_util;
+import 'package:marquee/marquee.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
@@ -34,9 +35,9 @@ class MapHomeScreen extends StatefulWidget {
   _MapHomeScreenState createState() => _MapHomeScreenState();
 }
 
-
-class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin, FCMNotificationClickMixin {
-  final Completer<GoogleMapController> _controller = Completer();
+class _MapHomeScreenState extends State<MapHomeScreen>
+    with FCMNotificationMixin, FCMNotificationClickMixin {
+  final Completer<GoogleMapController> _mapController = Completer();
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
   late LatLng _lastMapPosition;
@@ -49,7 +50,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
   int status = -1;
   final List<SwipeItem> _swipeItems = [];
   late MatchEngine _matchEngine;
-  List<Map<String, dynamic>> dataList =[];
+  List<Map<String, dynamic>> dataList = [];
   HomeController homeController = Get.put(HomeController());
 
   @override
@@ -64,19 +65,41 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
+    Map<String, String> map = {
+      "latitude": latitude.toString(),
+      "longitude": longitude.toString()
+    };
+    homeController.updateLocation(map);
     _lastMapPosition = LatLng(latitude, longitude);
     _kGooglePlex = CameraPosition(
       target: _lastMapPosition,
       zoom: 14.4746,
     );
-
+    addMyMarker(latitude, longitude);
     isLoading = false;
     setState(() {});
   }
+
+  addMyMarker(latitude, longitude) async {
+    Uint8List? imageData =
+        await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
+    _markers.add(Marker(
+        markerId: MarkerId("myLocation"),
+        position: LatLng(latitude, longitude),
+        draggable: false,
+        zIndex: 2,
+        flat: true,
+        anchor: Offset(0.5, 0.5),
+        icon: BitmapDescriptor.fromBytes(imageData!)));
+    setState(() {});
+  }
+
   @override
   void onNotify(RemoteMessage notification) {
-    printInfo(info: "notifying========="+notification.notification!.body.toString());
-    dataList.addAll( [
+    printInfo(
+        info:
+            "notifying=========" + notification.notification!.body.toString());
+    dataList.addAll([
       {
         "name": "Ian Somerholder",
         "imgUrl": imgUrl,
@@ -123,365 +146,387 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
       }
     ]);
     init();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      extendBodyBehindAppBar: true,
-      drawer: DrawerScreen(),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 18.0),
-          child: FloatingActionButton(
-            onPressed: () {
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            backgroundColor: AllColors.whiteColor,
-            child: const Icon(
-              Icons.sort,
-              color: AllColors.blackColor,
-            ),
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              notificationCounterValueNotifier.value = 0;
-              setState(() {});
-            },
-            child: ValueListenableBuilder(
-              builder: (BuildContext context, int newNotificationCounterValue,
-                  Widget? child) {
-                printInfo(info: "data===========");
+    return GetX<HomeController>(
+        init: HomeController(),
+        builder: (controller) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              Scaffold(
+                  key: _scaffoldKey,
+                  extendBodyBehindAppBar: true,
+                  drawer: DrawerScreen(),
 
-                return Badge(
-                  badgeColor: AllColors.redColor,
-                  toAnimate: true,
-                  badgeContent: Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: Container()),
-                  showBadge: newNotificationCounterValue == 0 ? false : true,
-                  //  showBadge: true,
-                  child: CircleAvatar(
-                    backgroundColor: AllColors.whiteColor,
-                    child: const Icon(
-                      Icons.notifications_none_sharp,
-                      size: 30,
-                      color: AllColors.blackColor,
-                    ),
-                  ),
-                );
-              },
-              valueListenable: notificationCounterValueNotifier,
-            ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          !isOnline
-              ? GestureDetector(
-                  onTap: () {
-                    isOnline = !isOnline;
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AllColors.blackColor,
-                        borderRadius: BorderRadius.circular(13)),
-                    margin: const EdgeInsets.only(top: 15, bottom: 15),
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          backgroundColor: AllColors.whiteColor,
-                          radius: 7,
-                        ),
-                        const SizedBox(
-                          width: 7,
-                        ),
-                        textWidget(
-                            txt: " Go online ",
-                            fontSize: 11,
-                            color: AllColors.whiteColor,
-                            italic: false,
-                            bold: FontWeight.w600)
-                      ],
-                    ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: () {
-                    isOnline = !isOnline;
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: AllColors.blackColor,
-                        borderRadius: BorderRadius.circular(13)),
-                    margin: const EdgeInsets.only(top: 15, bottom: 15),
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: Row(
-                      children: [
-                        textWidget(
-                            txt: " Go offline",
-                            fontSize: 11,
-                            color: AllColors.whiteColor,
-                            italic: false,
-                            bold: FontWeight.w600),
-                        const SizedBox(
-                          width: 7,
-                        ),
-                        CircleAvatar(
-                          backgroundColor: AllColors.greenColor,
-                          radius: 7,
-                        ),
-                        const SizedBox(
-                          width: 7,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-          const SizedBox(
-            width: 20,
-          )
-        ],
-      ),
-      body: GetX<HomeController>(
-          init: HomeController(),
-          builder: (controller) {
-            if(controller.isLoading.value){
-              return Center(child: greenLoadingWidget());
-            }
-            return Stack(
-              children: [
-                isLoading
-                    ? SizedBox(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: greenLoadingWidget(),
-                      )
-                    : GoogleMap(
-                        mapType: MapType.terrain,
-                        initialCameraPosition: _kGooglePlex,
-                        onMapCreated: (GoogleMapController controller) {
-                          _controller.complete(controller);
+                  appBar: AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    automaticallyImplyLeading: false,
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 18.0),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          _scaffoldKey.currentState!.openDrawer();
                         },
-                        markers: _markers,
-                        polylines: _polyLine,
+                        backgroundColor: AllColors.whiteColor,
+                        child: const Icon(
+                          Icons.sort,
+                          color: AllColors.blackColor,
+                        ),
                       ),
-                Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: NotificationListener(
-                      onNotification: (notification) {
-                        printInfo(info: "Bubble");
-                        init();
-
-                        return true;
-                      },
-                      child: _swipeItems.isEmpty
-                          ? Container()
-                          : Container(
-                              child: status == -1
-                                  ? SizedBox(
-                                      height: calculateHeight(
-                                          MediaQuery.of(context).size.height,
-                                          context),
-                                      child: SwipeCards(
-                                        matchEngine: _matchEngine,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return GestureDetector(
-                                              onTap: () {
-                                                Get.to(() =>
-                                                    const RiderDetailScreen());
-                                              },
-                                              child: RiderRequest(
-                                                name: dataList[index]["name"],
-                                                imgUrl: dataList[index]
-                                                    ["imgUrl"],
-                                                km: dataList[index]
-                                                    ["kiloMeter"],
-                                                price: dataList[index]
-                                                    ["charge"],
-                                                pickUpPoint: dataList[index]
-                                                    ["sourcePoint"],
-                                                dropOffPoint: dataList[index]
-                                                    ["destinationPoint"],
-                                                acceptOnTap: () {
-                                                  _matchEngine.currentItem
-                                                      ?.like();
-                                                  acceptRequest(index);
-                                                  setState(() {});
-                                                },
-                                                ignoreOnTap: () {
-
-                                                  _matchEngine.currentItem
-                                                      ?.nope();
-                                                  if (index !=
-                                                      dataList.length - 1) {
-                                                    setMarker(
-                                                        source: dataList[index +
-                                                            1]["sourceLatLong"],
-                                                        destination: dataList[
-                                                                index + 1][
-                                                            "destinationLatLong"]);
-                                                    setPolyline(
-                                                        dataList[index + 1]
-                                                            ["route"]);
-                                                  }
-                                                  setState(() {});
-                                                },
-                                              ));
-                                        },
-                                        onStackFinished: () {
-                                          // _scaffoldKey.currentState
-                                          //     ?.showSnackBar(const SnackBar(
-                                          //   content: Text("Stack Finished"),
-                                          //   duration: Duration(milliseconds: 500),
-                                          // ));
-
-                                          polyLineCoordinates.clear();
-                                          _polyLine.clear();
-                                          _markers.clear();
-                                          setState(() {});
-                                        },
-                                      ),
-                                    )
-                                  : Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        color: AllColors.whiteColor,
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(40),
-                                          topLeft: Radius.circular(40),
-                                        ),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.5),
-                                            spreadRadius: 5,
-                                            blurRadius: 7,
-                                            offset: const Offset(0,
-                                                3), // changes position of shadow
-                                          ),
-                                        ],
-                                      ),
-
-                                      //  padding: EdgeInsets.only(top: 10),
-                                      child: Column(
-                                        children: [
-                                          locationDetails(),
-                                          status < 2
-                                              ? RiderDetails(
-                                                  name: "Stella Josh",
-                                                  callButton: () {
-                                                    url_launcher.launch(
-                                                        "tel://21213123123");
-                                                  },
-                                                )
-                                              : status == 2
-                                                  ? whileTravelingCart()
-                                                  : userCart3(),
-                                          status < 2
-                                              ? Row(
-                                                  children: [
-                                                    SmallButton(
-                                                      text: "CANCEL",
-                                                      color:
-                                                          AllColors.blueColor,
-                                                      onPressed: () {
-                                                        printInfo(
-                                                            info:
-                                                                "************stop***********");
-                                                        _locationSubscription
-                                                            ?.cancel();
-                                                        // _locationTracker.
-                                                        setState(() {
-                                                          _locationSubscription =
-                                                              null;
-                                                        });
-                                                      },
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    if (status < 1)
-                                                      SmallButton(
-                                                        text: "ARRIVED",
-                                                        color: AllColors
-                                                            .greenColor,
-                                                        onPressed: () {
-                                                          status = 1;
-                                                          print("tap");
-                                                          setState(() {});
-                                                        },
-                                                      )
-                                                    else if (status == 1)
-                                                      SmallButton(
-                                                        text: "PICKED UP",
-                                                        color: AllColors
-                                                            .greenColor,
-                                                        onPressed: () {
-                                                          status = 2;
-                                                          print("tap");
-                                                          setState(() {});
-                                                        },
-                                                      )
-                                                    else if (status == 2)
-                                                      Container()
-                                                    // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
-                                                  ],
-                                                ).putPadding(
-                                                  0,
-                                                  20,
-                                                  context.widthPct(0.08),
-                                                  context.widthPct(0.08),
-                                                )
-                                              : status == 2
-                                                  ? AppButton(
-                                                          text: "TAP WHEN DROP",
-                                                          onPressed: () {
-                                                            status = 3;
-                                                            print("tap");
-                                                            setState(() {});
-                                                          },
-                                                          color: AllColors
-                                                              .greenColor)
-                                                      .paddingSymmetric(
-                                                          horizontal: 15)
-                                                  : AppButton(
-                                                          text:
-                                                              "CONFIRM PAYMENT",
-                                                          onPressed: () {
-                                                            status = 4;
-                                                            print("tap");
-                                                            setState(() {});
-                                                          },
-                                                          color: AllColors
-                                                              .greenColor)
-                                                      .paddingSymmetric(
-                                                          horizontal: 15),
-                                        ],
-                                      ),
+                    ),
+                    actions: [
+                      GestureDetector(
+                        onTap: () {
+                          notificationCounterValueNotifier.value = 0;
+                          setState(() {});
+                        },
+                        child: ValueListenableBuilder(
+                          builder: (BuildContext context,
+                              int newNotificationCounterValue, Widget? child) {
+                            return Badge(
+                              badgeColor: AllColors.redColor,
+                              toAnimate: true,
+                              badgeContent: Padding(
+                                  padding: const EdgeInsets.only(top: 30.0),
+                                  child: Container()),
+                              showBadge: newNotificationCounterValue == 0
+                                  ? false
+                                  : true,
+                              //  showBadge: true,
+                              child: CircleAvatar(
+                                backgroundColor: AllColors.whiteColor,
+                                child: const Icon(
+                                  Icons.notifications_none_sharp,
+                                  size: 30,
+                                  color: AllColors.blackColor,
+                                ),
+                              ),
+                            );
+                          },
+                          valueListenable: notificationCounterValueNotifier,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      !AppConstants.userOnline
+                          ? GestureDetector(
+                              onTap: () {
+                                Map<String, String> map = {};
+                                map["is_available"] = "1";
+                                homeController.changeUserStatus(map, context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: AllColors.blackColor,
+                                    borderRadius: BorderRadius.circular(13)),
+                                margin:
+                                    const EdgeInsets.only(top: 15, bottom: 15),
+                                padding:
+                                    const EdgeInsets.only(left: 5, right: 5),
+                                child: Row(
+                                  children: [
+                                    const CircleAvatar(
+                                      backgroundColor: AllColors.whiteColor,
+                                      radius: 7,
                                     ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    textWidget(
+                                        txt: " Go online ",
+                                        fontSize: 11,
+                                        color: AllColors.whiteColor,
+                                        italic: false,
+                                        bold: FontWeight.w600)
+                                  ],
+                                ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                Map<String, String> map = {};
+                                map["is_available"] = "0";
+                                homeController.changeUserStatus(map, context);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: AllColors.blackColor,
+                                    borderRadius: BorderRadius.circular(13)),
+                                margin:
+                                    const EdgeInsets.only(top: 15, bottom: 15),
+                                padding:
+                                    const EdgeInsets.only(left: 5, right: 5),
+                                child: Row(
+                                  children: [
+                                    textWidget(
+                                        txt: " Go offline",
+                                        fontSize: 11,
+                                        color: AllColors.whiteColor,
+                                        italic: false,
+                                        bold: FontWeight.w600),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                    CircleAvatar(
+                                      backgroundColor: AllColors.greenColor,
+                                      radius: 7,
+                                    ),
+                                    const SizedBox(
+                                      width: 7,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                    ))
-              ],
-            );
-          }),
-    );
+                      const SizedBox(
+                        width: 20,
+                      )
+                    ],
+                  ),
+                  body: Stack(
+                    children: [
+                      isLoading
+                          ? SizedBox(
+                              height: double.infinity,
+                              width: double.infinity,
+                              child: greenLoadingWidget(),
+                            )
+                          : GoogleMap(
+                              mapType: MapType.terrain,
+                              initialCameraPosition: _kGooglePlex,
+                              onMapCreated: (GoogleMapController controller) {
+                                _mapController.complete(controller);
+                              },
+                              markers: _markers,
+                              polylines: _polyLine,
+                            ),
+                      Positioned(
+                          right: 20,
+                          top: MediaQuery.of(context).size.height*0.12,
+                          child: FloatingActionButton(
+                            onPressed: () {
+                              getCurrentPosition();
+                            },
+                            backgroundColor: AllColors.whiteColor,
+                            child: Icon(
+                              Icons.my_location_outlined,
+                              color: AllColors.greenColor,
+                            ),
+                          )),
+                      Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: _swipeItems.isEmpty
+                              ? Container()
+                              : Container(
+                                  child: status == -1
+                                      ? SizedBox(
+                                          height: calculateHeight(
+                                              MediaQuery.of(context)
+                                                  .size
+                                                  .height,
+                                              context),
+                                          child: SwipeCards(
+                                            matchEngine: _matchEngine,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return GestureDetector(
+                                                  onTap: () {
+                                                    Get.to(() =>
+                                                        const RiderDetailScreen());
+                                                  },
+                                                  child: RiderRequest(
+                                                    name: dataList[index]
+                                                        ["name"],
+                                                    imgUrl: dataList[index]
+                                                        ["imgUrl"],
+                                                    km: dataList[index]
+                                                        ["kiloMeter"],
+                                                    price: dataList[index]
+                                                        ["charge"],
+                                                    pickUpPoint: dataList[index]
+                                                        ["sourcePoint"],
+                                                    dropOffPoint: dataList[
+                                                            index]
+                                                        ["destinationPoint"],
+                                                    acceptOnTap: () {
+                                                      _matchEngine.currentItem
+                                                          ?.like();
+                                                      acceptRequest(index);
+                                                      setState(() {});
+                                                    },
+                                                    ignoreOnTap: () {
+                                                      _matchEngine.currentItem
+                                                          ?.nope();
+                                                      if (index !=
+                                                          dataList.length - 1) {
+                                                        setMarker(
+                                                            source: dataList[
+                                                                    index + 1][
+                                                                "sourceLatLong"],
+                                                            destination: dataList[
+                                                                    index + 1][
+                                                                "destinationLatLong"]);
+                                                        setPolyline(
+                                                            dataList[index + 1]
+                                                                ["route"]);
+                                                      }
+                                                      setState(() {});
+                                                    },
+                                                  ));
+                                            },
+                                            onStackFinished: () {
+                                              // _scaffoldKey.currentState
+                                              //     ?.showSnackBar(const SnackBar(
+                                              //   content: Text("Stack Finished"),
+                                              //   duration: Duration(milliseconds: 500),
+                                              // ));
+
+                                              polyLineCoordinates.clear();
+                                              _polyLine.clear();
+                                              _markers.clear();
+                                              setState(() {});
+                                            },
+                                          ),
+                                        )
+                                      : Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          decoration: BoxDecoration(
+                                            color: AllColors.whiteColor,
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              topRight: Radius.circular(40),
+                                              topLeft: Radius.circular(40),
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.5),
+                                                spreadRadius: 5,
+                                                blurRadius: 7,
+                                                offset: const Offset(0,
+                                                    3), // changes position of shadow
+                                              ),
+                                            ],
+                                          ),
+
+                                          //  padding: EdgeInsets.only(top: 10),
+                                          child: Column(
+                                            children: [
+                                              locationDetails(),
+                                              status < 2
+                                                  ? RiderDetails(
+                                                      name: "Stella Josh",
+                                                      callButton: () {
+                                                        url_launcher.launch(
+                                                            "tel://21213123123");
+                                                      },
+                                                    )
+                                                  : status == 2
+                                                      ? whileTravelingCart()
+                                                      : userCart3(),
+                                              status < 2
+                                                  ? Row(
+                                                      children: [
+                                                        SmallButton(
+                                                          text: "CANCEL",
+                                                          color: AllColors
+                                                              .blueColor,
+                                                          onPressed: () {
+                                                            printInfo(
+                                                                info:
+                                                                    "************stop***********");
+                                                            _locationSubscription
+                                                                ?.cancel();
+                                                            // _locationTracker.
+                                                            setState(() {
+                                                              _locationSubscription =
+                                                                  null;
+                                                            });
+                                                          },
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        if (status < 1)
+                                                          SmallButton(
+                                                            text: "ARRIVED",
+                                                            color: AllColors
+                                                                .greenColor,
+                                                            onPressed: () {
+                                                              status = 1;
+                                                              print("tap");
+                                                              setState(() {});
+                                                            },
+                                                          )
+                                                        else if (status == 1)
+                                                          SmallButton(
+                                                            text: "PICKED UP",
+                                                            color: AllColors
+                                                                .greenColor,
+                                                            onPressed: () {
+                                                              status = 2;
+                                                              print("tap");
+                                                              setState(() {});
+                                                            },
+                                                          )
+                                                        else if (status == 2)
+                                                          Container()
+                                                        // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
+                                                      ],
+                                                    ).putPadding(
+                                                      0,
+                                                      20,
+                                                      context.widthPct(0.08),
+                                                      context.widthPct(0.08),
+                                                    )
+                                                  : status == 2
+                                                      ? AppButton(
+                                                              text:
+                                                                  "TAP WHEN DROP",
+                                                              onPressed: () {
+                                                                status = 3;
+                                                                print("tap");
+                                                                setState(() {});
+                                                              },
+                                                              color: AllColors
+                                                                  .greenColor)
+                                                          .paddingSymmetric(
+                                                              horizontal: 15)
+                                                      : AppButton(
+                                                              text:
+                                                                  "CONFIRM PAYMENT",
+                                                              onPressed: () {
+                                                                status = 4;
+                                                                print("tap");
+                                                                setState(() {});
+                                                              },
+                                                              color: AllColors
+                                                                  .greenColor)
+                                                          .paddingSymmetric(
+                                                              horizontal: 15),
+                                            ],
+                                          ),
+                                        ),
+                                ))
+                    ],
+                  )),
+              Visibility(
+                  visible: controller.isLoading.value,
+                  child: greenLoadingWidget())
+            ],
+          );
+        });
   }
 
   init() {
@@ -510,7 +555,7 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
           }));
     }
     polylinePoints = PolylinePoints();
-    if(dataList.isNotEmpty) {
+    if (dataList.isNotEmpty) {
       setMarker(
           source: dataList[0]["sourceLatLong"],
           destination: dataList[0]["destinationLatLong"]);
@@ -595,14 +640,14 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
 
       _locationSubscription =
           _locationTracker.onLocationChanged.handleError((onError) {
-        printInfo(info: "Error====="+onError);
+        printInfo(info: "Error=====" + onError);
         _locationSubscription?.cancel();
         setState(() {
           _locationSubscription = null;
         });
       }).listen((newLocalData) async {
-        if (_controller != null) {
-          final GoogleMapController controller = await _controller.future;
+        if (_mapController != null) {
+          final GoogleMapController controller = await _mapController.future;
           _lastMapPosition =
               LatLng(newLocalData.latitude!, newLocalData.longitude!);
           controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -911,6 +956,4 @@ class _MapHomeScreenState extends State<MapHomeScreen> with FCMNotificationMixin
   void onClick(RemoteMessage notification) {
     // TODO: implement onClick
   }
-
-
 }

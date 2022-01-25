@@ -38,7 +38,9 @@ class ErrorMessage {
   static String dateError="Please select a date and time.";
   static String pickDestinationError="Please select Pick up point and destination point too.";
   static String travelOpError="Please select travel option.";
-
+  static String expireDate="Please enter expire date.";
+  static String licencePhotoError="Please upload for licence photo.";
+  static String selfiePhotoError="Please upload for your selfie photo.";
 }
 
 class PlaceHolder {

@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:oyaridedriver/Models/response_api.dart';
-
 
 import 'api_constant.dart';
 
@@ -24,7 +25,8 @@ postAPI(String methodName, Map<String, dynamic> param,
   debugPrint("==Params== $param");
 
   http.post(uri, headers: null, body: param).then((value) {
-    debugPrint("==response== ${value.body}");_handleResponse(value, callback);
+    debugPrint("==response== ${value.body}");
+    _handleResponse(value, callback);
   }).onError((error, stackTrace) {
     debugPrint("onError== $error");
     _handleError(error, callback);
@@ -53,8 +55,7 @@ postAPIWithHeader(String methodName, Map<String, dynamic> param,
   });
 }
 
-getAPI(String methodName,
-    Function(ResponseAPI) callback) {
+getAPI(String methodName, Function(ResponseAPI) callback) {
   var url = ApiConstant.baseUrl + methodName;
 
   var uri = Uri.parse(url);
@@ -100,7 +101,8 @@ putAPI(String methodName, Map<String, dynamic> param,
   debugPrint("==Params== $param");
 
   http.put(uri, headers: null, body: param).then((value) {
-    debugPrint("==response== ${value.body}");_handleResponse(value, callback);
+    debugPrint("==response== ${value.body}");
+    _handleResponse(value, callback);
   }).onError((error, stackTrace) {
     debugPrint("onError== $error");
     _handleError(error, callback);
@@ -108,4 +110,41 @@ putAPI(String methodName, Map<String, dynamic> param,
     debugPrint("catchError== $error");
     _handleError(error, callback);
   });
+}
+
+multipartPostAPI(
+    {required String methodName,
+    required Map<String, String> param,
+    required Function(ResponseAPI) callback,
+    profilePic,licencePhoto}) async {
+  var url = ApiConstant.baseUrl + methodName;
+  var uri = Uri.parse(url);
+  debugPrint("==request== $uri");
+  debugPrint("==Params== $param");
+  final imageUploadRequest = http.MultipartRequest('POST', uri);
+  if (profilePic != null) {
+    final file = await http.MultipartFile.fromPath('profile_pic', profilePic,
+        filename: "profile_pic");
+    final file2 = await http.MultipartFile.fromPath('licence_photo', licencePhoto,
+        filename: "licence_photo");
+    debugPrint("==profile_pic== $profilePic");
+    imageUploadRequest.files.add(file);
+    imageUploadRequest.files.add(file2);
+
+  }
+  imageUploadRequest.fields.addAll(param);
+  try {
+    final streamedResponse = await imageUploadRequest.send();
+    await http.Response.fromStream(streamedResponse).then((value) {
+      _handleResponse(value, callback);
+    }).onError((error, stackTrace) {
+      _handleError(error, callback);
+    }).catchError((error) {
+      debugPrint("catchError== $error");
+      _handleError(error, callback);
+    });
+  } catch (e) {
+    _handleError(e, callback);
+    // return null;
+  }
 }

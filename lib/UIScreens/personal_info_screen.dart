@@ -178,26 +178,25 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     if (formKey.currentState!.validate()) {
       bool isValid = isValidEmail(txtEmail.text);
       if (isValid) {
-        Map<String, dynamic> _map = {
-          "driverId": AppConstants.userID,
-          "first_name": txtFName.text,
-          "last_name": txtLName.text,
-          "email": txtEmail.text,
-          "city": txtCity.text,
-          //"cityLatitude": cityLatitude.toString(),
-          // "cityLongitude": cityLongitude.toString(),
+        Map<String, String> _map = {
+          "id": AppConstants.userID,
+          "first_name": txtFName.text.toString(),
+          "last_name": txtLName.text.toString(),
+          "email": txtEmail.text.toString(),
+          "city": txtCity.text.toString(),
           "language": "english",
           "referral_code": txtReferralCode.text.isNotEmpty
               ? txtReferralCode.text
               : "referralCode",
-          "vehicle_manufacturer": txtVehicleMF.text,
-          "vehicle_model": txtVehicleModel.text,
+          "vehicle_manufacturer": txtVehicleMF.text.toString(),
+          "vehicle_model": txtVehicleModel.text.toString(),
           "vehicle_year": txtVehicleYear.text.toString(),
           "licence_plate": txtLicensePlate.text,
           "vehicle_color": txtVehicleColor.text
         };
-        //  signUpController.register2(_map, context);
-        Get.to(() => const LicenceDetailScreen());
+        printInfo( info: _map.toString());
+         signUpController.register2(_map, context);
+       // Get.to(() => const LicenceDetailScreen());
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(greenSnackBar(ErrorMessage.emailError2));

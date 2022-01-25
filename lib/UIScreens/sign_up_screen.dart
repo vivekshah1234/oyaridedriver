@@ -99,13 +99,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 onPressed: () {
                                   if (txtNum.text.isNotEmpty) {
                                     if (txtPwd.text.isNotEmpty) {
-                                      Map<String, dynamic> map = {};
+                                      Map<String, String> map = {};
                                       map["country_code"]=countryCode.toString();
                                       map["mobile_number"] = txtNum.text.toString();
                                       map["password"] = txtPwd.text.toString();
                                       map["role"]="driver";
-                                    //  map["profile_pic"]="";
-                                      printInfo(info: map.toString());
+
                                      signUpController.register1(map, context);
 
                                     } else {
@@ -322,7 +321,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
 
         // Set default value
-        initialSelection: '+62',
+        initialSelection: countryCode,
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {

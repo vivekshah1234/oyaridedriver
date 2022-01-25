@@ -108,16 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: context.heightPct(.02),
                               ),
                               AppButton(
-                                      onPressed: () {
-                                        // if (formKey.currentState!.validate()) {
-                                        //   Map<String, dynamic> map = {
-                                        //     "phoneNo": txtNum.text,
-                                        //     "password": txtPwd.text.toString()
-                                        //   };
-                                        //   loginController.login(map, context);
-                                        // }
-                                        Get.to(() => const MapHomeScreen());
-                                      },
+                                      onPressed: login,
                                       text: "LOGIN",
                                       color: AllColors.blueColor)
                                   .paddingSymmetric(horizontal: 45),
@@ -166,6 +157,18 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  login() {
+    if (formKey.currentState!.validate()) {
+      Map<String, String> _map = {
+        "mobile_number": txtNum.text.toString(),
+        "country_code": countryCode.toString(),
+        "password": txtPwd.text.toString(),
+        "role": "driver"
+      };
+
+      loginController.login(_map, context);
+    }
+  }
 
   bool showPassWord = true;
 
