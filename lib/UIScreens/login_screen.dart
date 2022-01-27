@@ -341,7 +341,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
 
         // Set default value
-        initialSelection: '+62',
+        initialSelection: countryCode,
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {

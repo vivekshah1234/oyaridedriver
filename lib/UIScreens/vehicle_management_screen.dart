@@ -38,7 +38,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
         child: GetX<VehicleController>(
             init: VehicleController(),
             builder: (controller) {
-              if(controller.isLoading.value){
+              if (controller.isLoading.value) {
                 return Center(child: greenLoadingWidget());
               }
               return SingleChildScrollView(
@@ -49,8 +49,8 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                       height: 20,
                     ),
                     AppButton(
-                            onPressed: ()  async {
-                            await   Get.to(() => const AddNewVehicleScreen());
+                            onPressed: () async {
+                              await Get.to(() =>  AddNewVehicleScreen(toEdit: false,));
                               vehicleController.getVehicles();
                             },
                             text: "ADD NEW VEHICLE",
@@ -64,66 +64,98 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
     );
   }
 
+  int selectedCardIndex = 0;
+
   Widget vehicleListView() {
     return ListView.builder(
         itemCount: vehicleController.vehicleList.length,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          VehicleList  vehicle=vehicleController.vehicleList[index];
-          return Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(width: 1.0, color: Colors.grey.shade300),
+          VehicleList vehicle = vehicleController.vehicleList[index];
+
+          return GestureDetector(
+            onTap: () async {
+              await  Get.to(()=>  AddNewVehicleScreen(
+                toEdit: true,
+              txtCarNumber: vehicle.licencePlate.toString(),
+                txtColor: vehicle.vehicleColor.toString(),
+                txtTaxiType: vehicle.vehicleTypeId.toString(),
+                txtVehicleBrand: vehicle.vehicleManufacturer.toString(),
+                txtVehicleModel: vehicle.vehicleModel.toString(),
+                txtVehicleYear: vehicle.vehicleYear.toString(),
+                vehicleId: vehicle.id.toString(),
+              ));
+              vehicleController.getVehicles();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 1.0, color: Colors.grey.shade300),
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 30.0, top: 17, bottom: 17, right: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: AllColors.greenColor,
-                        radius: 23,
-                        child: const Icon(
-                          Icons.car_rental,
-                          color: AllColors.whiteColor,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 30.0, top: 17, bottom: 17, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AllColors.greenColor,
+                          radius: 23,
+                          child: const Icon(
+                            Icons.car_rental,
+                            color: AllColors.whiteColor,
+                          ),
                         ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(vehicle.vehicleModel,
+                                style: const TextStyle(
+                                    fontSize: 19,
+                                    color: AllColors.blackColor,
+                                    fontWeight: FontWeight.w600)),
+                            Text(vehicle.licencePlate,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    color: AllColors.blackColor,
+                                    fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 30,
+                      child: RadioListTile(
+                        groupValue:vehicle.isActiveVehicle,
+                        value:index,
+                        tileColor: Colors.white,
+                        selectedTileColor: Colors.white,
+                        activeColor: AllColors.greenColor,
+                        onChanged: (val) {
+                          setState(()  {
+                            // radioItemHolder = nList[i].number;
+
+                            Map<String, String> map = {
+                              "vehicle_id": vehicle.id.toString()
+                            };
+                            setState(() {
+
+                            });
+                            vehicleController.changeActiveVehicle(map, context);
+                            // vehicleController.getVehicles();
+                          });
+                        },
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:  [
-                          Text(vehicle.vehicleModel,
-                              style: const TextStyle(
-                                  fontSize: 19,
-                                  color: AllColors.blackColor,
-                                  fontWeight: FontWeight.w600)),
-                          Text(vehicle.vehicleModel,
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  color: AllColors.blackColor,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => const AddNewVehicleScreen());
-                    },
-                    child: Text("EDIT",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: AllColors.greenColor,
-                            fontWeight: FontWeight.w600)),
-                  ),
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           );

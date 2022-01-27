@@ -54,4 +54,37 @@ class VehicleController extends GetxController {
     }
   }
 
+  changeActiveVehicle(Map<String,String> map,context) async {
+  //  isLoading(true);
+    bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
+    printInfo(info: "expire token====" + hasExpired.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (hasExpired == true) {
+      //refreshToken
+      var token = await refreshTokenApi();
+      AppConstants.userToken = token;
+      prefs.setString("token", AppConstants.userToken);
+    }
+    if (AppConstants.userToken != "userToken") {
+    postAPIWithHeader(ApiConstant.changeActiveVehicle, map, (value){
+      if (value.code == 200) {
+        Map<String, dynamic> valueMap = json.decode(value.response);
+        if (valueMap["status"] == 200) {
+
+          isLoading(false);
+        } else {
+          isLoading(false);
+          printError(
+            info: valueMap["status"].toString(),
+          );
+        }
+      } else {
+        isLoading(false);
+        printError(
+          info: value.response.toString(),
+        );
+      }
+    });
+  }
+  }
 }

@@ -15,6 +15,8 @@ class ApiConstant {
   static String addVehicle="/user/vehicle";
   static String vehicleTypes="/user/vehicle-type";
   static String forgetPassword="/auth/forgot-password";
+  static String changeActiveVehicle="/user/change-active-vehicle";
+  static String editVehicle="/user/edit-vehicle";
 }
 
 abstract class AppConstants {

@@ -31,7 +31,7 @@ class VehicleList {
     required this.vehicleModel,
     required this.vehicleYear,
     required this.vehicleColor,
-    this.vehicleTypeId,
+    required this.vehicleTypeId,
     required this.isActiveVehicle,
     required this.createdAt,
     required this.updatedAt,
@@ -42,6 +42,7 @@ class VehicleList {
   late final String vehicleModel;
   late final String vehicleYear;
   late final String vehicleColor;
+  late final String licencePlate;
   late final dynamic vehicleTypeId;
   late final int isActiveVehicle;
   late final String createdAt;
@@ -54,7 +55,8 @@ class VehicleList {
     vehicleModel = json['vehicle_model'];
     vehicleYear = json['vehicle_year'];
     vehicleColor = json['vehicle_color'];
-    vehicleTypeId = null;
+    vehicleTypeId = json["vehicle_type_id"];
+    licencePlate=json["licence_plate"];
     isActiveVehicle = json['is_active_vehicle'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -69,6 +71,7 @@ class VehicleList {
     _data['vehicle_year'] = vehicleYear;
     _data['vehicle_color'] = vehicleColor;
     _data['vehicle_type_id'] = vehicleTypeId;
+    _data["licence_plate"]=licencePlate;
     _data['is_active_vehicle'] = isActiveVehicle;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
