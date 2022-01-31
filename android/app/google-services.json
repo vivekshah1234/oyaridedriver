@@ -29,6 +29,13 @@
             {
               "client_id": "901024076132-q1ipnnuk9vgeuests2i78jehp0dosboh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "901024076132-ol6fne945ea9m5tcu8h9irqs3mo7vhtc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oyariderider.AppleIOS"
+              }
             }
           ]
         }
@@ -58,6 +65,13 @@
             {
               "client_id": "901024076132-q1ipnnuk9vgeuests2i78jehp0dosboh.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "901024076132-ol6fne945ea9m5tcu8h9irqs3mo7vhtc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oyariderider.AppleIOS"
+              }
             }
           ]
         }
