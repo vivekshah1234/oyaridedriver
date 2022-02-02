@@ -14,7 +14,7 @@ import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
-import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'all_colors.dart';

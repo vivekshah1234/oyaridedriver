@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
-import 'package:oyaridedriver/UIScreens/sign_up_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/sign_up_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {

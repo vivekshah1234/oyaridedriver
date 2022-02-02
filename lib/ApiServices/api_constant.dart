@@ -39,7 +39,7 @@ abstract class AppConstants {
 }
 
 class ApiKeys {
-  static String mapApiKey = "AIzaSyAd4_jmop3HuG6CS3cVfWZ7hvNMXYkhlSo";
+  static String mapApiKey = "AIzaSyBQHOw2QG98dqVirCXbHr8gLcaD3W5JIYo";
 }
 
 class DummyData {

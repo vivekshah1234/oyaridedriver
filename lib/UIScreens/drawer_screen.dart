@@ -8,14 +8,14 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/chat_screen.dart';
-import 'package:oyaridedriver/UIScreens/map_screen.dart';
+import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_tripe_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'document_management_screen.dart';
-import 'login_screen.dart';
+import 'authScreens/login_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
 class DrawerScreen extends StatefulWidget {

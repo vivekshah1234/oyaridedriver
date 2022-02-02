@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
-import 'package:oyaridedriver/UIScreens/change_password_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/change_password_screen.dart';
 import 'package:oyaridedriver/UIScreens/recover_password_screen.dart';
 
 class ForgetPasswordController extends GetxController{

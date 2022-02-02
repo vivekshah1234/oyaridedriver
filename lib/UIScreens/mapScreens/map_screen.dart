@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:badges/badges.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,8 @@ import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import '../main.dart';
+import '../../main.dart';
+import '../cancel_ride_reason_dialog.dart';
 // ignore_for_file: prefer_const_constructors
 
 class MapHomeScreen extends StatefulWidget {
@@ -58,23 +60,35 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     super.initState();
     getCurrentPosition();
     init();
+    homeController.connectToSocket();
     //   setPolyline();
   }
+
+  connectToSocket() {}
 
   getCurrentPosition() async {
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
-    Map<String, String> map = {
-      "latitude": latitude.toString(),
-      "longitude": longitude.toString()
-    };
-    homeController.updateLocation(map);
     _lastMapPosition = LatLng(latitude, longitude);
     _kGooglePlex = CameraPosition(
       target: _lastMapPosition,
       zoom: 14.4746,
     );
+    Map<String, dynamic> map = {};
+    _locationSubscription =
+        _locationTracker.onLocationChanged.handleError((onError) {
+      printInfo(info: "Error=====" + onError);
+      _locationSubscription?.cancel();
+      setState(() {
+        _locationSubscription = null;
+      });
+    }).listen((newLocalData) async {
+      map["latitude"] = newLocalData.latitude;
+      map["longitude"] = newLocalData.longitude;
+      map["userId"] = AppConstants.userID;
+      homeController.updateLocation2(map);
+    });
     addMyMarker(latitude, longitude);
     isLoading = false;
     setState(() {});
@@ -163,7 +177,6 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                   key: _scaffoldKey,
                   extendBodyBehindAppBar: true,
                   drawer: DrawerScreen(),
-
                   appBar: AppBar(
                     backgroundColor: Colors.transparent,
                     elevation: 0,
@@ -191,7 +204,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                           builder: (BuildContext context,
                               int newNotificationCounterValue, Widget? child) {
                             return Badge(
-                              badgeColor: AllColors.redColor,
+                              badgeColor: AllColors.greenColor,
                               toAnimate: true,
                               badgeContent: Padding(
                                   padding: const EdgeInsets.only(top: 30.0),
@@ -308,19 +321,6 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               markers: _markers,
                               polylines: _polyLine,
                             ),
-                      Positioned(
-                          right: 20,
-                          top: MediaQuery.of(context).size.height*0.12,
-                          child: FloatingActionButton(
-                            onPressed: () {
-                              getCurrentPosition();
-                            },
-                            backgroundColor: AllColors.whiteColor,
-                            child: Icon(
-                              Icons.my_location_outlined,
-                              color: AllColors.greenColor,
-                            ),
-                          )),
                       Positioned(
                           bottom: 0,
                           left: 0,
@@ -443,15 +443,11 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                           color: AllColors
                                                               .blueColor,
                                                           onPressed: () {
-                                                            printInfo(
-                                                                info:
-                                                                    "************stop***********");
-                                                            _locationSubscription
-                                                                ?.cancel();
+                                                            cancelRide();
+                                                            _locationSubscription ?.cancel();
                                                             // _locationTracker.
                                                             setState(() {
-                                                              _locationSubscription =
-                                                                  null;
+                                                              _locationSubscription =null;
                                                             });
                                                           },
                                                         ),
@@ -571,6 +567,18 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     setState(() {});
   }
 
+  cancelRide(){
+    showAnimatedDialog(
+      context: context,barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return const CancelRide()
+            .alertCard(context);
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration:  const Duration(milliseconds: 500),
+    );
+  }
   setPolyline(route) async {
     polyLineCoordinates.clear();
     _polyLine.clear();

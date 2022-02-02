@@ -4,7 +4,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 
 import 'drawer_screen.dart';
-import 'edit_profile_screen.dart';
+import 'authScreens/edit_profile_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);

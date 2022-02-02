@@ -6,7 +6,7 @@ import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Models/login_modal.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
-import 'package:oyaridedriver/UIScreens/map_screen.dart';
+import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';

@@ -5,14 +5,14 @@ import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/forgot_password_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/forgot_password_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
-import 'package:oyaridedriver/UIScreens/sign_up_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/sign_up_screen.dart';
 import 'package:oyaridedriver/controllers/login_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
 
-import 'map_screen.dart';
+import '../mapScreens/map_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);

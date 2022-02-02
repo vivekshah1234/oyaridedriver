@@ -11,8 +11,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
-import 'package:oyaridedriver/UIScreens/login_screen.dart';
-import 'package:oyaridedriver/UIScreens/map_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -212,6 +212,7 @@ class _MyAppState extends State<MyApp> {
 
 Future<void> setUserData(User user) async {
   //
+  print("aaa=======");
   AppConstants.fullName = user.firstName+" "+user.lastName;
   AppConstants.mobileNo = user.mobileNumber;
   AppConstants.email = user.email;
@@ -246,6 +247,7 @@ Future<void> setUserData(User user) async {
       };
       bool isUserExist =
           await databaseMethods.checkUserExist(AppConstants.userID);
+      print("aaa2======="+isUserExist.toString());
       if (!isUserExist) {
         databaseMethods.addUserInfo(
             docId: AppConstants.userID, userData: userData);

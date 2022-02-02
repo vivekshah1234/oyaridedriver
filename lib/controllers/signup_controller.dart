@@ -7,7 +7,7 @@ import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
-import 'package:oyaridedriver/UIScreens/login_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

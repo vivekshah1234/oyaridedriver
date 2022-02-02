@@ -4,7 +4,7 @@ import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:oyaridedriver/UIScreens/change_password_screen.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/change_password_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/controllers/forget_password_controller.dart';
 import 'package:sized_context/src/extensions.dart';

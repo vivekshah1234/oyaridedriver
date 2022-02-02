@@ -67,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: txtCPwd,
                 prefixIcon: ImageAssets.passwordIcon,
                 labelText: "Confirm Password"),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             Row(
