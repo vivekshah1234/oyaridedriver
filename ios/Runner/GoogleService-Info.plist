@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>901024076132-tn3bl73o529545mnm559vuu01bkba0l2.apps.googleusercontent.com</string>
+	<string>246077239050-c3d366uttscsn0elkd0fm01o774prse4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.901024076132-tn3bl73o529545mnm559vuu01bkba0l2</string>
+	<string>com.googleusercontent.apps.246077239050-c3d366uttscsn0elkd0fm01o774prse4</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCSjZ8v3dM22RiJ1QKWoJIWgoe9k761xmc</string>
+	<string>AIzaSyAWF24YpXvP5AyGBZxwqcD-PyE2TsM2QOQ</string>
 	<key>GCM_SENDER_ID</key>
-	<string>901024076132</string>
+	<string>246077239050</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.oyaridedriver.AppleIOS</string>
 	<key>PROJECT_ID</key>
-	<string>oyaride-dddd9</string>
+	<string>oyaride-a5a44</string>
 	<key>STORAGE_BUCKET</key>
-	<string>oyaride-dddd9.appspot.com</string>
+	<string>oyaride-a5a44.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:901024076132:ios:f2f7b42712a56de59c2a71</string>
+	<string>1:246077239050:ios:dfdc0f93918627d9c554f3</string>
 </dict>
 </plist>

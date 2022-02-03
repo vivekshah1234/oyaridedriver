@@ -175,6 +175,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   registerPersonalInfo() {
+
     if (formKey.currentState!.validate()) {
       bool isValid = isValidEmail(txtEmail.text);
       if (isValid) {
@@ -191,8 +192,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           "vehicle_manufacturer": txtVehicleMF.text.toString(),
           "vehicle_model": txtVehicleModel.text.toString(),
           "vehicle_year": txtVehicleYear.text.toString(),
-          "licence_plate": txtLicensePlate.text,
-          "vehicle_color": txtVehicleColor.text
+          "licence_plate": txtLicensePlate.text.toString(),
+          "vehicle_color": txtVehicleColor.text.toString()
         };
         printInfo( info: _map.toString());
          signUpController.register2(_map, context);

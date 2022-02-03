@@ -7,7 +7,7 @@ class Messaging {
 
   // from 'https://console.firebase.google.com'
   // --> project settings --> cloud messaging --> "Server key"
-  static const String serverKey = 'AAAAS9hbRwk:APA91bEpkXt9EZwOzFqj7VkaDf5_PCznvW1kvGLaIYhbgZ7ZGqKAxgxQ4RQEk_c4hchNSi5hMyGSi8lnqj77kcjJzIaZVV65BODyzzY3TsssGIF5f861i_ykUX-DrSHfDbrNk9zD1Zmf';
+  static const String serverKey = 'AAAAOUtYrwo:APA91bGKeHxmeuERL70kOM8mgXP6i5aG1jbqpGnNjx0jw5pIUKPFtTtOv2X2v9kmPUbo21oOp6MM-sY02Q6G2Hsoxci5HwROEb-dgynJQdg7jSpgfgGgvpheo4WkCBzMvv7_EbGsMO0V';
 
   static Future<Response> sendToAll({
     required String title,

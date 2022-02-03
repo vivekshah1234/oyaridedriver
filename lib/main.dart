@@ -147,6 +147,7 @@ class _MyAppState extends State<MyApp> {
             onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -220,7 +221,6 @@ Future<void> setUserData(User user) async {
   AppConstants.userID = user.id.toString();
 
   if (user.profilePic != null) {
-
     AppConstants.profilePic = user.profilePic;
   }
 
@@ -247,11 +247,13 @@ Future<void> setUserData(User user) async {
       };
       bool isUserExist =
           await databaseMethods.checkUserExist(AppConstants.userID);
-      print("aaa2======="+isUserExist.toString());
+
       if (!isUserExist) {
+        print("aaa2======="+isUserExist.toString());
         databaseMethods.addUserInfo(
             docId: AppConstants.userID, userData: userData);
       } else {
+        print("aaa3======="+isUserExist.toString());
         await FirebaseFirestore.instance
             .collection("users")
             .doc(AppConstants.userID)
