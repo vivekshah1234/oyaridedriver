@@ -3,7 +3,6 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 
 import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:sized_context/src/extensions.dart';
 
 class RecoverPasswordScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class RecoverPasswordScreen extends StatefulWidget {
 class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   TextEditingController txtResetCode = TextEditingController();
   TextEditingController txtNewPwd = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {

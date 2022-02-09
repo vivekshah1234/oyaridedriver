@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:sized_context/sized_context.dart';
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
 

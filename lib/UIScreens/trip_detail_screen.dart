@@ -1,14 +1,11 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
-import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:timelines/timelines.dart';
 
@@ -63,9 +60,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
         const PointLatLng(23.0225, 72.5714));
 
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     }
     setState(() {
       _polyLine.add(Polyline(
@@ -119,7 +116,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:  [
@@ -147,7 +144,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                             TimelineTile(
                               nodeAlign: TimelineNodeAlign.start,
                               contents: Container(
-                                padding: EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -223,8 +220,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                           color:Colors.grey.shade200,
                           borderRadius: BorderRadius.circular(5)
                         ),
-                        padding: EdgeInsets.only(left: 5,right: 5,bottom: 5,top: 5),
-                        child: Center(child: Text("Receipt",style: TextStyle(),)),
+                        padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5,top: 5),
+                        child: const Center(child: Text("Receipt",style: TextStyle(),)),
                       ),
                       )
                     ],
@@ -246,7 +243,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       itemSize: 16,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                       itemBuilder: (context, _) => Icon(
                         Icons.star,
                         color: AllColors.greenColor,

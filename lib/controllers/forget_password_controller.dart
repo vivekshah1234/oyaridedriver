@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
-import 'package:oyaridedriver/UIScreens/authScreens/change_password_screen.dart';
 import 'package:oyaridedriver/UIScreens/recover_password_screen.dart';
 
 class ForgetPasswordController extends GetxController{
@@ -19,7 +18,7 @@ class ForgetPasswordController extends GetxController{
         if (valueMap["status"] == 200) {
 
           isLoading(false);
-          Get.to(()=>RecoverPasswordScreen());
+          Get.to(()=>const RecoverPasswordScreen());
         } else {
           isLoading(false);
           handleError(valueMap["status"].toString(), context);

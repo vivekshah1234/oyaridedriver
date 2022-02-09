@@ -6,7 +6,6 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/search_city_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';

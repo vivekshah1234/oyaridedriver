@@ -14,14 +14,14 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       appBar: appBarWidget("Settings", scaffoldKey),
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,9 +29,9 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
             child: GestureDetector(
               onTap: () {
-                Get.to(() => EditProfileScreen());
+                Get.to(() => const EditProfileScreen());
               },
-              child: SettingOptions("Edit Profile"),
+              child: const SettingOptions("Edit Profile"),
             ),
           ),
           const Divider(
@@ -45,7 +45,7 @@ class _SettingScreenState extends State<SettingScreen> {
               onTap: () {
                 Get.to(() => const EditProfileScreen());
               },
-              child: SettingOptions("Privacy Policy")
+              child: const SettingOptions("Privacy Policy")
             ),
           ),
           const Divider(
@@ -59,7 +59,7 @@ class _SettingScreenState extends State<SettingScreen> {
               onTap: () {
                 Get.to(() => const EditProfileScreen());
               },
-              child: SettingOptions("Terms and Conditions")
+              child: const SettingOptions("Terms and Conditions")
             ),
           ),
           const Divider(
@@ -73,7 +73,7 @@ class _SettingScreenState extends State<SettingScreen> {
               onTap: () {
                 Get.to(() => const EditProfileScreen());
               },
-              child: SettingOptions("Help")
+              child: const SettingOptions("Help")
             ),
           ),
         ],
@@ -84,7 +84,7 @@ class _SettingScreenState extends State<SettingScreen> {
 class SettingOptions extends StatelessWidget {
 
   final String title;
-  SettingOptions(this.title);
+  const SettingOptions(this.title);
   @override
   Widget build(BuildContext context) {
     return  Row(

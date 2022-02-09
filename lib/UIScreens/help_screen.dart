@@ -11,7 +11,7 @@ class HelpScreen extends StatefulWidget {
 }
 
 class _HelpScreenState extends State<HelpScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {

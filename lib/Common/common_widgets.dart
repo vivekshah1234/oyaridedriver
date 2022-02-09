@@ -99,7 +99,7 @@ Widget greenLoadingWidget() {
 //   );
 // }
 
-AppBar appBarWidget(txt,GlobalKey<ScaffoldState> scaffoldKey) {
+AppBar appBarWidget(txt, GlobalKey<ScaffoldState> scaffoldKey) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
@@ -116,24 +116,38 @@ AppBar appBarWidget(txt,GlobalKey<ScaffoldState> scaffoldKey) {
         ),
       ),
     ),
-    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
+    title: textWidget(
+        txt: txt,
+        fontSize: 25,
+        color: AllColors.blackColor,
+        bold: FontWeight.w600,
+        italic: false),
     centerTitle: true,
   );
 }
+
 AppBar appBarWidget2(txt) {
   return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
-    leading:  Padding(
+    leading: Padding(
       padding: const EdgeInsets.only(left: 18.0),
       child: GestureDetector(
-          onTap: (){
+          onTap: () {
             Get.back();
           },
-
-          child: Icon(Icons.arrow_back_ios,color: AllColors.blackColor,size: 35,)),
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: AllColors.blackColor,
+            size: 35,
+          )),
     ),
-    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
+    title: textWidget(
+        txt: txt,
+        fontSize: 25,
+        color: AllColors.blackColor,
+        bold: FontWeight.w600,
+        italic: false),
     centerTitle: true,
   );
 }
@@ -142,12 +156,9 @@ Widget textFieldWithoutIcon({controller, labelText, errorText}) {
   return TextField(
     controller: controller,
     cursorColor: AllColors.blackColor,
-
     decoration: InputDecoration(
       labelText: labelText,
-      labelStyle: const TextStyle(
-          color: AllColors.greyColor,fontSize: 13
-      ),
+      labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
       border: const UnderlineInputBorder(
         borderSide: BorderSide(color: AllColors.greyColor),
       ),
@@ -164,24 +175,29 @@ Widget textFieldWithoutIcon({controller, labelText, errorText}) {
   );
 }
 
-SnackBar whiteSnackBar(String txt,) => SnackBar(
-  content: Text(
-    txt,
-    style: TextStyle(color: AllColors.blackColor
-        , fontWeight: FontWeight.bold),
-  ),
-  backgroundColor: AllColors.whiteColor,
-);
+SnackBar whiteSnackBar(
+  String txt,
+) =>
+    SnackBar(
+      content: Text(
+        txt,
+        style:
+            TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: AllColors.whiteColor,
+    );
 
-SnackBar greenSnackBar(String txt,) => SnackBar(
-  content: Text(
-    txt,
-    style: TextStyle(color: AllColors.blackColor
-        , fontWeight: FontWeight.bold),
-  ),
-  backgroundColor: AllColors.greenColor,
-);
-
+SnackBar greenSnackBar(
+  String txt,
+) =>
+    SnackBar(
+      content: Text(
+        txt,
+        style:
+            TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: AllColors.greenColor,
+    );
 
 class RiderRequest extends StatelessWidget {
   final String name;
@@ -195,13 +211,13 @@ class RiderRequest extends StatelessWidget {
 
   const RiderRequest(
       {required this.name,
-        required this.imgUrl,
-        required this.price,
-        required this.km,
-        required this.pickUpPoint,
-        required this.dropOffPoint,
-        required this.acceptOnTap,
-        required this.ignoreOnTap});
+      required this.imgUrl,
+      required this.price,
+      required this.km,
+      required this.pickUpPoint,
+      required this.dropOffPoint,
+      required this.acceptOnTap,
+      required this.ignoreOnTap});
 
   @override
   Widget build(BuildContext context) {
@@ -242,21 +258,23 @@ class RiderRequest extends StatelessWidget {
                       const SizedBox(
                         height: 3,
                       ),
-                      textWidget(
-                          txt: pickUpPoint,
+                      Text(
+                        pickUpPoint,
+                        maxLines: 1,
+                        style: TextStyle(
                           fontSize: 12,
                           color: AllColors.greyColor,
-                          bold: FontWeight.normal,
-                          italic: false),
+
+                        ),)
                     ],
                   ),
                 ),
                 node: TimelineNode(
                     indicator: ContainerIndicator(
                         child: CircleAvatar(
-                          backgroundColor: AllColors.greenColor,
-                          radius: 4,
-                        )),
+                      backgroundColor: AllColors.greenColor,
+                      radius: 4,
+                    )),
                     endConnector: const DashedLineConnector(
                       color: AllColors.greyColor,
                     )),
@@ -277,12 +295,14 @@ class RiderRequest extends StatelessWidget {
                       const SizedBox(
                         height: 3,
                       ),
-                      textWidget(
-                          txt: dropOffPoint,
+                      Text(
+                       dropOffPoint,
+                          maxLines: 1,
+                          style: TextStyle(
                           fontSize: 12,
                           color: AllColors.greyColor,
-                          bold: FontWeight.normal,
-                          italic: false),
+
+                        ),)
                     ],
                   ),
                 ),
@@ -292,9 +312,9 @@ class RiderRequest extends StatelessWidget {
                   ),
                   indicator: ContainerIndicator(
                       child: CircleAvatar(
-                        backgroundColor: AllColors.blueColor,
-                        radius: 4,
-                      )),
+                    backgroundColor: AllColors.blueColor,
+                    radius: 4,
+                  )),
                 ),
               ),
               // const SizedBox(height: 20,),
@@ -329,9 +349,9 @@ class RiderRequest extends StatelessWidget {
 
   Widget userDetails(
       {required String txt,
-        required String imgUrl,
-        required double charge,
-        required double kiloMeter}) {
+      required String imgUrl,
+      required double charge,
+      required double kiloMeter}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -347,10 +367,9 @@ class RiderRequest extends StatelessWidget {
             flex: 6,
             child: Row(
               children: [
-                 CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AllColors.greyColor,
-                  backgroundImage: NetworkImage(
-                      "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),
+                  backgroundImage: NetworkImage(imgUrl),
                   radius: 32,
                 ),
                 const SizedBox(
@@ -490,16 +509,13 @@ class _GiveRatingWidgetState extends State<GiveRatingWidget> {
   }
 }
 
-
 class AppButton extends StatelessWidget {
   final GestureTapCallback onPressed;
   final String text;
   final Color color;
-  const AppButton({
-    required this.onPressed,
-    required this.text,
-    required this.color
-  });
+
+  const AppButton(
+      {required this.onPressed, required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {

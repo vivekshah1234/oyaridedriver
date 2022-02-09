@@ -1,25 +1,51 @@
+import 'dart:async';
 import 'dart:convert';
-
+import 'package:oyaridedriver/Models/request_model.dart';
+import 'package:oyaridedriver/UIScreens/rider_list_cart_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
-import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swipe_cards/swipe_cards.dart';
+
+// STEP1:  Stream setup
+class StreamSocket {
+  final _socketResponse = StreamController<String>();
+
+  void Function(String) get addResponse => _socketResponse.sink.add;
+
+  Stream<dynamic> get getResponse => _socketResponse.stream;
+
+  void dispose() {
+    _socketResponse.close();
+  }
+}
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   late IO.Socket _socket;
-  getRequest() {}
+  StreamSocket streamSocket = StreamSocket();
+  final List<SwipeItem> swipeItems = <SwipeItem>[];
+  late MatchEngine matchEngine;
+  List<Map<String, dynamic>> dataList = [];
+  RxBool isAddingData = false.obs;
+  RxList<RequestModel> requestList = <RequestModel>[].obs;
+
+  RxInt currentAppState = 0.obs;
+
+  @override
+  void onInit() {
+    init(requestList);
+    super.onInit();
+  }
 
   changeUserStatus(Map<String, String> map, context) async {
     isLoading(true);
-    // postAPIWithHeader(APiC, param, callback)
     bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
-    print("expire token====" + hasExpired.toString());
+    printInfo(info: "expire token====" + hasExpired.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (hasExpired == true) {
       //refreshToken
@@ -46,52 +72,112 @@ class HomeController extends GetxController {
           }
         } else {
           isLoading(false);
-
           handleError(value.error.toString(), context);
-
           printError(info: value.error.toString());
         }
       });
     }
   }
 
-
-
-
-  connectToSocket(){
-//    printInfo(info: "inside=================");
-    try{
-    _socket = IO.io('http://3.13.6.132:3900', <String, dynamic>{
-      'transports': ['websocket', 'polling'],
-      'forceNew': true,
-      'reconnecting': true,
-      'timeout': 50000
-    });
-    _socket.connect();
-    printInfo(info: _socket.connected.toString());
-    _socket.on("connect", (_) {
+  connectToSocket() {
+    try {
+      _socket = IO.io('http://3.13.6.132:3900', <String, dynamic>{
+        'transports': ['websocket', 'polling'],
+        'forceNew': true,
+        'reconnecting': true,
+        'timeout': 50000
+      });
+      _socket.connect();
       printInfo(info: _socket.connected.toString());
-      printInfo(info: 'Socket Connected================');
-      // Map<String, dynamic> map = {};
-      // map["shipper_order_id"] = widget.courierData.id.toString();
-      // printInfo(info: "a====${widget.courierData.id}");
-      // _socket.emit("updateDriverLocation", map);
-    });
-
-    }catch(Ex){
-      printError(info:"Socket Error"+ Ex.toString());
+      _socket.on("connect", (_) {
+        printInfo(info: _socket.connected.toString());
+        printInfo(info: 'Socket Connected================');
+      });
+    } catch (ex) {
+      printError(info: "Socket Error" + ex.toString());
     }
   }
 
-
-  updateLocation2(Map<String, dynamic> map) async{
-    try{
-      printInfo(info: "Updated Location===="+map.toString());
-      _socket.emit('updateDriverLocation', map);
-
-    }catch(Ex){
-      printError(info:"Socket Error"+ Ex.toString());
+  updateLocation2(Map<String, dynamic> map) async {
+    try {
+      // printInfo(info: "Updated Location====" + map.toString());
+      _socket.emit(SocketEvents.updateDriverLocation, map);
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
     }
+  }
 
+  sendIdToSocket(Map<String, dynamic> map) async {
+    isAddingData(true);
+
+    printInfo(info: "getRequest==========" + isAddingData.value.toString());
+    try {
+      _socket.emit(SocketEvents.getRequest, map);
+      getDataFromSocket();
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  getDataFromSocket() {
+    _socket.on(SocketEvents.sendRequest, (data) {
+      printInfo(info: "getData==========" + data.toString());
+      Map<String, dynamic> valueMap = json.decode(data);
+      RequestModel requestModel = RequestModel.fromJson(valueMap);
+      requestList.add(requestModel);
+      init(requestList);
+      if (swipeItems.isNotEmpty) {
+        printInfo(info: "inside===");
+        isAddingData(false);
+      }
+      return streamSocket.addResponse;
+    });
+  }
+
+  init(List<RequestModel> requestList) {
+    for (int i = 0; i < requestList.length - 1; i++) {
+      swipeItems.add(SwipeItem(
+          content: Content(
+              name: requestList[i].userName,
+              imgurl: requestList[i].profilePic,
+              charge: 50.0,
+              kiloMeter: requestList[i].kilometer.toDouble(),
+              pickUpPoint: requestList[i].sourceAddress,
+              destinationPoint: requestList[i].destinationAddress),
+          likeAction: () {
+            printInfo(info: "like");
+            // acceptRequest(i);
+          },
+          nopeAction: () {
+            printInfo(info: "nope");
+            printInfo(info: "i=====" + i.toString());
+            printInfo(info: "swipeItems====" + swipeItems.length.toString());
+            if (i == requestList.length - 1) {
+              allDataClear();
+            }
+          },
+          superlikeAction: () {
+            printInfo(info: "super Like");
+            if (i == requestList.length - 1) {
+              allDataClear();
+            }
+          }));
+    }
+    printInfo(info: "swipeItems==========" + swipeItems.length.toString());
+    matchEngine = MatchEngine(swipeItems: swipeItems);
+  }
+
+  acceptRequest(Map<String, dynamic> map) {
+    try {
+      _socket.emit(SocketEvents.acceptRequest, map);
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  allDataClear() {
+    requestList.clear();
+    swipeItems.clear();
+    isAddingData(false);
   }
 }

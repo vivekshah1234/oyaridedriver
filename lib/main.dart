@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
-import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -153,12 +152,8 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
      RemoteNotification? notification = message.notification;
       printInfo(info: 'A new onMessage event was published!');
-      _showNotification(1234, notification!.title.toString(),
+      showNotification(1234, notification!.title.toString(),
           notification.body.toString(), "GET PAYLOAD FROM message userECT");
-      //    MyCustomNotification(notificationCounterValueNotifier.value);
-      notificationCounterValueNotifier.value++;
-      notificationCounterValueNotifier.notifyListeners();
-      printInfo(info: notificationCounterValueNotifier.value.toString());
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -270,7 +265,7 @@ Future<void> setUserData(User user) async {
   }
 }
 
-Future<void> _showNotification(
+Future<void> showNotification(
   int notificationId,
   String notificationTitle,
   String notificationContent,
@@ -278,6 +273,8 @@ Future<void> _showNotification(
   String channelId = '1234',
   String channelTitle = 'Android Channel',
 }) async {
+  notificationCounterValueNotifier.value++;
+  notificationCounterValueNotifier.notifyListeners();
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     channelId,
     channelTitle,

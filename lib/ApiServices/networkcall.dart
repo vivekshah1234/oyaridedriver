@@ -8,12 +8,7 @@ import 'api_constant.dart';
 
 Map<String, String> getHeaders() {
   var header = <String, String>{};
-  // header["language"] = "en";
-  // header["device_type"] = "1.0.0";
   header["Authorization"] = 'Bearer ${AppConstants.userToken}';
-  //print(AppConstants.userToken);
-  // headers["device_id"] = await getDeviceId();
-
   return header;
 }
 

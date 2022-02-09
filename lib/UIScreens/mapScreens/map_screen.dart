@@ -9,7 +9,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as poly_util;
-import 'package:marquee/marquee.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
@@ -38,7 +37,8 @@ class MapHomeScreen extends StatefulWidget {
 }
 
 class _MapHomeScreenState extends State<MapHomeScreen>
-    with FCMNotificationMixin, FCMNotificationClickMixin {
+    with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final Completer<GoogleMapController> _mapController = Completer();
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
@@ -50,21 +50,15 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   List<LatLng> polyLineCoordinates = [];
   late PolylinePoints polylinePoints;
   int status = -1;
-  final List<SwipeItem> _swipeItems = [];
-  late MatchEngine _matchEngine;
-  List<Map<String, dynamic>> dataList = [];
   HomeController homeController = Get.put(HomeController());
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     getCurrentPosition();
-    init();
     homeController.connectToSocket();
-    //   setPolyline();
   }
-
-  connectToSocket() {}
 
   getCurrentPosition() async {
     Position position = await determinePosition();
@@ -109,61 +103,21 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   }
 
   @override
-  void onNotify(RemoteMessage notification) {
-    printInfo(
-        info:
-            "notifying=========" + notification.notification!.body.toString());
-    dataList.addAll([
-      {
-        "name": "Ian Somerholder",
-        "imgUrl": imgUrl,
-        "charge": 50.0,
-        "kiloMeter": 15.0,
-        "sourcePoint": "Medical Education Center",
-        "destinationPoint": "Barthimam College",
-        "route": DummyData.route1,
-        "sourceLatLong": LatLng(22.9960, 72.4997),
-        "destinationLatLong": LatLng(23.0585, 72.5175),
-      },
-      {
-        "name": "Paul Welsey",
-        "imgUrl": imgUrl,
-        "charge": 50.0,
-        "kiloMeter": 15.0,
-        "sourcePoint": "Medical Education Center",
-        "destinationPoint": "Barthimam College",
-        "route": DummyData.route2,
-        "sourceLatLong": LatLng(22.9960, 72.4997),
-        "destinationLatLong": LatLng(23.0145, 72.5929),
-      },
-      {
-        "name": "Nina Doberev",
-        "imgUrl": imgUrl,
-        "charge": 50.0,
-        "kiloMeter": 15.0,
-        "sourcePoint": "Medical Education Center",
-        "destinationPoint": "Barthimam College",
-        "route": DummyData.route1,
-        "sourceLatLong": LatLng(22.9960, 72.4997),
-        "destinationLatLong": LatLng(23.0585, 72.5175),
-      },
-      {
-        "name": "Tony Somerholder",
-        "imgUrl": imgUrl,
-        "charge": 50.0,
-        "kiloMeter": 15.0,
-        "sourcePoint": "Medical Education Center",
-        "destinationPoint": "Barthimam College",
-        "route": DummyData.route2,
-        "sourceLatLong": LatLng(22.9960, 72.4997),
-        "destinationLatLong": LatLng(23.0145, 72.5929),
-      }
-    ]);
-    init();
+  void onNotify(RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    var notificationType = message.data["notificationType"];
+    showNotification(1234, notification!.title.toString(),
+        notification.body.toString(), "GET PAYLOAD FROM message userECT");
+    if (notificationType == "1") {
+      printInfo(info: "notifying1=========" + message.data.toString());
+      Map<String, String> map = {
+        "user_id": message.data["userId"],
+      };
+      homeController.sendIdToSocket(map);
+    }
+    // homeController.addData();
     setState(() {});
   }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -325,196 +279,211 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                           bottom: 0,
                           left: 0,
                           right: 0,
-                          child: _swipeItems.isEmpty
-                              ? Container()
-                              : Container(
-                                  child: status == -1
-                                      ? SizedBox(
-                                          height: calculateHeight(
-                                              MediaQuery.of(context)
-                                                  .size
-                                                  .height,
-                                              context),
-                                          child: SwipeCards(
-                                            matchEngine: _matchEngine,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return GestureDetector(
-                                                  onTap: () {
-                                                    Get.to(() =>
-                                                        const RiderDetailScreen());
-                                                  },
-                                                  child: RiderRequest(
-                                                    name: dataList[index]
-                                                        ["name"],
-                                                    imgUrl: dataList[index]
-                                                        ["imgUrl"],
-                                                    km: dataList[index]
-                                                        ["kiloMeter"],
-                                                    price: dataList[index]
-                                                        ["charge"],
-                                                    pickUpPoint: dataList[index]
-                                                        ["sourcePoint"],
-                                                    dropOffPoint: dataList[
-                                                            index]
-                                                        ["destinationPoint"],
-                                                    acceptOnTap: () {
-                                                      _matchEngine.currentItem
-                                                          ?.like();
-                                                      acceptRequest(index);
-                                                      setState(() {});
-                                                    },
-                                                    ignoreOnTap: () {
-                                                      _matchEngine.currentItem
-                                                          ?.nope();
-                                                      if (index !=
-                                                          dataList.length - 1) {
-                                                        setMarker(
-                                                            source: dataList[
-                                                                    index + 1][
-                                                                "sourceLatLong"],
-                                                            destination: dataList[
-                                                                    index + 1][
-                                                                "destinationLatLong"]);
-                                                        setPolyline(
-                                                            dataList[index + 1]
-                                                                ["route"]);
-                                                      }
-                                                      setState(() {});
-                                                    },
-                                                  ));
-                                            },
-                                            onStackFinished: () {
-                                              // _scaffoldKey.currentState
-                                              //     ?.showSnackBar(const SnackBar(
-                                              //   content: Text("Stack Finished"),
-                                              //   duration: Duration(milliseconds: 500),
-                                              // ));
-
-                                              polyLineCoordinates.clear();
-                                              _polyLine.clear();
-                                              _markers.clear();
-                                              setState(() {});
-                                            },
-                                          ),
-                                        )
-                                      : Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            color: AllColors.whiteColor,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              topRight: Radius.circular(40),
-                                              topLeft: Radius.circular(40),
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey
-                                                    .withOpacity(0.5),
-                                                spreadRadius: 5,
-                                                blurRadius: 7,
-                                                offset: const Offset(0,
-                                                    3), // changes position of shadow
-                                              ),
-                                            ],
-                                          ),
-
-                                          //  padding: EdgeInsets.only(top: 10),
-                                          child: Column(
-                                            children: [
-                                              locationDetails(),
-                                              status < 2
-                                                  ? RiderDetails(
-                                                      name: "Stella Josh",
-                                                      callButton: () {
-                                                        url_launcher.launch(
-                                                            "tel://21213123123");
+                          child: controller.isAddingData.value
+                              ? FetchingTheRequests()
+                              : controller.swipeItems.isEmpty
+                                  ? NoRequestCart()
+                                  : Container(
+                                      child: status == -1
+                                          ? SizedBox(
+                                              height: calculateHeight(
+                                                  MediaQuery.of(context)
+                                                      .size
+                                                      .height,
+                                                  context),
+                                              child: SwipeCards(
+                                                matchEngine:
+                                                    controller.matchEngine,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return GestureDetector(
+                                                      onTap: () {
+                                                        Get.to(() =>
+                                                            RiderDetailScreen(
+                                                                controller
+                                                                        .requestList[
+                                                                    index]));
                                                       },
-                                                    )
-                                                  : status == 2
-                                                      ? whileTravelingCart()
-                                                      : userCart3(),
-                                              status < 2
-                                                  ? Row(
-                                                      children: [
-                                                        SmallButton(
-                                                          text: "CANCEL",
-                                                          color: AllColors
-                                                              .blueColor,
-                                                          onPressed: () {
-                                                            cancelRide();
-                                                            _locationSubscription ?.cancel();
-                                                            // _locationTracker.
-                                                            setState(() {
-                                                              _locationSubscription =null;
-                                                            });
+                                                      child: RiderRequest(
+                                                        name: controller
+                                                            .requestList[index]
+                                                            .userName,
+                                                        imgUrl: controller
+                                                            .requestList[index]
+                                                            .profilePic,
+                                                        km: controller
+                                                            .requestList[index]
+                                                            .kilometer
+                                                            .toDouble(),
+                                                        price: 50.0,
+                                                        pickUpPoint: controller
+                                                            .requestList[index]
+                                                            .sourceAddress,
+                                                        dropOffPoint: controller
+                                                            .requestList[index]
+                                                            .destinationAddress,
+                                                        acceptOnTap: () {
+                                                          controller.matchEngine
+                                                              .currentItem
+                                                              ?.like();
+                                                          acceptRequest(index);
+                                                          setState(() {});
+                                                        },
+                                                        ignoreOnTap: () {
+                                                          controller.matchEngine
+                                                              .currentItem
+                                                              ?.nope();
+                                                          printInfo(info: "nope2");
+                                                          printInfo(info: "i====="+index.toString());
+                                                          printInfo(info: "swipeItems===="+controller.swipeItems.length.toString());
+                                                          if(index==controller.requestList.length-1){
+                                                            controller.allDataClear();
+                                                          }
+                                                          setState(() {});
+                                                        },
+                                                      ));
+                                                },
+                                                onStackFinished: () {
+                                                  polyLineCoordinates.clear();
+                                                  _polyLine.clear();
+                                                  _markers.clear();
+
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            )
+                                          : Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                color: AllColors.whiteColor,
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                  topRight: Radius.circular(40),
+                                                  topLeft: Radius.circular(40),
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: const Offset(0,
+                                                        3), // changes position of shadow
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  locationDetails(),
+                                                  status < 2
+                                                      ? RiderDetails(
+                                                          name: "Stella Josh",
+                                                          callButton: () {
+                                                            url_launcher.launch(
+                                                                "tel://21213123123");
                                                           },
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        if (status < 1)
-                                                          SmallButton(
-                                                            text: "ARRIVED",
-                                                            color: AllColors
-                                                                .greenColor,
-                                                            onPressed: () {
-                                                              status = 1;
-                                                              print("tap");
-                                                              setState(() {});
-                                                            },
-                                                          )
-                                                        else if (status == 1)
-                                                          SmallButton(
-                                                            text: "PICKED UP",
-                                                            color: AllColors
-                                                                .greenColor,
-                                                            onPressed: () {
-                                                              status = 2;
-                                                              print("tap");
-                                                              setState(() {});
-                                                            },
-                                                          )
-                                                        else if (status == 2)
-                                                          Container()
-                                                        // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
-                                                      ],
-                                                    ).putPadding(
-                                                      0,
-                                                      20,
-                                                      context.widthPct(0.08),
-                                                      context.widthPct(0.08),
-                                                    )
-                                                  : status == 2
-                                                      ? AppButton(
-                                                              text:
-                                                                  "TAP WHEN DROP",
-                                                              onPressed: () {
-                                                                status = 3;
-                                                                print("tap");
-                                                                setState(() {});
-                                                              },
+                                                        )
+                                                      : status == 2
+                                                          ? whileTravelingCart()
+                                                          : userCart3(),
+                                                  status < 2
+                                                      ? Row(
+                                                          children: [
+                                                            SmallButton(
+                                                              text: "CANCEL",
                                                               color: AllColors
-                                                                  .greenColor)
-                                                          .paddingSymmetric(
-                                                              horizontal: 15)
-                                                      : AppButton(
-                                                              text:
-                                                                  "CONFIRM PAYMENT",
+                                                                  .blueColor,
                                                               onPressed: () {
-                                                                status = 4;
-                                                                print("tap");
-                                                                setState(() {});
+                                                                cancelRide();
+                                                                _locationSubscription
+                                                                    ?.cancel();
+                                                                // _locationTracker.
+                                                                setState(() {
+                                                                  _locationSubscription =
+                                                                      null;
+                                                                });
                                                               },
-                                                              color: AllColors
-                                                                  .greenColor)
-                                                          .paddingSymmetric(
-                                                              horizontal: 15),
-                                            ],
-                                          ),
-                                        ),
-                                ))
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            if (status < 1)
+                                                              SmallButton(
+                                                                text: "ARRIVED",
+                                                                color: AllColors
+                                                                    .greenColor,
+                                                                onPressed: () {
+                                                                  status = 1;
+
+                                                                  setState(
+                                                                      () {});
+                                                                },
+                                                              )
+                                                            else if (status ==
+                                                                1)
+                                                              SmallButton(
+                                                                text:
+                                                                    "PICKED UP",
+                                                                color: AllColors
+                                                                    .greenColor,
+                                                                onPressed: () {
+                                                                  status = 2;
+
+                                                                  setState(
+                                                                      () {});
+                                                                },
+                                                              )
+                                                            else if (status ==
+                                                                2)
+                                                              Container()
+                                                            // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
+                                                          ],
+                                                        ).putPadding(
+                                                          0,
+                                                          20,
+                                                          context
+                                                              .widthPct(0.08),
+                                                          context
+                                                              .widthPct(0.08),
+                                                        )
+                                                      : status == 2
+                                                          ? AppButton(
+                                                                  text:
+                                                                      "TAP WHEN DROP",
+                                                                  onPressed:
+                                                                      () {
+                                                                    status = 3;
+                                                                    print(
+                                                                        "tap");
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  color: AllColors
+                                                                      .greenColor)
+                                                              .paddingSymmetric(
+                                                                  horizontal:
+                                                                      15)
+                                                          : AppButton(
+                                                                  text:
+                                                                      "CONFIRM PAYMENT",
+                                                                  onPressed:
+                                                                      () {
+                                                                    status = 4;
+                                                                    setState(
+                                                                        () {});
+                                                                  },
+                                                                  color: AllColors
+                                                                      .greenColor)
+                                                              .paddingSymmetric(
+                                                                  horizontal:
+                                                                      15),
+                                                ],
+                                              ),
+                                            ),
+                                    ))
                     ],
                   )),
               Visibility(
@@ -525,60 +494,25 @@ class _MapHomeScreenState extends State<MapHomeScreen>
         });
   }
 
-  init() {
-    for (int i = 0; i < dataList.length; i++) {
-      _swipeItems.add(SwipeItem(
-          content: Content(
-              name: dataList[i]["name"],
-              imgurl: dataList[i]["imgUrl"],
-              charge: dataList[i]["charge"],
-              kiloMeter: dataList[i]["kiloMeter"],
-              pickUpPoint: dataList[i]["sourcePoint"],
-              destinationPoint: dataList[i]["destinationPoint"]),
-          likeAction: () {
-            printInfo(info: "like");
-            acceptRequest(i);
-          },
-          nopeAction: () {
-            setMarker(
-                source: dataList[i + 1]["sourceLatLong"],
-                destination: dataList[i + 1]["destinationLatLong"]);
-            setPolyline(dataList[i + 1]["route"]);
-            printInfo(info: "nope");
-          },
-          superlikeAction: () {
-            printInfo(info: "super Like");
-          }));
-    }
-    polylinePoints = PolylinePoints();
-    if (dataList.isNotEmpty) {
-      setMarker(
-          source: dataList[0]["sourceLatLong"],
-          destination: dataList[0]["destinationLatLong"]);
-      setPolyline(dataList[0]["route"]);
-    }
-    _matchEngine = MatchEngine(swipeItems: _swipeItems);
-    setState(() {});
-  }
-
   acceptRequest(i) {
     status = 0;
     startLiveTracking();
     setState(() {});
   }
 
-  cancelRide(){
+  cancelRide() {
     showAnimatedDialog(
-      context: context,barrierColor: Colors.transparent,
+      context: context,
+      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return const CancelRide()
-            .alertCard(context);
+        return const CancelRide().alertCard(context);
       },
       animationType: DialogTransitionType.slideFromBottomFade,
       curve: Curves.fastOutSlowIn,
-      duration:  const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
     );
   }
+
   setPolyline(route) async {
     polyLineCoordinates.clear();
     _polyLine.clear();
@@ -954,14 +888,150 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   }
 
   @override
-  void dispose() {
-    printInfo(info: "dispose============");
-
-    super.dispose();
-  }
-
-  @override
   void onClick(RemoteMessage notification) {
     // TODO: implement onClick
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      //do your stuff
+      homeController.connectToSocket();
+    }
+
+  }
+}
+
+class NoRequestCart extends StatelessWidget {
+  const NoRequestCart({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AllColors.whiteColor,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(40),
+          topLeft: Radius.circular(40),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      padding: EdgeInsets.only(top: 7, bottom: 20),
+      child: Column(
+        children: [
+          Container(
+            height: 4,
+            width: MediaQuery.of(context).size.width * 0.35,
+            margin: EdgeInsets.only(top: 5, bottom: 15),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(15),
+            ),
+          ),
+          Text(
+            "Welcome, ${AppConstants.fullName}",
+            style: TextStyle(
+                fontSize: 20,
+                color: AllColors.blueColor,
+                fontWeight: FontWeight.bold),
+          ).paddingOnly(top: 0, bottom: 15),
+          Container(
+            height: 1.5,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey.shade300,
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          Text(
+            "Currently,You don't have any request.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 20,
+                color: AllColors.blueColor,
+                fontWeight: FontWeight.w300),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FetchingTheRequests extends StatelessWidget {
+  double bigFont = 23.0;
+  double smallFont = 14.0;
+  double mediumFont = 16.0;
+
+  FontWeight largeFontWeight = FontWeight.w900;
+  FontWeight mediumFontWeight = FontWeight.w600;
+  FontWeight normalFontWeight = FontWeight.normal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AllColors.whiteColor,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(40),
+          topLeft: Radius.circular(40),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            margin: const EdgeInsets.only(top: 10, bottom: 25),
+            height: 5,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10)),
+          ),
+          const Padding(
+            padding: EdgeInsets.only(left: 15.0, bottom: 15),
+            child: Text(
+              "Fetching the request",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          dividerWidget(),
+          LinearProgressIndicator(
+            backgroundColor: AllColors.blueColor,
+            valueColor: AlwaysStoppedAnimation(AllColors.greenColor),
+            minHeight: 5,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget dividerWidget() {
+  return Divider(
+    color: Colors.grey.shade300,
+    height: 2,
+    thickness: 1.5,
+  );
 }

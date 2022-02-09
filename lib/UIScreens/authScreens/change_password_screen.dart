@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:sized_context/src/extensions.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -16,7 +15,7 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController txtEmailId = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {

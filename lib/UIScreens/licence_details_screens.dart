@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,8 +10,6 @@ import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 
-import 'document_sent_screen.dart';
-import 'mapScreens/map_screen.dart';
 
 class LicenceDetailScreen extends StatefulWidget {
   const LicenceDetailScreen({Key? key}) : super(key: key);

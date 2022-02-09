@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'dart:async';
-import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
-import 'package:oyaridedriver/Common/common_methods.dart';
-import 'package:oyaridedriver/Common/common_widgets.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
+import 'package:oyaridedriver/Models/request_model.dart';
 import 'package:timelines/timelines.dart';
 
 class RiderDetailScreen extends StatefulWidget {
-  const RiderDetailScreen({Key? key}) : super(key: key);
+  final RequestModel requestModel;
+
+  const RiderDetailScreen(this.requestModel);
 
   @override
   _RiderDetailScreenState createState() => _RiderDetailScreenState();
@@ -54,7 +51,8 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
 
   getCurrentPosition() async {
     _kGooglePlex = CameraPosition(
-      target: LatLng(sourceLatitude, sourceLongitude),
+      target: LatLng(double.parse(widget.requestModel.sourceLatitude),
+          double.parse(widget.requestModel.sourceLongitude)),
       zoom: 14.4746,
     );
 
@@ -64,32 +62,36 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
 
   setMarker() {
     _markers.add(Marker(
-        markerId: MarkerId("source"),
-        position: LatLng(sourceLatitude, sourceLongitude),
+        markerId: const MarkerId("source"),
+        position:  LatLng(double.parse(widget.requestModel.sourceLatitude),
+            double.parse(widget.requestModel.sourceLongitude)),
         onTap: () {},
         draggable: false,
         zIndex: 2,
         flat: true,
-        anchor: Offset(0.5, 0.5),
+        anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.defaultMarkerWithHue(120)));
 
     _markers.add(Marker(
-        markerId: MarkerId("source"),
-        position: LatLng(destinationLatitude, destinationLongitude),
+        markerId: const MarkerId("destination"),
+        position:  LatLng(double.parse(widget.requestModel.destinationLatitude),
+            double.parse(widget.requestModel.destinationLongitude)),
         onTap: () {},
         draggable: false,
         zIndex: 2,
         flat: true,
-        anchor: Offset(0.5, 0.5),
+        anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.defaultMarker));
   }
 
   setPolyline() async {
     var result = await polylinePoints.getRouteBetweenCoordinates(
         ApiKeys.mapApiKey,
-        PointLatLng(sourceLatitude, sourceLongitude),
-        PointLatLng(destinationLatitude, destinationLongitude));
-
+        PointLatLng(double.parse(widget.requestModel.sourceLatitude),
+            double.parse(widget.requestModel.sourceLongitude)),
+        PointLatLng(double.parse(widget.requestModel.destinationLatitude),
+            double.parse(widget.requestModel.destinationLongitude)));
+    printInfo(info: result.errorMessage.toString());
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -116,17 +118,17 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                 const EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 0),
             child: Row(
               children: [
-                const CircleAvatar(
+                 CircleAvatar(
                   backgroundColor: AllColors.greyColor,
                   backgroundImage: NetworkImage(
-                      "https://image.shutterstock.com/image-photo/ian-somerhalder-lost-live-final-600w-102016990.jpg"),
+                     widget.requestModel.profilePic.toString()),
                   radius: 32,
                 ),
                 const SizedBox(
                   width: 20,
                 ),
                 Expanded(
-                  child: Text("Darpan Patel",
+                  child: Text(widget.requestModel.userName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -144,7 +146,6 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                           color: AllColors.blackColor,
                           bold: FontWeight.w600,
                           italic: false),
-
                     ],
                   ),
                 )
@@ -176,12 +177,13 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                         bottom: 10,
                         right: 10,
                         child: Container(
-                          decoration: BoxDecoration(color: AllColors.blueColor,
-                          borderRadius: BorderRadius.circular(5)
-                          ),
-                          padding: const EdgeInsets.only(left: 10,right: 10,bottom: 5,top: 5),
+                          decoration: BoxDecoration(
+                              color: AllColors.blueColor,
+                              borderRadius: BorderRadius.circular(5)),
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 10, bottom: 5, top: 5),
                           child: textWidget(
-                              txt: "Kilometer : 45 km",
+                              txt: "Kilometer : ${widget.requestModel.kilometer} km",
                               fontSize: ScreenUtil().setSp(15),
                               color: AllColors.whiteColor,
                               bold: FontWeight.w600,
@@ -220,7 +222,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                                     //     height: 3,
                                     //   ),
                                     Text(
-                                        "Shri Santram Mandir Marg, Shanti Nagar, Nadiad, Gujarat 387001",
+                                      widget.requestModel.sourceAddress,
                                         style: TextStyle(
                                           fontSize: smallFontSize,
                                           color: AllColors.greyColor,
@@ -255,7 +257,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                                     // const SizedBox(
                                     //   height: 3,
                                     // ),
-                                    Text("Makarba, Ahmedabad, Gujarat 380051",
+                                    Text(widget.requestModel.destinationAddress,
                                         style: TextStyle(
                                           fontSize: smallFontSize,
                                           color: AllColors.greyColor,
@@ -291,9 +293,16 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                     ],
                   ),
                 ),
-                AppButton(text: "ACCEPT", onPressed:  () {},color: AllColors.greenColor,),
-                AppButton(onPressed: () {  },color: AllColors.blueColor,text: "IGNORE",),
-
+                AppButton(
+                  text: "ACCEPT",
+                  onPressed: () {},
+                  color: AllColors.greenColor,
+                ),
+                AppButton(
+                  onPressed: () {},
+                  color: AllColors.blueColor,
+                  text: "IGNORE",
+                ),
               ],
             ),
           ),

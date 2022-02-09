@@ -133,10 +133,7 @@ class _SearchState extends State<SearchCity> {
             return GestureDetector(
               onTap: () async {
                  final pDetails = await getPlaceDetails(_results[index].placeId);
-                var val = pDetails.result.geometry.location.lat.toString() +
-                    "," +
-                    pDetails.result.geometry.location.lng.toString();
-                 printInfo(info:"a===="+ pDetails.result.formattedAddress.toString());
+
 
                  Map<String, dynamic> map={
                    "cityLatitude":pDetails.result.geometry.location.lat,

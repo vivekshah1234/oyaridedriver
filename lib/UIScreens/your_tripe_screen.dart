@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
@@ -14,7 +12,6 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/UIScreens/trip_detail_screen.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:timelines/timelines.dart';
 // ignore_for_file: prefer_const_constructors
 
@@ -35,7 +32,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
   FontWeight largeFontWeight = FontWeight.w900;
   FontWeight mediumFontWeight = FontWeight.w600;
   FontWeight normalFontWeight = FontWeight.normal;
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {

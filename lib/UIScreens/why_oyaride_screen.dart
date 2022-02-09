@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
-import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 
 class WhyOyaRideScren extends StatefulWidget {

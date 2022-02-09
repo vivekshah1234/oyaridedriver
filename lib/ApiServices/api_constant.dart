@@ -1,8 +1,6 @@
 class ApiConstant {
   static String baseUrl = "http://3.13.6.132:3900/api";
   static String signUp = "/auth/register";
-  static String registerPersonalInfo = "/or/d1/driver-info-and-vehical-info";
-  static String driverLicenseNumber = "/or/d1/driver-licenes-number";
   static String login = "/auth/login";
 
   static String resetPassword = "auth/reset-password";
@@ -39,12 +37,13 @@ abstract class AppConstants {
 }
 
 class ApiKeys {
-  static String mapApiKey = "AIzaSyBQHOw2QG98dqVirCXbHr8gLcaD3W5JIYo";
+  static String mapApiKey = "AIzaSyBQlfH7orUgEyQ9yNcg74TaVvz_rzu2PZU";
 }
 
-class DummyData {
-  static String route1 =
-      "wjjkCy`oyLi@h@QHi@@k@CQDQJEDEXM~@YlB[Cm@MGGIRI\\yLiCaLaCsJsBsQyD_FaA_Bc@iU_F_SeEmUaFuHcBqLaCqEeAwIoBiMuC_E{@gJoBqJoBeEy@}GsBcC}@mScI{McFcAe@k@[yCkAiNoFeEaBeE_ByIgD{G}BqGoBmFsA}Cm@OCg@Jm@KeCg@gCe@EZmH{AgF_AeAnIo@K_AO";
-  static String route2 =
-      "wjjkCy`oyLi@h@QHi@@k@CQDQJEDcEoCyAcAiD{BM?aDgBaDkBgDmBe@WjBqDf@w@fB}ALOBEmIiLaB{BSY_FaHcEoFcF_HsC_EAKeAaBi@eAi@sAa@mA]cBOiAW_ESkFbAD_@yHk@}JQqD_@gIw@}Oa@iJa@oIYwGSaFC}@Q}CYcACY?[Jq@MoC]sH[eHAy@QoDYoCa@wBm@kCk@{BoBeIxCgA|DsA_DqMQ}@S{@Ou@HGzAwBhBiC\\Mf@gAIsBEk@HYa@_DQ_BIiAQuAg@gBSgA?y@PcJ@yECuBA}ASiE@}ELwBKiBC_@IkBHkEDgAT}AD_@Gc@aAyCcAeDE?AAEAAIBIBAo@cDs@aDeAuC[uAc@cEI[s@aAuAiASGJq@lB}Jb@cE~BqVj@eGVuBh@oD^qC^cDBo@?i@?q@aAoEaBqHaBaHsCuLaBuH_@qAu@qBs@}A}A_Cg@aAf@GHa@RYLObBk@HOFQ?Gw@aEO[GEcBIkABOHKNKv@";
+abstract class SocketEvents{
+
+  static String updateDriverLocation="updateDriverLocation";
+  static String getRequest="getRequest";
+  static String sendRequest="sendRequest";
+  static String acceptRequest="acceptRequest";
 }
