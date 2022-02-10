@@ -11,12 +11,11 @@ class WhyOyaRideScreen extends StatefulWidget {
 }
 
 class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
-  double bigFontSize = 28.0;
-  double mediumFontSize = 21.0;
+  final double _bigFontSize = 28.0;
+  final double _mediumFontSize = 21.0;
 
-  FontWeight bold1 = FontWeight.w800;
-  FontWeight bold2 = FontWeight.w600;
-  FontWeight bold3 = FontWeight.normal;
+  final FontWeight _bold1 = FontWeight.w800;
+  final FontWeight _bold3 = FontWeight.normal;
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +56,15 @@ class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
       children: [
         textWidget(
           txt: "Why ",
-          fontSize: bigFontSize,
+          fontSize: _bigFontSize,
           color: AllColors.blueColor,
-          bold: bold1,
+          bold: _bold1,
         ),
         textWidget(
           txt: "Oyaride?",
-          fontSize: bigFontSize,
+          fontSize: _bigFontSize,
           color: AllColors.greenColor,
-          bold: bold1,
+          bold: _bold1,
         )
       ],
     );
@@ -80,15 +79,15 @@ class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
         ),
         textWidget(
           txt: "Make Money",
-          fontSize: bigFontSize,
+          fontSize: _bigFontSize,
           color: AllColors.greenColor,
-          bold: bold1,
+          bold: _bold1,
         ),
         textWidget(
           txt: "Make more with Oyaride",
-          fontSize: mediumFontSize,
+          fontSize: _mediumFontSize,
           color: AllColors.blackColor,
-          bold: bold3,
+          bold: _bold3,
         ),
       ],
     );
@@ -99,21 +98,21 @@ class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
       children: [
         textWidget(
           txt: "Set your hours",
-          fontSize: bigFontSize,
+          fontSize: _bigFontSize,
           color: AllColors.greenColor,
-          bold: bold1,
+          bold: _bold1,
         ),
         textWidget(
           txt: "Work with your own schedule",
-          fontSize: mediumFontSize,
+          fontSize: _mediumFontSize,
           color: AllColors.blackColor,
-          bold: bold3,
+          bold: _bold3,
         ),
         textWidget(
           txt: "no minimum hours and no boss.",
-          fontSize: mediumFontSize,
+          fontSize: _mediumFontSize,
           color: AllColors.blackColor,
-          bold: bold3,
+          bold: _bold3,
         ),
       ],
     );
@@ -128,21 +127,21 @@ class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
         ),
         textWidget(
           txt: "No monthly fees",
-          fontSize: bigFontSize,
+          fontSize: _bigFontSize,
           color: AllColors.greenColor,
-          bold: bold1,
+          bold: _bold1,
         ),
         textWidget(
           txt: "No risk, you only pay",
-          fontSize: mediumFontSize,
+          fontSize: _mediumFontSize,
           color: AllColors.blackColor,
-          bold: bold3,
+          bold: _bold3,
         ),
         textWidget(
           txt: "when you earn.",
-          fontSize: mediumFontSize,
+          fontSize: _mediumFontSize,
           color: AllColors.blackColor,
-          bold: bold3,
+          bold: _bold3,
         ),
       ],
     );

@@ -14,11 +14,11 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
-  double mediumFont = 15.0;
-  double smallFont = 12.0;
-  TextEditingController txtSearch = TextEditingController();
-  final border = const OutlineInputBorder(
+
+  final double _mediumFont = 15.0;
+  final double _smallFont = 12.0;
+  final TextEditingController _txtSearch = TextEditingController();
+  final OutlineInputBorder _border = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
         color: Colors.transparent,
@@ -67,14 +67,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         children: [
                           textWidget(
                             txt: "Robin Banks",
-                            fontSize: mediumFont,
+                            fontSize: _mediumFont,
                             color: AllColors.blackColor,
                             bold: FontWeight.w700,
                             italic: false,
                           ),
                           textWidget(
                             txt: "Hey",
-                            fontSize: smallFont,
+                            fontSize: _smallFont,
                             color: AllColors.blackColor,
                             bold: FontWeight.normal,
                             italic: false,
@@ -108,19 +108,19 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       height: 45,
       child: TextField(
-        controller: txtSearch,
+        controller: _txtSearch,
         decoration: InputDecoration(
             hintText: "Search",
             filled: true,
             fillColor: Colors.white,
-            focusedBorder: border,
-            enabledBorder: border,
-            border: border,
+            focusedBorder: _border,
+            enabledBorder: _border,
+            border: _border,
             suffixIcon: Icon(
               Icons.search,
               color: Colors.grey.shade300,
             ),
-            hintStyle: TextStyle(fontSize: mediumFont, fontWeight: FontWeight.w600, color: AllColors.blackColor)),
+            hintStyle: TextStyle(fontSize: _mediumFont, fontWeight: FontWeight.w600, color: AllColors.blackColor)),
       ),
     );
   }

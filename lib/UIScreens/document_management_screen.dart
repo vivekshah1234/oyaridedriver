@@ -18,10 +18,12 @@ class DocumentManagementScreen extends StatefulWidget {
 class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  TextEditingController txtLine1 = TextEditingController();
-  TextEditingController txtLine2 = TextEditingController();
-  TextEditingController txtLine3 = TextEditingController();
-  FontWeight bold1 = FontWeight.w400;
+  final TextEditingController _txtLine1 = TextEditingController();
+  final TextEditingController _txtLine2 = TextEditingController();
+  final TextEditingController _txtLine3 = TextEditingController();
+  final FontWeight _bold1 = FontWeight.w400;
+  var file;
+  var file2;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
               child: Text(
                   "We're legally required to ask for some documents to sign you up as a driver. Documents scans and quality photos are accepted.",
                   textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
+                  style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: _bold1)),
             ),
             const SizedBox(
               height: 20,
@@ -64,9 +66,9 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
                     txt: "Required*", fontSize: 12, color: AllColors.redColor, bold: FontWeight.normal, italic: false),
               ],
             ),
-            textField(txtLine1),
-            textField(txtLine2),
-            textField(txtLine3),
+            textField(_txtLine1),
+            textField(_txtLine2),
+            textField(_txtLine3),
             const SizedBox(
               height: 15,
             ),
@@ -91,7 +93,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
               child: Text(
                   "Please provide a clear portrait picture(not a full body picture) of yourself. It should show your full face, front view, with eyes open.",
                   textAlign: TextAlign.start,
-                  style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
+                  style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: _bold1)),
             ),
             const SizedBox(
               height: 15,
@@ -113,7 +115,7 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
     return TextField(
       controller: controller,
       cursorColor: AllColors.blackColor,
-      textInputAction: controller == txtLine3 ? TextInputAction.done : TextInputAction.next,
+      textInputAction: controller == _txtLine3 ? TextInputAction.done : TextInputAction.next,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.greyColor),
@@ -193,8 +195,6 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
     );
   }
 
-  var file;
-
   pickImage() async {
     final ImagePicker _picker = ImagePicker();
     try {
@@ -210,8 +210,6 @@ class _DocumentManagementScreenState extends State<DocumentManagementScreen> {
       debugPrint(ex.toString());
     }
   }
-
-  var file2;
 
   pickImage2() async {
     final ImagePicker _picker2 = ImagePicker();

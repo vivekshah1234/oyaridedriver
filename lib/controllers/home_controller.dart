@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:oyaridedriver/Models/request_model.dart';
-import 'package:oyaridedriver/UIScreens/rider_list_cart_screen.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';

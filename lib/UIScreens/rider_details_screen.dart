@@ -25,21 +25,20 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
 
   // late double latitude, longitude;
   late CameraPosition _kGooglePlex;
-  List<LatLng> polylineCoordinates = [];
-  bool isLoading = true;
+  final List<LatLng> _polylineCoordinates = [];
+  bool _isLoading = true;
   final Set<Marker> _markers = {};
   late final Set<Polyline> _polyLine = <Polyline>{};
-  PolylinePoints polylinePoints = PolylinePoints();
-  double largeFontSize = 22;
-  double mediumFontSize = 19;
-  double smallFontSize = 15;
-  FontWeight largeFontWeight = FontWeight.w900;
-  FontWeight mediumFontWeight = FontWeight.w600;
-  FontWeight normalFontWeight = FontWeight.normal;
-  double sourceLatitude = 22.6916;
-  double sourceLongitude = 72.8634;
-  double destinationLatitude = 23.0225;
-  double destinationLongitude = 72.5714;
+  final PolylinePoints _polylinePoints = PolylinePoints();
+
+  final double _smallFontSize = 15;
+
+  final FontWeight _normalFontWeight = FontWeight.normal;
+
+  // final double _sourceLatitude = 22.6916;
+  // final double _sourceLongitude = 72.8634;
+  // final double _destinationLatitude = 23.0225;
+  // final double _destinationLongitude = 72.5714;
 
   @override
   void initState() {
@@ -56,7 +55,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
       zoom: 14.4746,
     );
 
-    isLoading = false;
+    _isLoading = false;
     setState(() {});
   }
 
@@ -85,7 +84,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
   }
 
   setPolyline() async {
-    var result = await polylinePoints.getRouteBetweenCoordinates(
+    var result = await _polylinePoints.getRouteBetweenCoordinates(
         ApiKeys.mapApiKey,
         PointLatLng(
             double.parse(widget.requestModel.sourceLatitude), double.parse(widget.requestModel.sourceLongitude)),
@@ -94,12 +93,12 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
     printInfo(info: result.errorMessage.toString());
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
     }
     setState(() {
       _polyLine.add(Polyline(
-          polylineId: const PolylineId("poly"), color: AllColors.greenColor, width: 3, points: polylineCoordinates));
+          polylineId: const PolylineId("poly"), color: AllColors.greenColor, width: 3, points: _polylineCoordinates));
     });
   }
 
@@ -148,7 +147,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
           const SizedBox(
             height: 10,
           ),
-          isLoading
+          _isLoading
               ? const SizedBox(
                   height: double.infinity,
                   width: double.infinity,
@@ -202,19 +201,11 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Text( "Source Location",
-                                    //       style: TextStyle(
-                                    //         fontSize: smallFontSize,
-                                    //         color: AllColors.greyColor,
-                                    //         fontWeight: normalFontWeight,)),
-                                    //   const SizedBox(
-                                    //     height: 3,
-                                    //   ),
                                     Text(widget.requestModel.sourceAddress,
                                         style: TextStyle(
-                                          fontSize: smallFontSize,
+                                          fontSize: _smallFontSize,
                                           color: AllColors.greyColor,
-                                          fontWeight: normalFontWeight,
+                                          fontWeight: _normalFontWeight,
                                         )),
                                   ],
                                 ),
@@ -236,20 +227,11 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Text(
-                                    //      "Destination Location",
-                                    //     style: TextStyle(
-                                    //       fontSize: smallFontSize,
-                                    //       color: AllColors.greyColor,
-                                    //       fontWeight: normalFontWeight,)),
-                                    // const SizedBox(
-                                    //   height: 3,
-                                    // ),
                                     Text(widget.requestModel.destinationAddress,
                                         style: TextStyle(
-                                          fontSize: smallFontSize,
+                                          fontSize: _smallFontSize,
                                           color: AllColors.greyColor,
-                                          fontWeight: normalFontWeight,
+                                          fontWeight: _normalFontWeight,
                                         )),
                                   ],
                                 ),
@@ -268,16 +250,6 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                           ],
                         ),
                       ),
-                      // Expanded(flex: 2,
-                      //   child: Container(
-                      //     decoration: BoxDecoration(
-                      //         color:Colors.grey.shade200,
-                      //         borderRadius: BorderRadius.circular(5)
-                      //     ),
-                      //     padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5,top: 5),
-                      //     child: Center(child: const Text("Receipt",style: TextStyle(),)),
-                      //   ),
-                      // )
                     ],
                   ),
                 ),

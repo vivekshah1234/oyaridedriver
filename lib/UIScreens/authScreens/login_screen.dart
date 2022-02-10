@@ -19,13 +19,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPwd = TextEditingController();
-  TextEditingController txtNum = TextEditingController();
-  double mediumFontSize = 15.0;
-  LoginController loginController = Get.put(LoginController());
-  final formKey = GlobalKey<FormState>();
+  final TextEditingController _txtPwd = TextEditingController();
+  final TextEditingController _txtNum = TextEditingController();
+  final double _mediumFontSize = 15.0;
+  final LoginController _loginController = Get.put(LoginController());
+  final _formKey = GlobalKey<FormState>();
+  bool _showPassWord = true;
 
+  String _countryCode = "+39";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Expanded(
                         child: Form(
-                      key: formKey,
+                      key: _formKey,
                       child: Container(
                         //height: double.infinity,
                         decoration: BoxDecoration(
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 15,
                               ),
                               textFieldForNum(
-                                  controller: txtNum,
+                                  controller: _txtNum,
                                   labelText: "Phone Number",
                                   errorText: ErrorMessage.numberError,
                                   prefixIcon: ImageAssets.phoneIcon),
@@ -80,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 25,
                               ),
                               textField(
-                                  controller: txtPwd,
+                                  controller: _txtPwd,
                                   prefixIcon: ImageAssets.passwordIcon,
                                   errorText: ErrorMessage.passwordError,
                                   labelText: "Password"),
@@ -93,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   },
                                   child: textWidget(
                                       txt: "Forget Password ?",
-                                      fontSize: mediumFontSize,
+                                      fontSize: _mediumFontSize,
                                       color: AllColors.whiteColor,
                                       italic: false,
                                       bold: FontWeight.normal)),
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 children: [
                                   textWidget(
                                       txt: "Need to create an account? ",
-                                      fontSize: mediumFontSize,
+                                      fontSize: _mediumFontSize,
                                       color: AllColors.whiteColor,
                                       italic: false,
                                       bold: FontWeight.normal),
@@ -122,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: Text("Register Here",
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                              fontSize: mediumFontSize,
+                                              fontSize: _mediumFontSize,
                                               color: AllColors.blueColor,
                                             ))),
                                   ),
@@ -146,19 +147,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   login() {
-    if (formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       Map<String, String> _map = {
-        "mobile_number": txtNum.text.toString(),
-        "country_code": countryCode.toString(),
-        "password": txtPwd.text.toString(),
+        "mobile_number": _txtNum.text.toString(),
+        "country_code": _countryCode.toString(),
+        "password": _txtPwd.text.toString(),
         "role": "driver"
       };
 
-      loginController.login(_map, context);
+      _loginController.login(_map, context);
     }
   }
-
-  bool showPassWord = true;
 
   Widget textField({controller, labelText, errorText, prefixIcon}) {
     return Row(
@@ -185,15 +184,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   return null;
                 },
                 style: TextStyle(color: AllColors.whiteColor),
-                obscureText: showPassWord ? true : false,
+                obscureText: _showPassWord ? true : false,
                 decoration: InputDecoration(
                   labelText: labelText,
                   suffixIcon: GestureDetector(
                       onTap: () {
-                        showPassWord = !showPassWord;
+                        _showPassWord = !_showPassWord;
                         setState(() {});
                       },
-                      child: !showPassWord
+                      child: !_showPassWord
                           ? const Icon(
                               Icons.visibility,
                               color: AllColors.whiteColor,
@@ -202,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Icons.visibility_off,
                               color: AllColors.whiteColor,
                             )),
-                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: AllColors.whiteColor),
                   ),
@@ -224,7 +223,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  String countryCode = "+39";
 
   Widget textFieldForNum({controller, labelText, errorText, prefixIcon}) {
     return Row(
@@ -261,10 +259,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
-                  style: TextStyle(color: AllColors.whiteColor),
+                  style: const TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.whiteColor),
                     ),
@@ -304,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,
@@ -326,15 +324,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
 
         // Set default value
-        initialSelection: countryCode,
+        initialSelection: _countryCode,
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {
-          // print(code!.name);
-          // print(code.code);
-          // print(code.dialCode);
-          // print(code.flagUri);
-          countryCode = code!.dialCode.toString();
+
+          _countryCode = code!.dialCode.toString();
           setState(() {});
         },
         // Whether to allow the widget to set a custom UI overlay

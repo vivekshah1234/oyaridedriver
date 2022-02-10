@@ -47,14 +47,14 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
   late LatLng _lastMapPosition;
-  bool isOnline = false;
-  bool isLoading = true;
+
+  bool _isLoading = true;
   final Set<Marker> _markers = {};
   final Set<Polyline> _polyLine = <Polyline>{};
-  List<LatLng> polyLineCoordinates = [];
+  final List<LatLng> _polyLineCoordinates = [];
   late PolylinePoints polylinePoints;
   int status = -1;
-  HomeController homeController = Get.put(HomeController());
+  final HomeController _homeController = Get.put(HomeController());
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
     getCurrentPosition();
-    homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
+    _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
   }
 
   getCurrentPosition() async {
@@ -85,10 +85,10 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       map["latitude"] = newLocalData.latitude;
       map["longitude"] = newLocalData.longitude;
       map["userId"] = AppConstants.userID;
-      homeController.updateLocation2(map);
+      _homeController.updateLocation2(map);
     });
     addMyMarker(latitude, longitude);
-    isLoading = false;
+    _isLoading = false;
     setState(() {});
   }
 
@@ -116,9 +116,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       Map<String, String> map = {
         "user_id": message.data["userId"],
       };
-      homeController.sendIdToSocket(map);
+      _homeController.sendIdToSocket(map);
     }
-    // homeController.addData();
+
     setState(() {});
   }
 
@@ -186,7 +186,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               onTap: () {
                                 Map<String, String> map = {};
                                 map["is_available"] = "1";
-                                homeController.changeUserStatus(map, context);
+                                _homeController.changeUserStatus(map, context);
                               },
                               child: Container(
                                 decoration:
@@ -216,7 +216,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               onTap: () {
                                 Map<String, String> map = {};
                                 map["is_available"] = "0";
-                                homeController.changeUserStatus(map, context);
+                                _homeController.changeUserStatus(map, context);
                               },
                               child: Container(
                                 decoration:
@@ -252,7 +252,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                   ),
                   body: Stack(
                     children: [
-                      isLoading
+                      _isLoading
                           ? SizedBox(
                               height: double.infinity,
                               width: double.infinity,
@@ -300,7 +300,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                             "trip_id": controller.requestList[index].id,
                                                             "driver_id": AppConstants.userID
                                                           };
-                                                          homeController.acceptRequest(map);
+                                                          _homeController.acceptRequest(map);
                                                           setState(() {});
                                                         },
                                                         ignoreOnTap: () {
@@ -318,7 +318,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                       ));
                                                 },
                                                 onStackFinished: () {
-                                                  polyLineCoordinates.clear();
+                                                  _polyLineCoordinates.clear();
                                                   _polyLine.clear();
                                                   _markers.clear();
 
@@ -454,15 +454,15 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   }
 
   setPolyline(route) async {
-    polyLineCoordinates.clear();
+    _polyLineCoordinates.clear();
     _polyLine.clear();
     var points = poly_util.PolygonUtil.decode(route);
     for (var pointLatLng in points) {
-      polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      _polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
     }
 
     _polyLine.add(
-        Polyline(polylineId: PolylineId("poly"), color: AllColors.blueColor, width: 4, points: polyLineCoordinates));
+        Polyline(polylineId: PolylineId("poly"), color: AllColors.blueColor, width: 4, points: _polyLineCoordinates));
     setState(() {});
   }
 
@@ -777,7 +777,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       //do your stuff
-      homeController.connectToSocket(isFromNotification: false);
+      _homeController.connectToSocket(isFromNotification: false);
     }
   }
 }

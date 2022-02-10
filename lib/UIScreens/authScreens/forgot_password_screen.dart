@@ -15,7 +15,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  TextEditingController txtEmailId = TextEditingController();
+  final TextEditingController _txtEmailId = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ForgetPasswordController forgetPasswordController = Get.put(ForgetPasswordController());
 
@@ -45,7 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       height: 20,
                     ),
                     textFieldWithoutIcon(
-                        controller: txtEmailId, labelText: "Email id", errorText: "Please enter Email id."),
+                        controller: _txtEmailId, labelText: "Email id", errorText: "Please enter Email id."),
                     const Text(
                       "Please enter your email abov to receiver your password reset instruction.",
                       textAlign: TextAlign.center,
@@ -57,8 +57,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     AppButton(
                         text: "SEND MAIL",
                         onPressed: () {
-                          if (txtEmailId.text.isNotEmpty) {
-                            forgetPasswordController.sendEmail({"email": txtEmailId.text, "role": "driver"}, context);
+                          if (_txtEmailId.text.isNotEmpty) {
+                            forgetPasswordController.sendEmail({"email": _txtEmailId.text, "role": "driver"}, context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.emailError2));
                           }

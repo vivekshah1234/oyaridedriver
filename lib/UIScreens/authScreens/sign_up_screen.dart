@@ -10,7 +10,6 @@ import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
 
-// ignore_for_file: prefer_const_constructors
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
@@ -19,12 +18,15 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPwd = TextEditingController();
-  TextEditingController txtNum = TextEditingController();
-  double mediumFontSize = 15.0;
+  final TextEditingController _txtEmail = TextEditingController();
+  final TextEditingController _txtPwd = TextEditingController();
+  final TextEditingController _txtNum = TextEditingController();
+  final double _mediumFontSize = 15.0;
 
-  SignUpController signUpController = Get.put(SignUpController());
+  final SignUpController _signUpController = Get.put(SignUpController());
+  bool _showPassWord = true;
+
+  String _countryCode = "+39";
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +71,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //height: double.infinity,
                       decoration: BoxDecoration(
                           color: AllColors.greenColor,
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40))),
-                      padding: EdgeInsets.only(top: 50, bottom: 0, left: 25, right: 25),
+                          borderRadius:
+                              const BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40))),
+                      padding: const EdgeInsets.only(top: 50, bottom: 0, left: 25, right: 25),
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
                             textFieldForNum(
-                                controller: txtNum,
+                                controller: _txtNum,
                                 labelText: "Phone Number",
                                 errorText: ErrorMessage.numberError,
                                 prefixIcon: ImageAssets.phoneIcon),
@@ -83,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 25,
                             ),
                             textField(
-                                controller: txtPwd,
+                                controller: _txtPwd,
                                 prefixIcon: ImageAssets.passwordIcon,
                                 labelText: "Password",
                                 errorText: "Please enter the password"),
@@ -92,15 +95,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             AppButton(
                                     onPressed: () {
-                                      if (txtNum.text.isNotEmpty) {
-                                        if (txtPwd.text.isNotEmpty) {
+                                      if (_txtNum.text.isNotEmpty) {
+                                        if (_txtPwd.text.isNotEmpty) {
                                           Map<String, String> map = {};
-                                          map["country_code"] = countryCode.toString();
-                                          map["mobile_number"] = txtNum.text.toString();
-                                          map["password"] = txtPwd.text.toString();
+                                          map["country_code"] = _countryCode.toString();
+                                          map["mobile_number"] = _txtNum.text.toString();
+                                          map["password"] = _txtPwd.text.toString();
                                           map["role"] = "driver";
 
-                                          signUpController.register1(map, context);
+                                          _signUpController.register1(map, context);
                                         } else {
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
@@ -118,13 +121,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             textWidget(
                                 txt: "By signing up, you accept our Terms of ",
-                                fontSize: mediumFontSize,
+                                fontSize: _mediumFontSize,
                                 color: AllColors.whiteColor,
                                 italic: false,
                                 bold: FontWeight.normal),
                             textWidget(
                                 txt: "Services and Privacy Policy.",
-                                fontSize: mediumFontSize,
+                                fontSize: _mediumFontSize,
                                 color: AllColors.whiteColor,
                                 italic: false,
                                 bold: FontWeight.w600),
@@ -140,8 +143,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           }),
     );
   }
-
-  bool showPassWord = true;
 
   Widget textField({controller, labelText, errorText, prefixIcon}) {
     return Row(
@@ -161,26 +162,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextField(
                 controller: controller,
                 cursorColor: AllColors.whiteColor,
-                obscureText: showPassWord ? true : false,
-                style: TextStyle(color: AllColors.whiteColor),
+                obscureText: _showPassWord ? true : false,
+                style: const TextStyle(color: AllColors.whiteColor),
                 decoration: InputDecoration(
                   labelText: labelText,
                   //123456 filled: true,
                   suffixIcon: GestureDetector(
                       onTap: () {
-                        showPassWord = !showPassWord;
+                        _showPassWord = !_showPassWord;
                         setState(() {});
                       },
-                      child: !showPassWord
-                          ? Icon(
+                      child: !_showPassWord
+                          ? const Icon(
                               Icons.visibility,
                               color: AllColors.whiteColor,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.visibility_off,
                               color: AllColors.whiteColor,
                             )),
-                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: AllColors.whiteColor),
                   ),
@@ -201,8 +202,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ],
     );
   }
-
-  String countryCode = "+39";
 
   Widget textFieldForNum({controller, labelText, errorText, prefixIcon}) {
     return Row(
@@ -245,10 +244,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                     return null;
                   },
-                  style: TextStyle(color: AllColors.whiteColor),
+                  style: const TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.whiteColor),
                     ),
@@ -288,7 +287,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.whiteColor, fontSize: _mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,
@@ -310,12 +309,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
 
         // Set default value
-        initialSelection: countryCode,
+        initialSelection: _countryCode,
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {
-
-          countryCode = code!.dialCode.toString();
+          _countryCode = code!.dialCode.toString();
           setState(() {});
         },
         // Whether to allow the widget to set a custom UI overlay

@@ -11,13 +11,13 @@ class PaymentHistoryScreen extends StatefulWidget {
 }
 
 class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: appBarWidget("Payment History",scaffoldKey),
+      key: _scaffoldKey,
+      appBar: appBarWidget("Payment History",_scaffoldKey),
       drawer: const DrawerScreen(),
     );
   }

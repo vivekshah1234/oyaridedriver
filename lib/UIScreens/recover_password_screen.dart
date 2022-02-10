@@ -13,8 +13,8 @@ class RecoverPasswordScreen extends StatefulWidget {
 }
 
 class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
-  TextEditingController txtResetCode = TextEditingController();
-  TextEditingController txtNewPwd = TextEditingController();
+ final TextEditingController _txtResetCode = TextEditingController();
+ final TextEditingController _txtNewPwd = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -34,14 +34,14 @@ class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
             height: 20,
           ),
           textFieldWithoutIcon(
-              controller: txtResetCode, labelText: "Reset Code", errorText: "Please enter reset code."),
+              controller: _txtResetCode, labelText: "Reset Code", errorText: "Please enter reset code."),
           const Text(
             "Reset code was sent to your email. Please enter the code and create new password.",
             textAlign: TextAlign.center,
             style: TextStyle(color: AllColors.greyColor, fontSize: 13),
           ).putPadding(5, 3, 5, 5),
           textFieldWithoutIcon(
-              controller: txtNewPwd, labelText: "New Password", errorText: "Please enter new password."),
+              controller: _txtNewPwd, labelText: "New Password", errorText: "Please enter new password."),
           const SizedBox(
             height: 40,
           ),

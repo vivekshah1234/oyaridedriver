@@ -16,7 +16,7 @@ class AddNewVehicleScreen extends StatefulWidget {
   final dynamic txtTaxiType;
   final dynamic vehicleId;
 
-  AddNewVehicleScreen(
+  const AddNewVehicleScreen(
       {required this.toEdit,
       this.txtCarNumber,
       this.txtVehicleYear,
@@ -31,27 +31,27 @@ class AddNewVehicleScreen extends StatefulWidget {
 }
 
 class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
-  TextEditingController txtVehicleBrand = TextEditingController();
-  TextEditingController txtVehicleModel = TextEditingController();
-  TextEditingController txtVehicleYear = TextEditingController();
-  TextEditingController txtCarNumber = TextEditingController();
-  TextEditingController txtColor = TextEditingController();
-  TextEditingController txtTaxiType = TextEditingController();
-  final AddNewVehicleController addVehicleController = Get.put(AddNewVehicleController());
-  final formKey = GlobalKey<FormState>();
+  final TextEditingController _txtVehicleBrand = TextEditingController();
+  final TextEditingController _txtVehicleModel = TextEditingController();
+  final TextEditingController _txtVehicleYear = TextEditingController();
+  final TextEditingController _txtCarNumber = TextEditingController();
+  final TextEditingController _txtColor = TextEditingController();
+  final TextEditingController _txtTaxiType = TextEditingController();
+  final AddNewVehicleController _addVehicleController = Get.put(AddNewVehicleController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     if (widget.toEdit == true) {
       //  printInfo(info: "aaaa");
-      txtVehicleBrand.text = widget.txtVehicleBrand;
-      txtVehicleModel.text = widget.txtVehicleModel;
-      txtVehicleYear.text = widget.txtVehicleYear;
-      txtTaxiType.text = widget.txtTaxiType;
-      txtCarNumber.text = widget.txtCarNumber;
-      txtColor.text = widget.txtColor;
+      _txtVehicleBrand.text = widget.txtVehicleBrand;
+      _txtVehicleModel.text = widget.txtVehicleModel;
+      _txtVehicleYear.text = widget.txtVehicleYear;
+      _txtTaxiType.text = widget.txtTaxiType;
+      _txtCarNumber.text = widget.txtCarNumber;
+      _txtColor.text = widget.txtColor;
     }
-    addVehicleController.getVehicleType();
+    _addVehicleController.getVehicleType();
 
     super.initState();
   }
@@ -70,22 +70,22 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
               children: [
                 SingleChildScrollView(
                   child: Form(
-                    key: formKey,
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         textFieldWithoutIcon(
-                            controller: txtVehicleBrand,
+                            controller: _txtVehicleBrand,
                             labelText: "Vehicle Brand",
                             errorText: "Please Enter Vehicle Brand."),
                         textFieldWithoutIcon(
-                            controller: txtVehicleModel, labelText: "Model", errorText: "Please Enter Car Model."),
+                            controller: _txtVehicleModel, labelText: "Model", errorText: "Please Enter Car Model."),
                         textFieldWithoutIcon(
-                            controller: txtVehicleYear, labelText: "Year", errorText: "Please Enter Car year."),
+                            controller: _txtVehicleYear, labelText: "Year", errorText: "Please Enter Car year."),
                         textFieldWithoutIcon(
-                            controller: txtCarNumber, labelText: "Car Number", errorText: "Please Enter Car Number."),
+                            controller: _txtCarNumber, labelText: "Car Number", errorText: "Please Enter Car Number."),
                         textFieldWithoutIcon(
-                            controller: txtColor, labelText: "Colour", errorText: "Please Enter Car Colour."),
+                            controller: _txtColor, labelText: "Colour", errorText: "Please Enter Car Colour."),
                         const SizedBox(
                           height: 20,
                         ),
@@ -136,28 +136,28 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
   }
 
   addVehicle() {
-    if (formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       if (widget.toEdit) {
         Map<String, String> _map = {
-          "vehicle_color": txtColor.text.toString(),
-          "vehicle_manufacturer": txtVehicleBrand.text.toString(),
-          "vehicle_model": txtVehicleModel.text.toString(),
-          "vehicle_year": txtVehicleYear.text.toString(),
-          "licence_plate": txtCarNumber.text.toString(),
+          "vehicle_color": _txtColor.text.toString(),
+          "vehicle_manufacturer": _txtVehicleBrand.text.toString(),
+          "vehicle_model": _txtVehicleModel.text.toString(),
+          "vehicle_year": _txtVehicleYear.text.toString(),
+          "licence_plate": _txtCarNumber.text.toString(),
           "vehicle_type_id": selectedIndex.toString(),
           "vehicle_id": widget.vehicleId.toString()
         };
-        addVehicleController.editVehicle(_map, context);
+        _addVehicleController.editVehicle(_map, context);
       } else {
         Map<String, String> _map = {
-          "vehicle_color": txtColor.text.toString(),
-          "vehicle_manufacturer": txtVehicleBrand.text.toString(),
-          "vehicle_model": txtVehicleModel.text.toString(),
-          "vehicle_year": txtVehicleYear.text.toString(),
-          "licence_plate": txtCarNumber.text.toString(),
+          "vehicle_color": _txtColor.text.toString(),
+          "vehicle_manufacturer": _txtVehicleBrand.text.toString(),
+          "vehicle_model": _txtVehicleModel.text.toString(),
+          "vehicle_year": _txtVehicleYear.text.toString(),
+          "licence_plate": _txtCarNumber.text.toString(),
           "vehicle_type_id": selectedIndex.toString(),
         };
-        addVehicleController.addNewVehicle(_map, context);
+        _addVehicleController.addNewVehicle(_map, context);
       }
     }
   }

@@ -20,17 +20,15 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   late double latitude, longitude;
   late CameraPosition _kGooglePlex;
-  List<LatLng> polylineCoordinates = [];
-  bool isLoading = true;
+  final List<LatLng> _polylineCoordinates = [];
+  bool _isLoading = true;
   final Set<Marker> _markers = {};
   late final Set<Polyline> _polyLine = <Polyline>{};
-  PolylinePoints polylinePoints = PolylinePoints();
-  double largeFontSize = 22;
-  double mediumFontSize = 19;
-  double smallFontSize = 15;
-  FontWeight largeFontWeight = FontWeight.w900;
-  FontWeight mediumFontWeight = FontWeight.w600;
-  FontWeight normalFontWeight = FontWeight.normal;
+  final PolylinePoints _polylinePoints = PolylinePoints();
+
+  final double _smallFontSize = 15;
+
+  final FontWeight _normalFontWeight = FontWeight.normal;
 
   @override
   void initState() {
@@ -49,22 +47,22 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       zoom: 14.4746,
     );
 
-    isLoading = false;
+    _isLoading = false;
     setState(() {});
   }
 
   setPolyline() async {
-    var result = await polylinePoints.getRouteBetweenCoordinates(
+    var result = await _polylinePoints.getRouteBetweenCoordinates(
         ApiKeys.mapApiKey, const PointLatLng(22.6916, 72.8634), const PointLatLng(23.0225, 72.5714));
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        _polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       }
     }
     setState(() {
       _polyLine.add(Polyline(
-          polylineId: const PolylineId("poly"), color: AllColors.blueColor, width: 3, points: polylineCoordinates));
+          polylineId: const PolylineId("poly"), color: AllColors.blueColor, width: 3, points: _polylineCoordinates));
     });
   }
 
@@ -75,7 +73,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          isLoading
+          _isLoading
               ? const SizedBox(
                   height: double.infinity,
                   width: double.infinity,
@@ -101,11 +99,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   children: [
                     Text(
                       "29 Sept,2021, 9:29 PM",
-                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                     Text(
                       "\$60",
-                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                   ],
                 ),
@@ -117,13 +115,13 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   children: [
                     Text(
                       "Maruti Suzuki Wagon R",
-                      style:
-                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize, color: AllColors.greyColor),
+                      style: TextStyle(
+                          fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.greyColor),
                     ),
                     Text(
                       "Tip",
-                      style:
-                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize, color: AllColors.blueColor),
+                      style: TextStyle(
+                          fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.blueColor),
                     ),
                   ],
                 ),
@@ -152,9 +150,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                     //   ),
                                     Text("Shri Santram Mandir Marg, Shanti Nagar, Nadiad, Gujarat 387001",
                                         style: TextStyle(
-                                          fontSize: smallFontSize,
+                                          fontSize: _smallFontSize,
                                           color: AllColors.greyColor,
-                                          fontWeight: normalFontWeight,
+                                          fontWeight: _normalFontWeight,
                                         )),
                                   ],
                                 ),
@@ -187,9 +185,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                     // ),
                                     Text("Makarba, Ahmedabad, Gujarat 380051",
                                         style: TextStyle(
-                                          fontSize: smallFontSize,
+                                          fontSize: _smallFontSize,
                                           color: AllColors.greyColor,
-                                          fontWeight: normalFontWeight,
+                                          fontWeight: _normalFontWeight,
                                         )),
                                   ],
                                 ),
@@ -229,7 +227,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   children: [
                     Text(
                       "Charan rated you",
-                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                     RatingBar.builder(
                       initialRating: 3,

@@ -20,7 +20,7 @@ class SearchCity extends StatefulWidget {
 }
 
 class _SearchState extends State<SearchCity> {
-  final key = GlobalKey<ScaffoldState>();
+  final _key = GlobalKey<ScaffoldState>();
   final TextEditingController _searchQuery = TextEditingController();
   bool _isSearching = false;
   String _error = "error";
@@ -85,7 +85,7 @@ class _SearchState extends State<SearchCity> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: key,
+        key: _key,
         backgroundColor: AllColors.whiteColor,
         appBar: AppBar(
           backgroundColor: AllColors.whiteColor,

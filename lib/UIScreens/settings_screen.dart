@@ -14,13 +14,13 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: appBarWidget("Settings", scaffoldKey),
+      key: _scaffoldKey,
+      appBar: appBarWidget("Settings", _scaffoldKey),
       drawer: const DrawerScreen(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

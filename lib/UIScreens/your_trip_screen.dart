@@ -13,7 +13,6 @@ import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/UIScreens/trip_detail_screen.dart';
 import 'package:timelines/timelines.dart';
-// ignore_for_file: prefer_const_constructors
 
 class YourTripScreen extends StatefulWidget {
   const YourTripScreen({Key? key}) : super(key: key);
@@ -26,19 +25,19 @@ class _YourTripScreenState extends State<YourTripScreen> {
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  double largeFontSize = 22;
-  double mediumFontSize = 19;
-  double smallFontSize = 14;
-  FontWeight largeFontWeight = FontWeight.w900;
-  FontWeight mediumFontWeight = FontWeight.w600;
-  FontWeight normalFontWeight = FontWeight.normal;
-  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
+  final double _largeFontSize = 22;
+  final double _mediumFontSize = 19;
+  final double _smallFontSize = 14;
+  final FontWeight _largeFontWeight = FontWeight.w900;
+  final FontWeight _mediumFontWeight = FontWeight.w600;
+  final FontWeight _normalFontWeight = FontWeight.normal;
+  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: appBarWidget("Your Trip", scaffoldKey),
+      key: _scaffoldKey,
+      appBar: appBarWidget("Your Trip", _scaffoldKey),
       drawer: DrawerScreen(),
       body: Column(
         children: [
@@ -72,14 +71,14 @@ class _YourTripScreenState extends State<YourTripScreen> {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.blackColor, borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
+      padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.car_rental,
             color: AllColors.whiteColor,
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Column(
@@ -87,15 +86,15 @@ class _YourTripScreenState extends State<YourTripScreen> {
             children: [
               textWidget(
                   txt: "Total Jobs",
-                  fontSize: ScreenUtil().setSp(smallFontSize),
+                  fontSize: ScreenUtil().setSp(_smallFontSize),
                   color: AllColors.whiteColor,
                   bold: FontWeight.normal,
                   italic: false),
               textWidget(
                   txt: "1,432",
-                  fontSize: ScreenUtil().setSp(largeFontSize),
+                  fontSize: ScreenUtil().setSp(_largeFontSize),
                   color: AllColors.whiteColor,
-                  bold: largeFontWeight,
+                  bold: _largeFontWeight,
                   italic: false),
             ],
           )
@@ -108,7 +107,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
+      padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
           CircleAvatar(
@@ -119,7 +118,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                 color: AllColors.greenColor,
                 size: 27,
               )),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Column(
@@ -127,15 +126,15 @@ class _YourTripScreenState extends State<YourTripScreen> {
             children: [
               textWidget(
                   txt: "Total Earn",
-                  fontSize: ScreenUtil().setSp(smallFontSize),
+                  fontSize: ScreenUtil().setSp(_smallFontSize),
                   color: AllColors.whiteColor,
-                  bold: normalFontWeight,
+                  bold: _normalFontWeight,
                   italic: false),
               textWidget(
                   txt: "\$ 2500",
-                  fontSize: ScreenUtil().setSp(largeFontSize),
+                  fontSize: ScreenUtil().setSp(_largeFontSize),
                   color: AllColors.whiteColor,
-                  bold: largeFontWeight,
+                  bold: _largeFontWeight,
                   italic: false),
             ],
           )
@@ -147,11 +146,11 @@ class _YourTripScreenState extends State<YourTripScreen> {
   Widget cartListview() {
     return ListView.builder(
         itemCount: 3,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => TripDetailScreen());
+              Get.to(() => const TripDetailScreen());
             },
             child: Container(
               decoration: BoxDecoration(
@@ -162,14 +161,14 @@ class _YourTripScreenState extends State<YourTripScreen> {
                     color: Colors.grey.withOpacity(0.2),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
               ),
-              margin: EdgeInsets.only(top: 10, bottom: 10),
+              margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: Container(
                 padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                    const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -180,15 +179,15 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           children: [
                             textWidget(
                                 txt: "29 Sept 2021",
-                                fontSize: ScreenUtil().setSp(mediumFontSize),
+                                fontSize: ScreenUtil().setSp(_mediumFontSize),
                                 color: AllColors.blackColor,
-                                bold: normalFontWeight,
+                                bold: _normalFontWeight,
                                 italic: false),
                             textWidget(
                                 txt: "\$60",
-                                fontSize: ScreenUtil().setSp(mediumFontSize),
+                                fontSize: ScreenUtil().setSp(_mediumFontSize),
                                 color: AllColors.blackColor,
-                                bold: mediumFontWeight,
+                                bold: _mediumFontWeight,
                                 italic: false),
                           ],
                         ),
@@ -197,23 +196,23 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           children: [
                             textWidget(
                                 txt: "Seden Car",
-                                fontSize: ScreenUtil().setSp(mediumFontSize),
+                                fontSize: ScreenUtil().setSp(_mediumFontSize),
                                 color: AllColors.blackColor,
-                                bold: mediumFontWeight,
+                                bold: _mediumFontWeight,
                                 italic: false),
                             Row(
                               children: [
                                 textWidget(
                                     txt: "Payment : ",
-                                    fontSize: mediumFontSize,
+                                    fontSize: _mediumFontSize,
                                     color: AllColors.blackColor,
-                                    bold: normalFontWeight,
+                                    bold: _normalFontWeight,
                                     italic: false),
                                 textWidget(
                                     txt: "Cash",
-                                    fontSize: ScreenUtil().setSp(mediumFontSize),
+                                    fontSize: ScreenUtil().setSp(_mediumFontSize),
                                     color: AllColors.blackColor,
-                                    bold: mediumFontWeight,
+                                    bold: _mediumFontWeight,
                                     italic: false),
                               ],
                             ),
@@ -221,7 +220,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                         ),
                       ],
                     ).putPadding(0, 0, 7, 7),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     RatingBar.builder(
@@ -231,7 +230,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                       itemSize: 16,
                       allowHalfRating: true,
                       itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                       itemBuilder: (context, _) => Icon(
                         Icons.star,
                         color: AllColors.greenColor,
@@ -240,14 +239,14 @@ class _YourTripScreenState extends State<YourTripScreen> {
                         print(rating);
                       },
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Divider(
                       color: Colors.grey.shade400,
                       height: 2,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Column(
@@ -255,24 +254,24 @@ class _YourTripScreenState extends State<YourTripScreen> {
                         TimelineTile(
                           nodeAlign: TimelineNodeAlign.start,
                           contents: Container(
-                            padding: EdgeInsets.all(8.0),
+                            padding:const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 textWidget(
                                     txt: "Source Location",
-                                    fontSize: ScreenUtil().setSp(smallFontSize),
+                                    fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
-                                    bold: normalFontWeight,
+                                    bold: _normalFontWeight,
                                     italic: false),
                                 const SizedBox(
                                   height: 3,
                                 ),
                                 textWidget(
                                     txt: "Medical Education Center",
-                                    fontSize: ScreenUtil().setSp(smallFontSize),
+                                    fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
-                                    bold: normalFontWeight,
+                                    bold: _normalFontWeight,
                                     italic: false),
                               ],
                             ),
@@ -296,18 +295,18 @@ class _YourTripScreenState extends State<YourTripScreen> {
                               children: [
                                 textWidget(
                                     txt: "Destination Location",
-                                    fontSize: ScreenUtil().setSp(smallFontSize),
+                                    fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
-                                    bold: normalFontWeight,
+                                    bold: _normalFontWeight,
                                     italic: false),
                                 const SizedBox(
                                   height: 3,
                                 ),
                                 textWidget(
                                     txt: "Barthingam Collage",
-                                    fontSize: ScreenUtil().setSp(smallFontSize),
+                                    fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
-                                    bold: normalFontWeight,
+                                    bold: _normalFontWeight,
                                     italic: false),
                               ],
                             ),
@@ -434,6 +433,8 @@ final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
 final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
 
 class TableComplexExample extends StatefulWidget {
+  const TableComplexExample({Key? key}) : super(key: key);
+
   @override
   _TableComplexExampleState createState() => _TableComplexExampleState();
 }
@@ -523,7 +524,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('TableCalendar - Complex'),
+        title:const Text('TableCalendar - Complex'),
       ),
       body: Column(
         children: [
@@ -546,13 +547,13 @@ class _TableComplexExampleState extends State<TableComplexExample> {
                 },
                 onLeftArrowTap: () {
                   _pageController.previousPage(
-                    duration: Duration(milliseconds: 300),
+                    duration:const Duration(milliseconds: 300),
                     curve: Curves.easeOut,
                   );
                 },
                 onRightArrowTap: () {
                   _pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
+                    duration:const Duration(milliseconds: 300),
                     curve: Curves.easeOut,
                   );
                 },
@@ -648,27 +649,27 @@ class _CalendarHeader extends StatelessWidget {
             width: 120.0,
             child: Text(
               headerText,
-              style: TextStyle(fontSize: 26.0),
+              style: const TextStyle(fontSize: 26.0),
             ),
           ),
           IconButton(
-            icon: Icon(Icons.calendar_today, size: 20.0),
+            icon:const Icon(Icons.calendar_today, size: 20.0),
             visualDensity: VisualDensity.compact,
             onPressed: onTodayButtonTap,
           ),
           if (clearButtonVisible)
             IconButton(
-              icon: Icon(Icons.clear, size: 20.0),
+              icon:const Icon(Icons.clear, size: 20.0),
               visualDensity: VisualDensity.compact,
               onPressed: onClearButtonTap,
             ),
           const Spacer(),
           IconButton(
-            icon: Icon(Icons.chevron_left),
+            icon:const Icon(Icons.chevron_left),
             onPressed: onLeftArrowTap,
           ),
           IconButton(
-            icon: Icon(Icons.chevron_right),
+            icon:const Icon(Icons.chevron_right),
             onPressed: onRightArrowTap,
           ),
         ],

@@ -17,11 +17,11 @@ class VehicleManagementScreen extends StatefulWidget {
 
 class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  VehicleController vehicleController = Get.put(VehicleController());
+  final VehicleController _vehicleController = Get.put(VehicleController());
 
   @override
   void initState() {
-    vehicleController.getVehicles();
+    _vehicleController.getVehicles();
     super.initState();
   }
 
@@ -52,7 +52,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                               await Get.to(() => AddNewVehicleScreen(
                                     toEdit: false,
                                   ));
-                              vehicleController.getVehicles();
+                              _vehicleController.getVehicles();
                             },
                             text: "ADD NEW VEHICLE",
                             color: AllColors.greenColor)
@@ -65,15 +65,13 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
     );
   }
 
-  int selectedCardIndex = 0;
-
   Widget vehicleListView() {
     return ListView.builder(
-        itemCount: vehicleController.vehicleList.length,
+        itemCount: _vehicleController.vehicleList.length,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          VehicleList vehicle = vehicleController.vehicleList[index];
+          VehicleList vehicle = _vehicleController.vehicleList[index];
 
           return GestureDetector(
             onTap: () async {
@@ -87,7 +85,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                     txtVehicleYear: vehicle.vehicleYear.toString(),
                     vehicleId: vehicle.id.toString(),
                   ));
-              vehicleController.getVehicles();
+              _vehicleController.getVehicles();
             },
             child: Container(
               decoration: BoxDecoration(
@@ -140,7 +138,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
 
                             Map<String, String> map = {"vehicle_id": vehicle.id.toString()};
                             setState(() {});
-                            vehicleController.changeActiveVehicle(map, context);
+                            _vehicleController.changeActiveVehicle(map, context);
                             // vehicleController.getVehicles();
                           });
                         },

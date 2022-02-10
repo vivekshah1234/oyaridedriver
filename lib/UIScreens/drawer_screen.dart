@@ -25,7 +25,7 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-  List<DrawerItems> drawerList = [
+ final List<DrawerItems> _drawerList = [
     DrawerItems(
         0,
         ImageAssets.paymentIcon,
@@ -93,25 +93,25 @@ class _DrawerScreenState extends State<DrawerScreen> {
           color: AllColors.greenColor,
           borderRadius:const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
       child: ListView.builder(
-          itemCount: drawerList.length,
+          itemCount: _drawerList.length,
           itemBuilder: (context, index) {
             return ListTile(
               //minVerticalPadding: 10,
               title: Text(
-                drawerList[index].name,
+                _drawerList[index].name,
                 style:const TextStyle(color: AllColors.whiteColor, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               leading: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Image.asset(
-                  drawerList[index].iconData,
+                  _drawerList[index].iconData,
                   color: AllColors.whiteColor,
                   scale: 5,
                 ),
               ),
               onTap: () {
-                if (drawerList[index].id < 6) {
-                  Get.offAll(() => drawerList[index].screen);
+                if (_drawerList[index].id < 6) {
+                  Get.offAll(() => _drawerList[index].screen);
                 } else {
                   logoutDialog();
                 }

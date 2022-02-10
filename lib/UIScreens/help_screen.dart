@@ -11,13 +11,13 @@ class HelpScreen extends StatefulWidget {
 }
 
 class _HelpScreenState extends State<HelpScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
-      appBar: appBarWidget("Help Center", scaffoldKey),
+      key: _scaffoldKey,
+      appBar: appBarWidget("Help Center", _scaffoldKey),
       drawer: const DrawerScreen(),
     );
   }

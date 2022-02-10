@@ -17,14 +17,14 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  TextEditingController txtFName = TextEditingController();
-  TextEditingController txtLName = TextEditingController();
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtNum = TextEditingController();
-  TextEditingController txtPwd = TextEditingController();
-  TextEditingController txtCPwd = TextEditingController();
-  double mediumFontSize = 15.0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+ final TextEditingController _txtFName = TextEditingController();
+ final TextEditingController _txtLName = TextEditingController();
+ final TextEditingController _txtEmail = TextEditingController();
+ final TextEditingController _txtNum = TextEditingController();
+ final TextEditingController _txtPwd = TextEditingController();
+ final TextEditingController _txtCPwd = TextEditingController();
+ final  double _mediumFontSize = 15.0;
+ bool _checkBoxValue = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,17 +38,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 Expanded(
                     child:
-                        textField(controller: txtFName, prefixIcon: ImageAssets.personIcon, labelText: "First Name")),
+                        textField(controller: _txtFName, prefixIcon: ImageAssets.personIcon, labelText: "First Name")),
                 const SizedBox(
                   width: 7,
                 ),
-                Expanded(child: textFieldWithoutIcon(controller: txtLName, labelText: "Last Name")),
+                Expanded(child: textFieldWithoutIcon(controller: _txtLName, labelText: "Last Name")),
               ],
             ),
-            textField(controller: txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
-            textFieldForNum(controller: txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
-            textField(controller: txtPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Password"),
-            textField(controller: txtCPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Confirm Password"),
+            textField(controller: _txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
+            textFieldForNum(controller: _txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
+            textField(controller: _txtPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Password"),
+            textField(controller: _txtCPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Confirm Password"),
             const SizedBox(
               height: 25,
             ),
@@ -61,11 +61,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Expanded(
                     child: Text(
                   "I have read and agreed the terms and conditions.",
-                  style: TextStyle(fontSize: mediumFontSize, color: AllColors.greyColor, fontWeight: FontWeight.normal),
+                  style: TextStyle(fontSize: _mediumFontSize, color: AllColors.greyColor, fontWeight: FontWeight.normal),
                 ))
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 25,
             ),
             AppButton(text: "REGISTER", onPressed: () {}, color: AllColors.greenColor).paddingSymmetric(horizontal: 30),
@@ -80,17 +80,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  bool checkBoxValue = false;
+
 
   Widget checkBoxFun() {
     return Column(
       children: <Widget>[
         Checkbox(
-            value: checkBoxValue,
+            value: _checkBoxValue,
             activeColor: Colors.green,
             onChanged: (newValue) {
               setState(() {
-                checkBoxValue = newValue!;
+                _checkBoxValue = newValue!;
               });
               const Text('Remember me');
             }),
@@ -134,7 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             cursorColor: AllColors.blackColor,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
+              labelStyle: TextStyle(color: AllColors.greyColor, fontSize: _mediumFontSize),
               border: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AllColors.greyColor),
               ),
@@ -188,7 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.greyColor, fontSize: _mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.greyColor),
                     ),
@@ -228,7 +228,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.greyColor, fontSize: _mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,

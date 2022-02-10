@@ -18,9 +18,9 @@ class LicenceDetailScreen extends StatefulWidget {
 }
 
 class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
-  TextEditingController txtLicenceNumber = TextEditingController();
+  final TextEditingController _txtLicenceNumber = TextEditingController();
 
-  SignUpController signUpController = Get.put(SignUpController());
+  final SignUpController _signUpController = Get.put(SignUpController());
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                             italic: false),
                       ),
                       textField(
-                          controller: txtLicenceNumber,
+                          controller: _txtLicenceNumber,
                           labelText: "Driver License Number",
                           prefixIcon: ImageAssets.licenceIcon),
                       Align(
@@ -92,10 +92,10 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
   }
 
   registerLicensePlate() {
-    if (txtLicenceNumber.text.isNotEmpty) {
-      Map<String, String> _map = {"id": AppConstants.userID, "licence_number": txtLicenceNumber.text.toString()};
+    if (_txtLicenceNumber.text.isNotEmpty) {
+      Map<String, String> _map = {"id": AppConstants.userID, "licence_number": _txtLicenceNumber.text.toString()};
       printInfo(info: _map.toString());
-      signUpController.register3(_map, context);
+      _signUpController.register3(_map, context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.licenceNumber));
     }
@@ -147,11 +147,12 @@ class LicenceDocumentScreen extends StatefulWidget {
 }
 
 class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
-  TextEditingController txtLine1 = TextEditingController();
-  TextEditingController txtLine2 = TextEditingController();
-  TextEditingController txtLine3 = TextEditingController();
-  FontWeight bold1 = FontWeight.w400;
-  SignUpController signUpController = Get.put(SignUpController());
+  final TextEditingController _txtLine1 = TextEditingController();
+  final TextEditingController _txtLine2 = TextEditingController();
+  final TextEditingController _txtLine3 = TextEditingController();
+  final FontWeight _bold1 = FontWeight.w400;
+  final SignUpController _signUpController = Get.put(SignUpController());
+  var licencePhoto, selfiePhoto;
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +181,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     child: Text(
                         "We're legally required to ask for some documents to sign you up as a driver. Documents scans and quality photos are accepted.",
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
+                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: _bold1)),
                   ),
                   const SizedBox(
                     height: 20,
@@ -208,9 +209,9 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                           italic: false),
                     ],
                   ),
-                  textField(txtLine1),
-                  textField(txtLine2),
-                  textField(txtLine3),
+                  textField(_txtLine1),
+                  textField(_txtLine2),
+                  textField(_txtLine3),
                   const SizedBox(
                     height: 15,
                   ),
@@ -239,7 +240,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     child: Text(
                         "Please provide a clear portrait picture(not a full body picture) of yourself. It should show your full face, front view, with eyes open.",
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
+                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: _bold1)),
                   ),
                   const SizedBox(
                     height: 15,
@@ -261,14 +262,14 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
   }
 
   register() {
-    if (txtLine1.text.isNotEmpty) {
+    if (_txtLine1.text.isNotEmpty) {
       if (licencePhoto != null) {
         if (selfiePhoto != null) {
           Map<String, String> _map = {};
-          _map["licence_expire_date"] = txtLine1.text.toString();
+          _map["licence_expire_date"] = _txtLine1.text.toString();
           _map["id"] = AppConstants.userID;
 
-          signUpController.register4(map: _map, context: context, profilePic: selfiePhoto, licencePhoto: licencePhoto);
+          _signUpController.register4(map: _map, context: context, profilePic: selfiePhoto, licencePhoto: licencePhoto);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.selfiePhotoError));
         }
@@ -286,7 +287,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
     return TextField(
       controller: controller,
       cursorColor: AllColors.blackColor,
-      textInputAction: controller == txtLine3 ? TextInputAction.done : TextInputAction.next,
+      textInputAction: controller == _txtLine3 ? TextInputAction.done : TextInputAction.next,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.greyColor),
@@ -399,8 +400,6 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
     );
   }
 
-  var licencePhoto;
-
   pickImage() async {
     final ImagePicker _picker = ImagePicker();
     try {
@@ -416,8 +415,6 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
       debugPrint(ex.toString());
     }
   }
-
-  var selfiePhoto;
 
   pickImage2() async {
     final ImagePicker _picker2 = ImagePicker();

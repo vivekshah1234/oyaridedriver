@@ -18,21 +18,20 @@ class PersonalInfoScreen extends StatefulWidget {
 }
 
 class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
-  TextEditingController txtFName = TextEditingController();
-  TextEditingController txtLName = TextEditingController();
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtCity = TextEditingController();
-  TextEditingController txtLanguage = TextEditingController();
-  TextEditingController txtReferralCode = TextEditingController();
-  TextEditingController txtVehicleMF = TextEditingController();
-  TextEditingController txtVehicleModel = TextEditingController();
-  TextEditingController txtVehicleYear = TextEditingController();
-  TextEditingController txtLicensePlate = TextEditingController();
-  TextEditingController txtVehicleColor = TextEditingController();
+ final TextEditingController _txtFName = TextEditingController();
+ final  TextEditingController _txtLName = TextEditingController();
+ final  TextEditingController _txtEmail = TextEditingController();
+ final TextEditingController _txtCity = TextEditingController();
+ final TextEditingController _txtLanguage = TextEditingController();
+ final TextEditingController _txtReferralCode = TextEditingController();
+ final TextEditingController _txtVehicleMF = TextEditingController();
+ final TextEditingController _txtVehicleModel = TextEditingController();
+ final TextEditingController _txtVehicleYear = TextEditingController();
+ final TextEditingController _txtLicensePlate = TextEditingController();
+ final TextEditingController _txtVehicleColor = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  SignUpController signUpController = Get.put(SignUpController());
-  final formKey = GlobalKey<FormState>();
-  double cityLatitude = 0.0, cityLongitude = 0.0;
+ final SignUpController _signUpController = Get.put(SignUpController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               children: [
                 SingleChildScrollView(
                   child: Form(
-                    key: formKey,
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -92,7 +91,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               children: [
                                 Expanded(
                                     child: textField(
-                                        controller: txtFName,
+                                        controller: _txtFName,
                                         prefixIcon: ImageAssets.personIcon,
                                         errorText: ErrorMessage.fNameError,
                                         labelText: "First Name")),
@@ -101,7 +100,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                 ),
                                 Expanded(
                                     child: textFieldWithoutIcon(
-                                        controller: txtLName,
+                                        controller: _txtLName,
                                         errorText: ErrorMessage.lNameError,
                                         labelText: "Last Name")),
 
@@ -109,36 +108,36 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                               ],
                             ),
                             textField(
-                                controller: txtEmail,
+                                controller: _txtEmail,
                                 prefixIcon: ImageAssets.emailIcon,
                                 errorText: ErrorMessage.emailError,
                                 labelText: "Email"),
                             textFieldForCity(
-                                controller: txtCity,
+                                controller: _txtCity,
                                 prefixIcon: ImageAssets.cityIcon,
                                 errorText: ErrorMessage.cityError,
                                 labelText: "City"),
                             Column(
                               children: [
-                                referralCode(controller: txtReferralCode, labelText: "Referral code"),
+                                referralCode(controller: _txtReferralCode, labelText: "Referral code"),
                                 textFieldWithoutIcon(
-                                    controller: txtVehicleMF,
+                                    controller: _txtVehicleMF,
                                     errorText: ErrorMessage.vmanuFactureError,
                                     labelText: "Vehicle manufacturer"),
                                 textFieldWithoutIcon(
-                                    controller: txtVehicleModel,
+                                    controller: _txtVehicleModel,
                                     errorText: ErrorMessage.vModel,
                                     labelText: "Vehicle model"),
                                 textFieldWithoutIcon(
-                                    controller: txtVehicleYear,
+                                    controller: _txtVehicleYear,
                                     errorText: ErrorMessage.vYear,
                                     labelText: "Vehicle year"),
                                 textFieldWithoutIcon(
-                                    controller: txtLicensePlate,
+                                    controller: _txtLicensePlate,
                                     errorText: ErrorMessage.licencePlate,
                                     labelText: "License plate"),
                                 textFieldWithoutIcon(
-                                    controller: txtVehicleColor,
+                                    controller: _txtVehicleColor,
                                     errorText: ErrorMessage.vColor,
                                     labelText: "Vehicle color"),
                               ],
@@ -162,25 +161,25 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   registerPersonalInfo() {
-    if (formKey.currentState!.validate()) {
-      bool isValid = isValidEmail(txtEmail.text);
+    if (_formKey.currentState!.validate()) {
+      bool isValid = isValidEmail(_txtEmail.text);
       if (isValid) {
         Map<String, String> _map = {
           "id": AppConstants.userID,
-          "first_name": txtFName.text.toString(),
-          "last_name": txtLName.text.toString(),
-          "email": txtEmail.text.toString(),
-          "city": txtCity.text.toString(),
+          "first_name": _txtFName.text.toString(),
+          "last_name": _txtLName.text.toString(),
+          "email": _txtEmail.text.toString(),
+          "city": _txtCity.text.toString(),
           "language": "english",
-          "referral_code": txtReferralCode.text.isNotEmpty ? txtReferralCode.text : "referralCode",
-          "vehicle_manufacturer": txtVehicleMF.text.toString(),
-          "vehicle_model": txtVehicleModel.text.toString(),
-          "vehicle_year": txtVehicleYear.text.toString(),
-          "licence_plate": txtLicensePlate.text.toString(),
-          "vehicle_color": txtVehicleColor.text.toString()
+          "referral_code": _txtReferralCode.text.isNotEmpty ? _txtReferralCode.text : "referralCode",
+          "vehicle_manufacturer": _txtVehicleMF.text.toString(),
+          "vehicle_model": _txtVehicleModel.text.toString(),
+          "vehicle_year": _txtVehicleYear.text.toString(),
+          "licence_plate": _txtLicensePlate.text.toString(),
+          "vehicle_color": _txtVehicleColor.text.toString()
         };
         printInfo(info: _map.toString());
-        signUpController.register2(_map, context);
+        _signUpController.register2(_map, context);
         // Get.to(() => const LicenceDetailScreen());
       } else {
         ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.emailError2));
@@ -213,7 +212,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             onTap: () {
               Get.to(() => SearchCity((val) {
                     printInfo(info: val.toString());
-                    txtCity.text = val["cityName"];
+                    _txtCity.text = val["cityName"];
                     //txtCity.text=val;
                   }));
             },
@@ -295,7 +294,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         }
         return null;
       },
-      textInputAction: controller == txtVehicleColor ? TextInputAction.done : TextInputAction.next,
+      textInputAction: controller == _txtVehicleColor ? TextInputAction.done : TextInputAction.next,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
@@ -346,17 +345,17 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
 
   @override
   void dispose() {
-    txtFName.dispose();
-    txtLName.dispose();
-    txtEmail.dispose();
-    txtCity.dispose();
-    txtLanguage.dispose();
-    txtReferralCode.dispose();
-    txtVehicleMF.dispose();
-    txtVehicleModel.dispose();
-    txtVehicleYear.dispose();
-    txtLicensePlate.dispose();
-    txtVehicleColor.dispose();
+    _txtFName.dispose();
+    _txtLName.dispose();
+    _txtEmail.dispose();
+    _txtCity.dispose();
+    _txtLanguage.dispose();
+    _txtReferralCode.dispose();
+    _txtVehicleMF.dispose();
+    _txtVehicleModel.dispose();
+    _txtVehicleYear.dispose();
+    _txtLicensePlate.dispose();
+    _txtVehicleColor.dispose();
     super.dispose();
   }
 }

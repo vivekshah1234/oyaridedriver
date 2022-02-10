@@ -11,18 +11,18 @@ class CancelRide extends StatefulWidget {
 }
 
 class _CancelRideState extends State<CancelRide> {
-  TextEditingController txtReason = TextEditingController();
+  final TextEditingController txtReason = TextEditingController();
 
-  String dropDownValue = 'I changed my mind.';
+  String _dropDownValue = 'I changed my mind.';
 
   // List of items in our dropdown menu
-  var items = [
+  final  List<String> _items = [
     'I changed my mind.',
     'I am facing some vehicle issue.',
     'Journey is not in my route.',
     'Other',
   ];
-  bool isVisible = false;
+  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +30,10 @@ class _CancelRideState extends State<CancelRide> {
       children: [
         DropdownButton(
           isExpanded: true,
-          value: dropDownValue,
+          value: _dropDownValue,
           underline: Container(),
           icon: const Icon(Icons.keyboard_arrow_down),
-          items: items.map((String items) {
+          items: _items.map((String items) {
             return DropdownMenuItem(
               value: items,
               child: Text(
@@ -44,16 +44,16 @@ class _CancelRideState extends State<CancelRide> {
           }).toList(),
           onChanged: (String? newValue) {
             setState(() {
-              dropDownValue = newValue!;
-              if (dropDownValue == "Other") {
-                isVisible = true;
+              _dropDownValue = newValue!;
+              if (_dropDownValue == "Other") {
+                _isVisible = true;
               } else {
-                isVisible = false;
+                _isVisible = false;
               }
             });
           },
         ),
-        isVisible
+        _isVisible
             ? Column(
                 children: [
                   textField(
