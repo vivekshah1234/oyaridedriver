@@ -3,10 +3,11 @@ class SignUpModel {
     required this.status,
     required this.data,
   });
+
   late final int status;
   late final Data data;
 
-  SignUpModel.fromJson(Map<String, dynamic> json){
+  SignUpModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = Data.fromJson(json['data']);
   }
@@ -24,10 +25,11 @@ class Data {
     required this.token,
     required this.user,
   });
+
   late final String token;
   late final User user;
 
-  Data.fromJson(Map<String, dynamic> json){
+  Data.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     user = User.fromJson(json['user']);
   }
@@ -52,17 +54,18 @@ class User {
     required this.language,
     required this.referralCode,
     required this.countryCode,
-    required  this.licencePlate,
-    required  this.licenceNumber,
+    required this.licencePlate,
+    required this.licenceNumber,
     required this.licencePhoto,
     required this.isVerified,
     required this.signUpStep,
     required this.isAvailable,
-    required  this.verificationCode,
+    required this.verificationCode,
     required this.createdAt,
     required this.updatedAt,
     required this.unreadCount,
   });
+
   late final int id;
   late final String firstName;
   late final String lastName;
@@ -84,7 +87,7 @@ class User {
   late final String updatedAt;
   late final int unreadCount;
 
-  User.fromJson(Map<String, dynamic> json){
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];

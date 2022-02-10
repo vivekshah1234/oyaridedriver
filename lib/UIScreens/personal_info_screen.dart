@@ -34,7 +34,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final formKey = GlobalKey<FormState>();
   double cityLatitude = 0.0, cityLongitude = 0.0;
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,8 +80,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         ),
                         Center(
                           child: textWidget(
-                              txt:
-                                  "details  are visible to clients during booking.",
+                              txt: "details  are visible to clients during booking.",
                               fontSize: 16,
                               color: Colors.black54,
                               bold: FontWeight.normal,
@@ -122,9 +120,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                 labelText: "City"),
                             Column(
                               children: [
-                                referralCode(
-                                    controller: txtReferralCode,
-                                    labelText: "Referral code"),
+                                referralCode(controller: txtReferralCode, labelText: "Referral code"),
                                 textFieldWithoutIcon(
                                     controller: txtVehicleMF,
                                     errorText: ErrorMessage.vmanuFactureError,
@@ -147,14 +143,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                     labelText: "Vehicle color"),
                               ],
                             ).paddingOnly(bottom: 20, left: 25, right: 5),
-
-                            AppButton(
-                                    text: "NEXT",
-                                    color: AllColors.greenColor,
-                                    onPressed: registerPersonalInfo)
-                                .paddingOnly(
-                                    left: context.widthPct(.15),
-                                    right: context.widthPct(.15)),
+                            AppButton(text: "NEXT", color: AllColors.greenColor, onPressed: registerPersonalInfo)
+                                .paddingOnly(left: context.widthPct(.15), right: context.widthPct(.15)),
                             const SizedBox(
                               height: 20,
                             )
@@ -164,9 +154,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     ),
                   ),
                 ),
-                Visibility(
-                    visible: controller.isLoading.value,
-                    child: Center(child: greenLoadingWidget()))
+                Visibility(visible: controller.isLoading.value, child: Center(child: greenLoadingWidget()))
               ],
             );
           }),
@@ -174,7 +162,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   }
 
   registerPersonalInfo() {
-
     if (formKey.currentState!.validate()) {
       bool isValid = isValidEmail(txtEmail.text);
       if (isValid) {
@@ -185,21 +172,18 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           "email": txtEmail.text.toString(),
           "city": txtCity.text.toString(),
           "language": "english",
-          "referral_code": txtReferralCode.text.isNotEmpty
-              ? txtReferralCode.text
-              : "referralCode",
+          "referral_code": txtReferralCode.text.isNotEmpty ? txtReferralCode.text : "referralCode",
           "vehicle_manufacturer": txtVehicleMF.text.toString(),
           "vehicle_model": txtVehicleModel.text.toString(),
           "vehicle_year": txtVehicleYear.text.toString(),
           "licence_plate": txtLicensePlate.text.toString(),
           "vehicle_color": txtVehicleColor.text.toString()
         };
-        printInfo( info: _map.toString());
-         signUpController.register2(_map, context);
-       // Get.to(() => const LicenceDetailScreen());
+        printInfo(info: _map.toString());
+        signUpController.register2(_map, context);
+        // Get.to(() => const LicenceDetailScreen());
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(greenSnackBar(ErrorMessage.emailError2));
+        ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.emailError2));
       }
     }
   }
@@ -210,8 +194,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       children: [
         Image.asset(
           prefixIcon,
-          color:
-              prefixIcon == ImageAssets.emailIcon ? Colors.black : Colors.black,
+          color: prefixIcon == ImageAssets.emailIcon ? Colors.black : Colors.black,
           scale: 10,
         ),
         const SizedBox(
@@ -237,8 +220,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle:
-                  const TextStyle(color: AllColors.greyColor, fontSize: 13),
+              labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
               border: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AllColors.greyColor),
               ),
@@ -264,8 +246,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
       children: [
         Image.asset(
           prefixIcon,
-          color:
-              prefixIcon == ImageAssets.emailIcon ? Colors.black : Colors.black,
+          color: prefixIcon == ImageAssets.emailIcon ? Colors.black : Colors.black,
           scale: 10,
         ),
         const SizedBox(
@@ -284,8 +265,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle:
-                  const TextStyle(color: AllColors.greyColor, fontSize: 13),
+              labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
               border: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AllColors.greyColor),
               ),
@@ -315,9 +295,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
         }
         return null;
       },
-      textInputAction: controller == txtVehicleColor
-          ? TextInputAction.done
-          : TextInputAction.next,
+      textInputAction: controller == txtVehicleColor ? TextInputAction.done : TextInputAction.next,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
@@ -366,7 +344,6 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     );
   }
 
-
   @override
   void dispose() {
     txtFName.dispose();
@@ -382,5 +359,4 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     txtVehicleColor.dispose();
     super.dispose();
   }
-
 }

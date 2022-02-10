@@ -4,20 +4,21 @@ class VehicleListModel {
     required this.data,
     required this.message,
   });
+
   late final int status;
   late final List<VehicleList> data;
   late final String message;
 
-  VehicleListModel.fromJson(Map<String, dynamic> json){
+  VehicleListModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data = List.from(json['data']).map((e)=>VehicleList.fromJson(e)).toList();
+    data = List.from(json['data']).map((e) => VehicleList.fromJson(e)).toList();
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['status'] = status;
-    _data['data'] = data.map((e)=>e.toJson()).toList();
+    _data['data'] = data.map((e) => e.toJson()).toList();
     _data['message'] = message;
     return _data;
   }
@@ -36,6 +37,7 @@ class VehicleList {
     required this.createdAt,
     required this.updatedAt,
   });
+
   late final int id;
   late final int userId;
   late final String vehicleManufacturer;
@@ -48,7 +50,7 @@ class VehicleList {
   late final String createdAt;
   late final String updatedAt;
 
-  VehicleList.fromJson(Map<String, dynamic> json){
+  VehicleList.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     vehicleManufacturer = json['vehicle_manufacturer'];
@@ -56,7 +58,7 @@ class VehicleList {
     vehicleYear = json['vehicle_year'];
     vehicleColor = json['vehicle_color'];
     vehicleTypeId = json["vehicle_type_id"];
-    licencePlate=json["licence_plate"];
+    licencePlate = json["licence_plate"];
     isActiveVehicle = json['is_active_vehicle'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -71,7 +73,7 @@ class VehicleList {
     _data['vehicle_year'] = vehicleYear;
     _data['vehicle_color'] = vehicleColor;
     _data['vehicle_type_id'] = vehicleTypeId;
-    _data["licence_plate"]=licencePlate;
+    _data["licence_plate"] = licencePlate;
     _data['is_active_vehicle'] = isActiveVehicle;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;

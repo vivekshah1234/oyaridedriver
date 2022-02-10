@@ -5,7 +5,7 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 
 import 'drawer_screen.dart';
-// ignore_for_file: prefer_const_constructors
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
@@ -18,41 +18,38 @@ class _ChatScreenState extends State<ChatScreen> {
   double mediumFont = 15.0;
   double smallFont = 12.0;
   TextEditingController txtSearch = TextEditingController();
-  final border = OutlineInputBorder(
+  final border = const OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
         color: Colors.transparent,
       ));
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBarWidget("Message", _scaffoldKey),
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
       body: Column(
         children: [
           searchTextField().paddingSymmetric(horizontal: 25, vertical: 15),
-          Expanded(child: MessageList())
+          Expanded(child: messageUserList())
         ],
       ),
     );
   }
 
-  Widget MessageList() {
+  Widget messageUserList() {
     return ListView.builder(
         itemCount: 5,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return Container(
-            decoration: BoxDecoration(
-                border:
-                Border(bottom: BorderSide(color: Colors.grey.shade300))),
+            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.shade300))),
             child: Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -62,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         backgroundImage: NetworkImage(imgUrl),
                         radius: 24,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       Column(
@@ -73,12 +70,14 @@ class _ChatScreenState extends State<ChatScreen> {
                             fontSize: mediumFont,
                             color: AllColors.blackColor,
                             bold: FontWeight.w700,
+                            italic: false,
                           ),
                           textWidget(
                             txt: "Hey",
                             fontSize: smallFont,
                             color: AllColors.blackColor,
                             bold: FontWeight.normal,
+                            italic: false,
                           ),
                         ],
                       ),
@@ -103,7 +102,7 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Colors.grey.withOpacity(0.1),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -117,30 +116,12 @@ class _ChatScreenState extends State<ChatScreen> {
             focusedBorder: border,
             enabledBorder: border,
             border: border,
-            suffixIcon: Icon(Icons.search,color: Colors.grey.shade300,),
-            hintStyle: TextStyle(
-                fontSize: mediumFont,
-                fontWeight: FontWeight.w600,
-                color: AllColors.blackColor)),
+            suffixIcon: Icon(
+              Icons.search,
+              color: Colors.grey.shade300,
+            ),
+            hintStyle: TextStyle(fontSize: mediumFont, fontWeight: FontWeight.w600, color: AllColors.blackColor)),
       ),
     );
   }
-
-  Widget textWidget({
-    required String txt,
-    required double fontSize,
-    required Color color,
-    required FontWeight bold,
-  }) {
-    return Text(
-      txt,
-      style: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: bold,
-      ),
-    );
-  }
-
-
 }

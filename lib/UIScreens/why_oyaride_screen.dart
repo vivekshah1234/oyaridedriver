@@ -3,14 +3,14 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 
-class WhyOyaRideScren extends StatefulWidget {
-  const WhyOyaRideScren({Key? key}) : super(key: key);
+class WhyOyaRideScreen extends StatefulWidget {
+  const WhyOyaRideScreen({Key? key}) : super(key: key);
 
   @override
-  _WhyOyaRideScrenState createState() => _WhyOyaRideScrenState();
+  _WhyOyaRideScreenState createState() => _WhyOyaRideScreenState();
 }
 
-class _WhyOyaRideScrenState extends State<WhyOyaRideScren> {
+class _WhyOyaRideScreenState extends State<WhyOyaRideScreen> {
   double bigFontSize = 28.0;
   double mediumFontSize = 21.0;
 
@@ -21,37 +21,38 @@ class _WhyOyaRideScrenState extends State<WhyOyaRideScren> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Column(children: [
-        whyOyaRide(),
-        Expanded(
-          flex: 2,
-          child: Container(),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        makeMoney(),
-        Expanded(
-          flex: 3,
-          child: Container(),
-        ),
-        setHours(),
-        Expanded(
-          flex: 3,
-          child: Container(),
-        ),
-        noFees(),
-        Expanded(
-          flex: 4,
-          child: Container(),
-        ),
-      ],).paddingSymmetric(horizontal: 25)
-    );
+        body: Column(
+          children: [
+            whyOyaRide(),
+            Expanded(
+              flex: 2,
+              child: Container(),
+            ),
+            makeMoney(),
+            Expanded(
+              flex: 3,
+              child: Container(),
+            ),
+            setHours(),
+            Expanded(
+              flex: 3,
+              child: Container(),
+            ),
+            noFees(),
+            Expanded(
+              flex: 4,
+              child: Container(),
+            ),
+          ],
+        ).paddingSymmetric(horizontal: 25));
   }
 
-  Widget whyOyaRide(){
-    return   Row(
+  Widget whyOyaRide() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         textWidget(
@@ -69,10 +70,10 @@ class _WhyOyaRideScrenState extends State<WhyOyaRideScren> {
       ],
     );
   }
+
   Widget makeMoney() {
     return Column(
       children: [
-
         Image.asset(
           ImageAssets.makeMoneyIcon,
           scale: 7,
@@ -96,7 +97,6 @@ class _WhyOyaRideScrenState extends State<WhyOyaRideScren> {
   Widget setHours() {
     return Column(
       children: [
-
         textWidget(
           txt: "Set your hours",
           fontSize: bigFontSize,

@@ -5,7 +5,6 @@ import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:sized_context/src/extensions.dart';
 // ignore_for_file: prefer_const_constructors
 
-
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({Key? key}) : super(key: key);
 
@@ -15,12 +14,12 @@ class ChangePasswordScreen extends StatefulWidget {
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   TextEditingController txtEmailId = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key:_scaffoldKey ,
+      key: _scaffoldKey,
       appBar: appBarWidget2(""),
       body: Column(
         //  mainAxisAlignment: MainAxisAlignment.center,
@@ -29,28 +28,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             height: context.heightPct(.13),
           ),
           textWidget(
-              txt: "Change Password",
-              fontSize: 25,
-              color: AllColors.blackColor,
-              bold: FontWeight.w600,
-              italic: false),
+              txt: "Change Password", fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
           SizedBox(
             height: 20,
           ),
-          textFieldWithoutIcon(
-              controller: txtEmailId,
-              labelText: "Email id",
-              errorText: "Please enter Email id."),
-           Text(
+          textFieldWithoutIcon(controller: txtEmailId, labelText: "Email id", errorText: "Please enter Email id."),
+          Text(
             "Please enter your email above to receiver your password reset instruction.",
             textAlign: TextAlign.center,
             style: TextStyle(color: AllColors.greyColor, fontSize: 13),
           ).putPadding(5, 3, 5, 5),
-
           SizedBox(
             height: context.heightPct(0.1),
           ),
-          AppButton(text: "SEND MAIL", onPressed:  () {},color: AllColors.greenColor),
+          AppButton(text: "SEND MAIL", onPressed: () {}, color: AllColors.greenColor),
           SizedBox(
             height: 40,
           ),

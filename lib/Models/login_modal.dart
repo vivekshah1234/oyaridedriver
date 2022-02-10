@@ -5,10 +5,11 @@ class LoginModel {
     required this.status,
     required this.data,
   });
+
   late final int status;
   late final Data data;
 
-  LoginModel.fromJson(Map<String, dynamic> json){
+  LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = Data.fromJson(json['data']);
   }
@@ -26,10 +27,11 @@ class Data {
     required this.token,
     required this.user,
   });
+
   late final String token;
   late final User user;
 
-  Data.fromJson(Map<String, dynamic> json){
+  Data.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     user = User.fromJson(json['user']);
   }

@@ -51,8 +51,8 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
 
   getCurrentPosition() async {
     _kGooglePlex = CameraPosition(
-      target: LatLng(double.parse(widget.requestModel.sourceLatitude),
-          double.parse(widget.requestModel.sourceLongitude)),
+      target:
+          LatLng(double.parse(widget.requestModel.sourceLatitude), double.parse(widget.requestModel.sourceLongitude)),
       zoom: 14.4746,
     );
 
@@ -63,8 +63,8 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
   setMarker() {
     _markers.add(Marker(
         markerId: const MarkerId("source"),
-        position:  LatLng(double.parse(widget.requestModel.sourceLatitude),
-            double.parse(widget.requestModel.sourceLongitude)),
+        position:
+            LatLng(double.parse(widget.requestModel.sourceLatitude), double.parse(widget.requestModel.sourceLongitude)),
         onTap: () {},
         draggable: false,
         zIndex: 2,
@@ -74,7 +74,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
 
     _markers.add(Marker(
         markerId: const MarkerId("destination"),
-        position:  LatLng(double.parse(widget.requestModel.destinationLatitude),
+        position: LatLng(double.parse(widget.requestModel.destinationLatitude),
             double.parse(widget.requestModel.destinationLongitude)),
         onTap: () {},
         draggable: false,
@@ -87,22 +87,19 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
   setPolyline() async {
     var result = await polylinePoints.getRouteBetweenCoordinates(
         ApiKeys.mapApiKey,
-        PointLatLng(double.parse(widget.requestModel.sourceLatitude),
-            double.parse(widget.requestModel.sourceLongitude)),
+        PointLatLng(
+            double.parse(widget.requestModel.sourceLatitude), double.parse(widget.requestModel.sourceLongitude)),
         PointLatLng(double.parse(widget.requestModel.destinationLatitude),
             double.parse(widget.requestModel.destinationLongitude)));
     printInfo(info: result.errorMessage.toString());
     if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) {
+      for (var point in result.points) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
+      }
     }
     setState(() {
       _polyLine.add(Polyline(
-          polylineId: const PolylineId("poly"),
-          color: AllColors.greenColor,
-          width: 3,
-          points: polylineCoordinates));
+          polylineId: const PolylineId("poly"), color: AllColors.greenColor, width: 3, points: polylineCoordinates));
     });
   }
 
@@ -114,14 +111,12 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding:
-                const EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 0),
+            padding: const EdgeInsets.only(top: 5, bottom: 5, left: 20, right: 0),
             child: Row(
               children: [
-                 CircleAvatar(
+                CircleAvatar(
                   backgroundColor: AllColors.greyColor,
-                  backgroundImage: NetworkImage(
-                     widget.requestModel.profilePic.toString()),
+                  backgroundImage: NetworkImage(widget.requestModel.profilePic.toString()),
                   radius: 32,
                 ),
                 const SizedBox(
@@ -132,9 +127,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: ScreenUtil().setSp(17),
-                          color: AllColors.blackColor)),
+                          fontWeight: FontWeight.w800, fontSize: ScreenUtil().setSp(17), color: AllColors.blackColor)),
                 ),
                 Expanded(
                   flex: 1,
@@ -177,11 +170,8 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                         bottom: 10,
                         right: 10,
                         child: Container(
-                          decoration: BoxDecoration(
-                              color: AllColors.blueColor,
-                              borderRadius: BorderRadius.circular(5)),
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 5, top: 5),
+                          decoration: BoxDecoration(color: AllColors.blueColor, borderRadius: BorderRadius.circular(5)),
+                          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
                           child: textWidget(
                               txt: "Kilometer : ${widget.requestModel.kilometer} km",
                               fontSize: ScreenUtil().setSp(15),
@@ -198,8 +188,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(
-                      left: 25, right: 25, top: 0, bottom: 15),
+                  padding: const EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 15),
                   child: Row(
                     children: [
                       Expanded(
@@ -221,8 +210,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                                     //   const SizedBox(
                                     //     height: 3,
                                     //   ),
-                                    Text(
-                                      widget.requestModel.sourceAddress,
+                                    Text(widget.requestModel.sourceAddress,
                                         style: TextStyle(
                                           fontSize: smallFontSize,
                                           color: AllColors.greyColor,

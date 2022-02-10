@@ -12,8 +12,7 @@ Map<String, String> getHeaders() {
   return header;
 }
 
-postAPI(String methodName, Map<String, dynamic> param,
-    Function(ResponseAPI) callback) {
+postAPI(String methodName, Map<String, dynamic> param, Function(ResponseAPI) callback) {
   var url = ApiConstant.baseUrl + methodName;
   var uri = Uri.parse(url);
   debugPrint("==request== $uri");
@@ -31,8 +30,7 @@ postAPI(String methodName, Map<String, dynamic> param,
   });
 }
 
-postAPIWithHeader(String methodName, Map<String, dynamic> param,
-    Function(ResponseAPI) callback) {
+postAPIWithHeader(String methodName, Map<String, dynamic> param, Function(ResponseAPI) callback) {
   var url = ApiConstant.baseUrl + methodName;
   var uri = Uri.parse(url);
   debugPrint("==request2== $uri");
@@ -75,8 +73,7 @@ _handleResponse(value, Function(ResponseAPI) callback) {
 
 _handleError(value, Function(ResponseAPI) callback) {
   if (!value.toString().contains("errno = 111")) {
-    callback.call(ResponseAPI(0, "No internet connection",
-        isError: true, error: value.toString()));
+    callback.call(ResponseAPI(0, "No internet connection", isError: true, error: value.toString()));
   } else {
     debugPrint("error::::::::::::::");
     callback.call(ResponseAPI(
@@ -88,8 +85,7 @@ _handleError(value, Function(ResponseAPI) callback) {
   }
 }
 
-putAPI(String methodName, Map<String, dynamic> param,
-    Function(ResponseAPI) callback) {
+putAPI(String methodName, Map<String, dynamic> param, Function(ResponseAPI) callback) {
   var url = ApiConstant.baseUrl + methodName;
   var uri = Uri.parse(url);
   debugPrint("==request== $uri");
@@ -111,21 +107,19 @@ multipartPostAPI(
     {required String methodName,
     required Map<String, String> param,
     required Function(ResponseAPI) callback,
-    profilePic,licencePhoto}) async {
+    profilePic,
+    licencePhoto}) async {
   var url = ApiConstant.baseUrl + methodName;
   var uri = Uri.parse(url);
   debugPrint("==request== $uri");
   debugPrint("==Params== $param");
   final imageUploadRequest = http.MultipartRequest('POST', uri);
   if (profilePic != null) {
-    final file = await http.MultipartFile.fromPath('profile_pic', profilePic,
-        filename: "profile_pic");
-    final file2 = await http.MultipartFile.fromPath('licence_photo', licencePhoto,
-        filename: "licence_photo");
+    final file = await http.MultipartFile.fromPath('profile_pic', profilePic, filename: "profile_pic");
+    final file2 = await http.MultipartFile.fromPath('licence_photo', licencePhoto, filename: "licence_photo");
     debugPrint("==profile_pic== $profilePic");
     imageUploadRequest.files.add(file);
     imageUploadRequest.files.add(file2);
-
   }
   imageUploadRequest.fields.addAll(param);
   try {

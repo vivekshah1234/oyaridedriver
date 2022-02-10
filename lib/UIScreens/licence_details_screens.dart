@@ -10,7 +10,6 @@ import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 
-
 class LicenceDetailScreen extends StatefulWidget {
   const LicenceDetailScreen({Key? key}) : super(key: key);
 
@@ -80,19 +79,12 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      AppButton(
-                              text: "NEXT",
-                              onPressed: registerLicensePlate,
-                              color: AllColors.greenColor)
-                          .paddingOnly(
-                              left: context.widthPct(.15),
-                              right: context.widthPct(.15))
+                      AppButton(text: "NEXT", onPressed: registerLicensePlate, color: AllColors.greenColor)
+                          .paddingOnly(left: context.widthPct(.15), right: context.widthPct(.15))
                     ],
                   ).paddingOnly(left: 15, right: 15),
                 ),
-                Visibility(
-                    visible: controller.isLoading.value,
-                    child: greenLoadingWidget())
+                Visibility(visible: controller.isLoading.value, child: greenLoadingWidget())
               ],
             );
           }),
@@ -101,15 +93,11 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
 
   registerLicensePlate() {
     if (txtLicenceNumber.text.isNotEmpty) {
-      Map<String, String> _map = {
-        "id": AppConstants.userID,
-        "licence_number": txtLicenceNumber.text.toString()
-      };
+      Map<String, String> _map = {"id": AppConstants.userID, "licence_number": txtLicenceNumber.text.toString()};
       printInfo(info: _map.toString());
       signUpController.register3(_map, context);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(greenSnackBar(ErrorMessage.licenceNumber));
+      ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.licenceNumber));
     }
   }
 
@@ -130,8 +118,7 @@ class _LicenceDetailScreenState extends State<LicenceDetailScreen> {
             cursorColor: AllColors.blackColor,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle:
-                  const TextStyle(color: AllColors.greyColor, fontSize: 13),
+              labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
               border: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AllColors.greyColor),
               ),
@@ -193,20 +180,14 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     child: Text(
                         "We're legally required to ask for some documents to sign you up as a driver. Documents scans and quality photos are accepted.",
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            fontWeight: bold1)),
+                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   const Text("Driver's License",
                       textAlign: TextAlign.start,
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: AllColors.blackColor,
-                          fontWeight: FontWeight.w500)),
+                      style: TextStyle(fontSize: 22, color: AllColors.blackColor, fontWeight: FontWeight.w500)),
                   const SizedBox(
                     height: 7,
                   ),
@@ -233,10 +214,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                   const SizedBox(
                     height: 15,
                   ),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child:
-                          licencePhoto != null ? fileWidget() : uploadFile()),
+                  Align(alignment: Alignment.centerRight, child: licencePhoto != null ? fileWidget() : uploadFile()),
                   const SizedBox(
                     height: 15,
                   ),
@@ -245,10 +223,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     children: <Widget>[
                       const Text("Driver's License",
                           textAlign: TextAlign.start,
-                          style: TextStyle(
-                              fontSize: 22,
-                              color: AllColors.blackColor,
-                              fontWeight: FontWeight.w500)),
+                          style: TextStyle(fontSize: 22, color: AllColors.blackColor, fontWeight: FontWeight.w500)),
                       textWidget(
                           txt: "Required*",
                           fontSize: 12,
@@ -264,32 +239,21 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
                     child: Text(
                         "Please provide a clear portrait picture(not a full body picture) of yourself. It should show your full face, front view, with eyes open.",
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                            fontWeight: bold1)),
+                        style: TextStyle(fontSize: 16, color: Colors.black54, fontWeight: bold1)),
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child:
-                          selfiePhoto != null ? fileWidget2() : uploadFile2()),
+                  Align(alignment: Alignment.centerRight, child: selfiePhoto != null ? fileWidget2() : uploadFile2()),
                   const SizedBox(
                     height: 15,
                   ),
-                  AppButton(
-                          onPressed: register,
-                          text: "NEXT",
-                          color: AllColors.blueColor)
+                  AppButton(onPressed: register, text: "NEXT", color: AllColors.blueColor)
                       .paddingSymmetric(horizontal: 45)
                 ],
               ).paddingOnly(left: 25, right: 25),
             ),
-            Visibility(
-                visible: controller.isLoading.value,
-                child: greenLoadingWidget())
+            Visibility(visible: controller.isLoading.value, child: greenLoadingWidget())
           ],
         );
       }),
@@ -302,24 +266,17 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         if (selfiePhoto != null) {
           Map<String, String> _map = {};
           _map["licence_expire_date"] = txtLine1.text.toString();
-          _map["id"]=AppConstants.userID;
+          _map["id"] = AppConstants.userID;
 
-          signUpController.register4(
-              map: _map,
-              context: context,
-              profilePic: selfiePhoto,
-              licencePhoto: licencePhoto);
+          signUpController.register4(map: _map, context: context, profilePic: selfiePhoto, licencePhoto: licencePhoto);
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(greenSnackBar(ErrorMessage.selfiePhotoError));
+          ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.selfiePhotoError));
         }
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(greenSnackBar(ErrorMessage.licencePhotoError));
+        ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.licencePhotoError));
       }
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(greenSnackBar(ErrorMessage.expireDate));
+      ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.expireDate));
     }
   }
 
@@ -329,8 +286,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
     return TextField(
       controller: controller,
       cursorColor: AllColors.blackColor,
-      textInputAction:
-          controller == txtLine3 ? TextInputAction.done : TextInputAction.next,
+      textInputAction: controller == txtLine3 ? TextInputAction.done : TextInputAction.next,
       decoration: const InputDecoration(
         border: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.greyColor),
@@ -351,8 +307,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
   Widget fileWidget() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.40,
-      decoration: BoxDecoration(
-          color: AllColors.greenColor, borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(15)),
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 10),
       child: Row(
         children: [
@@ -383,8 +338,7 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
   Widget fileWidget2() {
     return Container(
       width: MediaQuery.of(context).size.width * 0.40,
-      decoration: BoxDecoration(
-          color: AllColors.greenColor, borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(15)),
       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 10),
       child: Row(
         children: [
@@ -422,11 +376,9 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AllColors.greenColor),
             shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
+              return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
             }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 5, bottom: 5))),
+            padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.only(top: 5, bottom: 5))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
@@ -493,11 +445,9 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(AllColors.greenColor),
             shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-              return RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25));
+              return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
             }),
-            padding: MaterialStateProperty.all<EdgeInsets>(
-                const EdgeInsets.only(top: 5, bottom: 5))),
+            padding: MaterialStateProperty.all<EdgeInsets>(const EdgeInsets.only(top: 5, bottom: 5))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[

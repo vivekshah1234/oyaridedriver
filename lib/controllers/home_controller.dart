@@ -11,7 +11,7 @@ import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
-// STEP1:  Stream setup
+
 class StreamSocket {
   final _socketResponse = StreamController<String>();
 
@@ -33,7 +33,6 @@ class HomeController extends GetxController {
   List<Map<String, dynamic>> dataList = [];
   RxBool isAddingData = false.obs;
   RxList<RequestModel> requestList = <RequestModel>[].obs;
-
   RxInt currentAppState = 0.obs;
 
   @override
@@ -42,6 +41,97 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  //All Socket operations
+  connectToSocket({required bool isFromNotification, userid}) {
+    try {
+      _socket = IO.io(SocketEvents.socketUrl, <String, dynamic>{
+        'transports': ['websocket', 'polling'],
+        'forceNew': true,
+        'reconnecting': true,
+        'timeout': 50000
+      });
+      _socket.connect();
+      printInfo(info: _socket.connected.toString());
+      _socket.on("connect", (_) {
+        printInfo(info: 'Socket Connected================');
+        if (isFromNotification == true) {
+          Map<String, dynamic> map = {
+            "user_id": userid,
+          };
+          sendIdToSocket(map);
+        }
+      });
+      _socket.onError((data) {
+        printError(info: "Socket Error" + data.toString());
+      });
+    } catch (ex) {
+      printError(info: "Socket Error" + ex.toString());
+    }
+  }
+
+  reconnectSocket() {
+    if (!_socket.connected) {
+      _socket.connect();
+      _socket.on("connect", (_) {
+        printInfo(
+            info: 'Socket Re-Connected================' +
+                _socket.connected.toString());
+      });
+    }
+  }
+
+  updateLocation2(Map<String, dynamic> map) async {
+    reconnectSocket();
+    try {
+      _socket.emit(SocketEvents.updateDriverLocation, map);
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  sendIdToSocket(Map<String, dynamic> map) async {
+    isAddingData(true);
+    reconnectSocket();
+    printInfo(info: "getRequest==========" + isAddingData.value.toString());
+    try {
+      _socket.emit(SocketEvents.getRequest, map);
+      getDataFromSocket();
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  getDataFromSocket() {
+    reconnectSocket();
+    _socket.on(SocketEvents.sendRequest, (data) {
+      printInfo(info: "getData==========" + data.toString());
+      Map<String, dynamic> valueMap = json.decode(data);
+      RequestModel requestModel = RequestModel.fromJson(valueMap);
+      requestList.add(requestModel);
+      init(requestList);
+      if (swipeItems.isNotEmpty) {
+        printInfo(info: "inside===");
+        isAddingData(false);
+      }
+      return streamSocket.addResponse;
+    });
+  }
+
+  acceptRequest(Map<String, dynamic> map) {
+    printInfo(info: "accept==============" + map.toString());
+    reconnectSocket();
+    try {
+      _socket.emit(SocketEvents.acceptRequest, map);
+      _socket.on(SocketEvents.sendAcceptReqResponse, (data) {
+        printInfo(info: "getAcceptedData==========" + data.toString());
+        Map<String, dynamic> valueMap = json.decode(data);
+      });
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  //API Calling
   changeUserStatus(Map<String, String> map, context) async {
     isLoading(true);
     bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
@@ -79,61 +169,6 @@ class HomeController extends GetxController {
     }
   }
 
-  connectToSocket() {
-    try {
-      _socket = IO.io('http://3.13.6.132:3900', <String, dynamic>{
-        'transports': ['websocket', 'polling'],
-        'forceNew': true,
-        'reconnecting': true,
-        'timeout': 50000
-      });
-      _socket.connect();
-      printInfo(info: _socket.connected.toString());
-      _socket.on("connect", (_) {
-        printInfo(info: _socket.connected.toString());
-        printInfo(info: 'Socket Connected================');
-      });
-    } catch (ex) {
-      printError(info: "Socket Error" + ex.toString());
-    }
-  }
-
-  updateLocation2(Map<String, dynamic> map) async {
-    try {
-      // printInfo(info: "Updated Location====" + map.toString());
-      _socket.emit(SocketEvents.updateDriverLocation, map);
-    } catch (Ex) {
-      printError(info: "Socket Error" + Ex.toString());
-    }
-  }
-
-  sendIdToSocket(Map<String, dynamic> map) async {
-    isAddingData(true);
-
-    printInfo(info: "getRequest==========" + isAddingData.value.toString());
-    try {
-      _socket.emit(SocketEvents.getRequest, map);
-      getDataFromSocket();
-    } catch (Ex) {
-      printError(info: "Socket Error" + Ex.toString());
-    }
-  }
-
-  getDataFromSocket() {
-    _socket.on(SocketEvents.sendRequest, (data) {
-      printInfo(info: "getData==========" + data.toString());
-      Map<String, dynamic> valueMap = json.decode(data);
-      RequestModel requestModel = RequestModel.fromJson(valueMap);
-      requestList.add(requestModel);
-      init(requestList);
-      if (swipeItems.isNotEmpty) {
-        printInfo(info: "inside===");
-        isAddingData(false);
-      }
-      return streamSocket.addResponse;
-    });
-  }
-
   init(List<RequestModel> requestList) {
     for (int i = 0; i < requestList.length - 1; i++) {
       swipeItems.add(SwipeItem(
@@ -147,6 +182,12 @@ class HomeController extends GetxController {
           likeAction: () {
             printInfo(info: "like");
             // acceptRequest(i);
+            Map<String, dynamic> map = {
+              "trip_id": requestList[i].id,
+              "driver_id": AppConstants.userID
+            };
+
+            acceptRequest(map);
           },
           nopeAction: () {
             printInfo(info: "nope");
@@ -165,14 +206,6 @@ class HomeController extends GetxController {
     }
     printInfo(info: "swipeItems==========" + swipeItems.length.toString());
     matchEngine = MatchEngine(swipeItems: swipeItems);
-  }
-
-  acceptRequest(Map<String, dynamic> map) {
-    try {
-      _socket.emit(SocketEvents.acceptRequest, map);
-    } catch (Ex) {
-      printError(info: "Socket Error" + Ex.toString());
-    }
   }
 
   allDataClear() {

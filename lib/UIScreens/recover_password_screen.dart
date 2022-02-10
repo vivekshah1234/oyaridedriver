@@ -15,46 +15,38 @@ class RecoverPasswordScreen extends StatefulWidget {
 class _RecoverPasswordScreenState extends State<RecoverPasswordScreen> {
   TextEditingController txtResetCode = TextEditingController();
   TextEditingController txtNewPwd = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key:_scaffoldKey ,
+      key: _scaffoldKey,
       appBar: appBarWidget2(""),
       body: Column(
-      //  mainAxisAlignment: MainAxisAlignment.center,
+        //  mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
             height: context.heightPct(.13),
           ),
           textWidget(
-              txt: "Recover Password",
-              fontSize: 25,
-              color: AllColors.blackColor,
-              bold: FontWeight.w600,
-              italic: false),
-          SizedBox(
+              txt: "Recover Password", fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
+          const SizedBox(
             height: 20,
           ),
           textFieldWithoutIcon(
-              controller: txtResetCode,
-              labelText: "Reset Code",
-              errorText: "Please enter reset code."),
+              controller: txtResetCode, labelText: "Reset Code", errorText: "Please enter reset code."),
           const Text(
             "Reset code was sent to your email. Please enter the code and create new password.",
             textAlign: TextAlign.center,
             style: TextStyle(color: AllColors.greyColor, fontSize: 13),
           ).putPadding(5, 3, 5, 5),
           textFieldWithoutIcon(
-              controller: txtNewPwd,
-              labelText: "New Password",
-              errorText: "Please enter new password."),
-          SizedBox(
+              controller: txtNewPwd, labelText: "New Password", errorText: "Please enter new password."),
+          const SizedBox(
             height: 40,
           ),
-          AppButton(text: "CHANGE PASSWORD", onPressed: () {},color: AllColors.greenColor),
-          SizedBox(
+          AppButton(text: "CHANGE PASSWORD", onPressed: () {}, color: AllColors.greenColor),
+          const SizedBox(
             height: 40,
           ),
         ],

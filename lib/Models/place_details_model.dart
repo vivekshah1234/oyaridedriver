@@ -4,11 +4,12 @@ class PlaceDetails {
     required this.result,
     required this.status,
   });
+
   late final List<dynamic> htmlAttributions;
   late final Result result;
   late final String status;
 
-  PlaceDetails.fromJson(Map<String, dynamic> json){
+  PlaceDetails.fromJson(Map<String, dynamic> json) {
     htmlAttributions = List.castFrom<dynamic, dynamic>(json['html_attributions']);
     result = Result.fromJson(json['result']);
     status = json['status'];
@@ -40,6 +41,7 @@ class Result {
     required this.utcOffset,
     required this.vicinity,
   });
+
   late final List<AddressComponents> addressComponents;
   late final String adrAddress;
   late final String formattedAddress;
@@ -55,8 +57,8 @@ class Result {
   late final int utcOffset;
   late final String vicinity;
 
-  Result.fromJson(Map<String, dynamic> json){
-    addressComponents = List.from(json['address_components']).map((e)=>AddressComponents.fromJson(e)).toList();
+  Result.fromJson(Map<String, dynamic> json) {
+    addressComponents = List.from(json['address_components']).map((e) => AddressComponents.fromJson(e)).toList();
     adrAddress = json['adr_address'];
     formattedAddress = json['formatted_address'];
     geometry = Geometry.fromJson(json['geometry']);
@@ -74,7 +76,7 @@ class Result {
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['address_components'] = addressComponents.map((e)=>e.toJson()).toList();
+    _data['address_components'] = addressComponents.map((e) => e.toJson()).toList();
     _data['adr_address'] = adrAddress;
     _data['formatted_address'] = formattedAddress;
     _data['geometry'] = geometry.toJson();
@@ -98,11 +100,12 @@ class AddressComponents {
     required this.shortName,
     required this.types,
   });
+
   late final String longName;
   late final String shortName;
   late final List<String> types;
 
-  AddressComponents.fromJson(Map<String, dynamic> json){
+  AddressComponents.fromJson(Map<String, dynamic> json) {
     longName = json['long_name'];
     shortName = json['short_name'];
     types = List.castFrom<dynamic, String>(json['types']);
@@ -122,10 +125,11 @@ class Geometry {
     required this.location,
     required this.viewport,
   });
+
   late final Location location;
   late final Viewport viewport;
 
-  Geometry.fromJson(Map<String, dynamic> json){
+  Geometry.fromJson(Map<String, dynamic> json) {
     location = Location.fromJson(json['location']);
     viewport = Viewport.fromJson(json['viewport']);
   }
@@ -143,10 +147,11 @@ class Location {
     required this.lat,
     required this.lng,
   });
+
   late final double lat;
   late final double lng;
 
-  Location.fromJson(Map<String, dynamic> json){
+  Location.fromJson(Map<String, dynamic> json) {
     lat = json['lat'];
     lng = json['lng'];
   }
@@ -164,10 +169,11 @@ class Viewport {
     required this.northeast,
     required this.southwest,
   });
+
   late final Northeast northeast;
   late final Southwest southwest;
 
-  Viewport.fromJson(Map<String, dynamic> json){
+  Viewport.fromJson(Map<String, dynamic> json) {
     northeast = Northeast.fromJson(json['northeast']);
     southwest = Southwest.fromJson(json['southwest']);
   }
@@ -185,10 +191,11 @@ class Northeast {
     required this.lat,
     required this.lng,
   });
+
   late final double lat;
   late final double lng;
 
-  Northeast.fromJson(Map<String, dynamic> json){
+  Northeast.fromJson(Map<String, dynamic> json) {
     lat = json['lat'];
     lng = json['lng'];
   }
@@ -206,10 +213,11 @@ class Southwest {
     required this.lat,
     required this.lng,
   });
+
   late final double lat;
   late final double lng;
 
-  Southwest.fromJson(Map<String, dynamic> json){
+  Southwest.fromJson(Map<String, dynamic> json) {
     lat = json['lat'];
     lng = json['lng'];
   }

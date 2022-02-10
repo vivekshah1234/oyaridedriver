@@ -37,8 +37,7 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
   TextEditingController txtCarNumber = TextEditingController();
   TextEditingController txtColor = TextEditingController();
   TextEditingController txtTaxiType = TextEditingController();
-  final AddNewVehicleController addVehicleController =
-      Get.put(AddNewVehicleController());
+  final AddNewVehicleController addVehicleController = Get.put(AddNewVehicleController());
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -80,28 +79,19 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                             labelText: "Vehicle Brand",
                             errorText: "Please Enter Vehicle Brand."),
                         textFieldWithoutIcon(
-                            controller: txtVehicleModel,
-                            labelText: "Model",
-                            errorText: "Please Enter Car Model."),
+                            controller: txtVehicleModel, labelText: "Model", errorText: "Please Enter Car Model."),
                         textFieldWithoutIcon(
-                            controller: txtVehicleYear,
-                            labelText: "Year",
-                            errorText: "Please Enter Car year."),
+                            controller: txtVehicleYear, labelText: "Year", errorText: "Please Enter Car year."),
                         textFieldWithoutIcon(
-                            controller: txtCarNumber,
-                            labelText: "Car Number",
-                            errorText: "Please Enter Car Number."),
+                            controller: txtCarNumber, labelText: "Car Number", errorText: "Please Enter Car Number."),
                         textFieldWithoutIcon(
-                            controller: txtColor,
-                            labelText: "Colour",
-                            errorText: "Please Enter Car Colour."),
+                            controller: txtColor, labelText: "Colour", errorText: "Please Enter Car Colour."),
                         const SizedBox(
                           height: 20,
                         ),
                         const Text(
                           "Vehicle type",
-                          style: TextStyle(
-                              color: AllColors.greyColor, fontSize: 13),
+                          style: TextStyle(color: AllColors.greyColor, fontSize: 13),
                         ),
                         DropdownButton(
                           isExpanded: true,
@@ -122,13 +112,10 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                           }).toList(),
                           onChanged: (val) {
                             printInfo(info: val.toString());
-                            controller.selectedVehicleType.value =
-                                val.toString();
+                            controller.selectedVehicleType.value = val.toString();
                             VehicleTypes findId(String name) =>
-                                controller.vehicleTypes
-                                    .firstWhere((value) => value.name == name);
-                            printInfo(
-                                info: findId(val.toString()).id.toString());
+                                controller.vehicleTypes.firstWhere((value) => value.name == name);
+                            printInfo(info: findId(val.toString()).id.toString());
                             selectedIndex = findId(val.toString()).id;
                             setState(() {});
                           },
@@ -136,17 +123,12 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        AppButton(
-                            text: "ADD",
-                            onPressed: addVehicle,
-                            color: AllColors.greenColor),
+                        AppButton(text: "ADD", onPressed: addVehicle, color: AllColors.greenColor),
                       ],
                     ).putPadding(20, 20, 30, 30),
                   ),
                 ),
-                Visibility(
-                    visible: controller.isLoading.value,
-                    child: greenLoadingWidget())
+                Visibility(visible: controller.isLoading.value, child: greenLoadingWidget())
               ],
             );
           }),

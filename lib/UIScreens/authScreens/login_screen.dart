@@ -6,13 +6,10 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/authScreens/forgot_password_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 import 'package:oyaridedriver/UIScreens/authScreens/sign_up_screen.dart';
 import 'package:oyaridedriver/controllers/login_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
-
-import '../mapScreens/map_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -60,20 +57,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         //height: double.infinity,
                         decoration: BoxDecoration(
                             color: AllColors.greenColor,
-                            borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(40),
-                                topLeft: Radius.circular(40))),
-                        padding: const EdgeInsets.only(
-                            top: 50, bottom: 0, left: 25, right: 25),
+                            borderRadius:
+                                const BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40))),
+                        padding: const EdgeInsets.only(top: 50, bottom: 0, left: 25, right: 25),
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
                               const Text(
                                 "Welcome!",
-                                style: TextStyle(
-                                    fontSize: 27,
-                                    color: AllColors.whiteColor,
-                                    fontWeight: FontWeight.w600),
+                                style:
+                                    TextStyle(fontSize: 27, color: AllColors.whiteColor, fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(
                                 height: 15,
@@ -107,10 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 height: context.heightPct(.02),
                               ),
-                              AppButton(
-                                      onPressed: login,
-                                      text: "LOGIN",
-                                      color: AllColors.blueColor)
+                              AppButton(onPressed: login, text: "LOGIN", color: AllColors.blueColor)
                                   .paddingSymmetric(horizontal: 45),
                               SizedBox(
                                 height: context.heightPct(.02),
@@ -148,9 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ))
                   ],
                 ),
-                Visibility(
-                    visible: controller.isLoading.value,
-                    child: whiteLoadingWidget())
+                Visibility(visible: controller.isLoading.value, child: whiteLoadingWidget())
               ],
             );
           }),
@@ -214,8 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Icons.visibility_off,
                               color: AllColors.whiteColor,
                             )),
-                  labelStyle: TextStyle(
-                      color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: AllColors.whiteColor),
                   ),
@@ -277,8 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(
-                        color: AllColors.whiteColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.whiteColor),
                     ),
@@ -318,8 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(
-                      color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,

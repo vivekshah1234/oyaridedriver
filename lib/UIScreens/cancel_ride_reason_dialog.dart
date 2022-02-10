@@ -13,7 +13,7 @@ class CancelRide extends StatefulWidget {
 class _CancelRideState extends State<CancelRide> {
   TextEditingController txtReason = TextEditingController();
 
-  String dropdownvalue = 'I changed my mind.';
+  String dropDownValue = 'I changed my mind.';
 
   // List of items in our dropdown menu
   var items = [
@@ -22,7 +22,7 @@ class _CancelRideState extends State<CancelRide> {
     'Journey is not in my route.',
     'Other',
   ];
-  bool isVisible=false;
+  bool isVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,49 +30,43 @@ class _CancelRideState extends State<CancelRide> {
       children: [
         DropdownButton(
           isExpanded: true,
-          // Initial Value
-          value: dropdownvalue,
+          value: dropDownValue,
           underline: Container(),
-          // Down Arrow Icon
           icon: const Icon(Icons.keyboard_arrow_down),
-
-          // Array list of items
           items: items.map((String items) {
             return DropdownMenuItem(
               value: items,
               child: Text(
                 items,
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: AllColors.blueColor,
-                    fontSize: 17),
+                style: TextStyle(fontWeight: FontWeight.w400, color: AllColors.blueColor, fontSize: 17),
               ),
             );
           }).toList(),
-          // After selecting the desired option,it will
-          // change button value to selected value
           onChanged: (String? newValue) {
             setState(() {
-
-              dropdownvalue = newValue!;
-              if(dropdownvalue=="Other"){
-                isVisible=true;
-              }else{
-                isVisible=false;
+              dropDownValue = newValue!;
+              if (dropDownValue == "Other") {
+                isVisible = true;
+              } else {
+                isVisible = false;
               }
             });
           },
         ),
-        isVisible? Column(
-          children: [
-            textField(
-              controller: txtReason,
-              errorText: "Please enter the reason for cancellation.",
-              labelText: "Enter cancellation reason",
-            ),
-            SizedBox(height: 15,),
-          ],
-        ):Container(),
+        isVisible
+            ? Column(
+                children: [
+                  textField(
+                    controller: txtReason,
+                    errorText: "Please enter the reason for cancellation.",
+                    labelText: "Enter cancellation reason",
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
+              )
+            : Container(),
         AppButton(onPressed: () {}, text: "CANCEL RIDE", color: AllColors.blueColor)
       ],
     );
@@ -82,7 +76,7 @@ class _CancelRideState extends State<CancelRide> {
     return TextFormField(
       controller: controller,
       cursorColor: AllColors.whiteColor,
-      style:  TextStyle(color: AllColors.blueColor),
+      style: TextStyle(color: AllColors.blueColor),
       validator: (value) {
         if (value!.isEmpty) {
           return errorText;
@@ -94,17 +88,17 @@ class _CancelRideState extends State<CancelRide> {
       ],
       decoration: InputDecoration(
         hintText: labelText,
-        labelStyle:  TextStyle(color: AllColors.blueColor, fontSize: 17),
-        border:  UnderlineInputBorder(
+        labelStyle: TextStyle(color: AllColors.blueColor, fontSize: 17),
+        border: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.blueColor),
         ),
-        focusedBorder:  UnderlineInputBorder(
+        focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.blueColor),
         ),
-        disabledBorder:  UnderlineInputBorder(
+        disabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.blueColor),
         ),
-        enabledBorder:  UnderlineInputBorder(
+        enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: AllColors.blueColor),
         ),
       ),

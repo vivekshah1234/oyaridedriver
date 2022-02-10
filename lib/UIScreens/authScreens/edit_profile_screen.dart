@@ -8,8 +8,6 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_cart_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -27,10 +25,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController txtCPwd = TextEditingController();
   double mediumFontSize = 15.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: appBarWidget2("Edit Profile"),
       body: SingleChildScrollView(
         child: Column(
@@ -39,34 +37,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Row(
               children: [
                 Expanded(
-                    child: textField(
-                        controller: txtFName,
-                        prefixIcon: ImageAssets.personIcon,
-                        labelText: "First Name")),
+                    child:
+                        textField(controller: txtFName, prefixIcon: ImageAssets.personIcon, labelText: "First Name")),
                 const SizedBox(
                   width: 7,
                 ),
-                Expanded(
-                    child: textFieldWithoutIcon(
-                        controller: txtLName, labelText: "Last Name")),
+                Expanded(child: textFieldWithoutIcon(controller: txtLName, labelText: "Last Name")),
               ],
             ),
-            textField(
-                controller: txtEmail,
-                prefixIcon: ImageAssets.emailIcon,
-                labelText: "Email"),
-            textFieldForNum(
-                controller: txtNum,
-                labelText: "Phone Number",
-                prefixIcon: ImageAssets.phoneIcon),
-            textField(
-                controller: txtPwd,
-                prefixIcon: ImageAssets.passwordIcon,
-                labelText: "Password"),
-            textField(
-                controller: txtCPwd,
-                prefixIcon: ImageAssets.passwordIcon,
-                labelText: "Confirm Password"),
+            textField(controller: txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
+            textFieldForNum(controller: txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
+            textField(controller: txtPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Password"),
+            textField(controller: txtCPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Confirm Password"),
             const SizedBox(
               height: 25,
             ),
@@ -77,20 +59,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   width: 5,
                 ),
                 Expanded(
-                  child: Text(
-                      "I have read and agreed the terms and conditions.",
-                      style: TextStyle(
-                      fontSize: mediumFontSize,
-                      color: AllColors.greyColor,
-                      fontWeight: FontWeight.normal),)
-                )
+                    child: Text(
+                  "I have read and agreed the terms and conditions.",
+                  style: TextStyle(fontSize: mediumFontSize, color: AllColors.greyColor, fontWeight: FontWeight.normal),
+                ))
               ],
             ),
             SizedBox(
               height: 25,
             ),
-            AppButton(text: "REGISTER", onPressed:  () {},color: AllColors.greenColor)
-                .paddingSymmetric(horizontal: 30),
+            AppButton(text: "REGISTER", onPressed: () {}, color: AllColors.greenColor).paddingSymmetric(horizontal: 30),
             // const Expanded(
             //     flex: 2,
             //     child: SizedBox(
@@ -156,8 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             cursorColor: AllColors.blackColor,
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle: TextStyle(
-                  color: AllColors.greyColor, fontSize: mediumFontSize),
+              labelStyle: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
               border: const UnderlineInputBorder(
                 borderSide: BorderSide(color: AllColors.greyColor),
               ),
@@ -211,8 +188,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(
-                        color: AllColors.greyColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.greyColor),
                     ),
@@ -246,14 +222,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           return Container(
             decoration: const BoxDecoration(
                 border: Border(
-                  bottom: BorderSide(color: AllColors.greyColor),
-                )),
+              bottom: BorderSide(color: AllColors.greyColor),
+            )),
             child: Row(
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(
-                      color: AllColors.greyColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.greyColor, fontSize: mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,
@@ -299,19 +274,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           padding: const EdgeInsets.all(8.0),
           child: file != null
               ? CircleAvatar(
-            backgroundColor: Colors.grey.shade200,
-            radius: 52,
-            backgroundImage: FileImage(file),
-          )
+                  backgroundColor: Colors.grey.shade200,
+                  radius: 52,
+                  backgroundImage: FileImage(file),
+                )
               : CircleAvatar(
-            backgroundColor: Colors.grey.shade200,
-            radius: 52,
-            child: Icon(
-              Icons.camera_alt_outlined,
-              color: Colors.grey.shade400,
-              size: 42,
-            ),
-          ),
+                  backgroundColor: Colors.grey.shade200,
+                  radius: 52,
+                  child: Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.grey.shade400,
+                    size: 42,
+                  ),
+                ),
         ),
         Positioned(
           right: 0,
@@ -323,7 +298,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: CircleAvatar(
               backgroundColor: AllColors.greenColor,
               radius: 18,
-              child: Image.asset(ImageAssets.editIcon,scale: 10,),
+              child: Image.asset(
+                ImageAssets.editIcon,
+                scale: 10,
+              ),
             ),
           ),
         )

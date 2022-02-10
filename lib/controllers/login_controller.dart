@@ -30,7 +30,7 @@ class LoginController extends GetxController{
               token: loginModel.data.token.toString(),
               user: loginModel.data.user,context: context);
 
-          Get.offAll(() => const MapHomeScreen());
+          Get.offAll(() =>  MapHomeScreen(isFromNotification: false,));
           isLoading(false);
         } else {
           isLoading(false);

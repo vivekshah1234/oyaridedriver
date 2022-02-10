@@ -7,7 +7,8 @@ class Messaging {
 
   // from 'https://console.firebase.google.com'
   // --> project settings --> cloud messaging --> "Server key"
-  static const String serverKey = 'AAAAOUtYrwo:APA91bGKeHxmeuERL70kOM8mgXP6i5aG1jbqpGnNjx0jw5pIUKPFtTtOv2X2v9kmPUbo21oOp6MM-sY02Q6G2Hsoxci5HwROEb-dgynJQdg7jSpgfgGgvpheo4WkCBzMvv7_EbGsMO0V';
+  static const String serverKey =
+      'AAAAOUtYrwo:APA91bGKeHxmeuERL70kOM8mgXP6i5aG1jbqpGnNjx0jw5pIUKPFtTtOv2X2v9kmPUbo21oOp6MM-sY02Q6G2Hsoxci5HwROEb-dgynJQdg7jSpgfgGgvpheo4WkCBzMvv7_EbGsMO0V';
 
   static Future<Response> sendToAll({
     required String title,
@@ -15,17 +16,11 @@ class Messaging {
   }) =>
       sendToTopic(title: title, body: body, topic: 'all');
 
-  static Future<Response> sendToTopic(
-          {required String title,
-          required String body,
-          required String topic}) =>
+  static Future<Response> sendToTopic({required String title, required String body, required String topic}) =>
       sendTo(title: title, body: body, fcmToken: '/topics/$topic');
 
   static Future<Response> sendTo(
-          {required String title,
-          required String body,
-          required String fcmToken,
-          dynamic id //it should be int
+          {required String title, required String body, required String fcmToken, dynamic id //it should be int
           }) =>
       client.post(
         // Uri.parse('https://api.rnfirebase.io/messaging/send')

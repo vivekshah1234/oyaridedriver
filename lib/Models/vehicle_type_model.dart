@@ -1,24 +1,24 @@
-
 class VehicleTypeModel {
   VehicleTypeModel({
     required this.status,
     required this.data,
     required this.message,
   });
+
   late final int status;
   late final List<VehicleTypes> data;
   late final String message;
 
-  VehicleTypeModel.fromJson(Map<String, dynamic> json){
+  VehicleTypeModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data = List.from(json['data']).map((e)=>VehicleTypes.fromJson(e)).toList();
+    data = List.from(json['data']).map((e) => VehicleTypes.fromJson(e)).toList();
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['status'] = status;
-    _data['data'] = data.map((e)=>e.toJson()).toList();
+    _data['data'] = data.map((e) => e.toJson()).toList();
     _data['message'] = message;
     return _data;
   }
@@ -34,6 +34,7 @@ class VehicleTypes {
     required this.createdAt,
     required this.updatedAt,
   });
+
   late final int id;
   late final String name;
   late final String price;
@@ -42,7 +43,7 @@ class VehicleTypes {
   late final String createdAt;
   late final String updatedAt;
 
-  VehicleTypes.fromJson(Map<String, dynamic> json){
+  VehicleTypes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     price = json['price'];

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
 
@@ -19,12 +20,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           Expanded(
             child: ListView.builder(
                 itemCount: 5,
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return Container(
-                    decoration: BoxDecoration(
-                        color: AllColors.greenColor,
-                        borderRadius: BorderRadius.circular(15)),
+                    decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(15)),
                     margin: const EdgeInsets.only(bottom: 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

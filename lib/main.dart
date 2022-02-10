@@ -20,64 +20,42 @@ import 'UIScreens/ChatUI/firebase_chat.dart';
 import 'UIScreens/home_screen.dart';
 // ignore_for_file: prefer_const_constructors
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
-  if (message != null) {
-    print(message.data);
-    flutterLocalNotificationsPlugin.show(
-        message.data.hashCode,
-        message.data['title'],
-        message.data['body'],
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            channel.id,
-            channel.name,
-          ),
-        ));
-  }
-}
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title// description
+  importance: Importance.high,
 
-late AndroidNotificationChannel channel;
-late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+  enableLights: true,
+  ledColor: Colors.red,
+);
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+ValueNotifier<int> notificationCounterValueNotifier = ValueNotifier(0);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    print('A new onMessageOpenedApp event was published!1=========');
+    onSelectNotification(message);
+  });
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark,
-      statusBarIconBrightness: Brightness.dark
+      statusBarColor: Colors.transparent, statusBarBrightness: Brightness.dark, statusBarIconBrightness: Brightness.dark
       // transparent status bar
       ));
-  channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title// description
-    importance: Importance.high,
-
-    enableLights: true,
-    ledColor: Colors.red,
-  );
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
   Widget firstScreen = MyApp();
   SharedPreferences sp = await SharedPreferences.getInstance();
-  AppConstants.userOnline=sp.getBool("userOnline")??true;
+  AppConstants.userOnline = sp.getBool("userOnline") ?? true;
   AppConstants.userID = sp.getString("user_id") ?? "user_id";
-
   AppConstants.registerFormNo = sp.getInt("registerFormNo") ?? 0;
-
   if (AppConstants.registerFormNo != 0) {
     switch (AppConstants.registerFormNo) {
       case 1:
@@ -101,18 +79,34 @@ Future<void> main() async {
     var userData = sp.getString("userData");
     if (userData != null) {
       Map<String, dynamic> data = json.decode(userData);
-
       User user = User.fromJson(data);
       setUserData(user);
-      firstScreen=MapHomeScreen();
+      firstScreen = MapHomeScreen(
+        isFromNotification: false,
+      );
     }
   }
-  runApp(ScreenUtilInit(
-      builder: () => GetMaterialApp(
-          debugShowCheckedModeBanner: false, home: firstScreen)));
+  runApp(ScreenUtilInit(builder: () => GetMaterialApp(debugShowCheckedModeBanner: false, home: firstScreen)));
 }
 
-ValueNotifier<int> notificationCounterValueNotifier = ValueNotifier(0);
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+
+  if (message != null) {
+    print(message.data);
+    flutterLocalNotificationsPlugin.show(
+        message.data.hashCode,
+        message.data['title'],
+        message.data['body'],
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+          ),
+        ));
+  }
+}
 
 class MyApp extends StatefulWidget with ChangeNotifier {
   @override
@@ -125,48 +119,47 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     firebaseCloudMessagingListeners();
-    dummyFirebaseToken();
     super.initState();
   }
 
-  dummyFirebaseToken() async {
-    FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    String? firebaseToken = await firebaseMessaging.getToken();
-    printInfo(info: "Token==" + firebaseToken.toString());
-  }
-
   firebaseCloudMessagingListeners() {
-
     if (Platform.isIOS) iOSPermission();
 
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
     final IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings(
-            onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+        IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-     RemoteNotification? notification = message.notification;
+      RemoteNotification? notification = message.notification;
       printInfo(info: 'A new onMessage event was published!');
-      showNotification(1234, notification!.title.toString(),
-          notification.body.toString(), "GET PAYLOAD FROM message userECT");
+      showNotification(
+          1234, notification!.title.toString(), notification.body.toString(), "GET PAYLOAD FROM message userECT");
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       printInfo(info: "3");
       printInfo(info: 'A new onMessageOpenedApp event was published!');
       // notify listeners here so ValueListenableBuilder will build the widget.
-
       onSelectNotification(message);
     });
   }
 
-  void onDidReceiveLocalNotification(
-      int? id, String? title, String? body, String? payload) async {
+  @override
+  Widget build(BuildContext context) {
+    return HomeScreen();
+  }
+
+  void iOSPermission() {
+    _firebaseMessaging.setAutoInitEnabled(true);
+    _firebaseMessaging.getNotificationSettings();
+    _firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
+  }
+
+  void onDidReceiveLocalNotification(int? id, String? title, String? body, String? payload) async {
     // display a dialog with the notification details, tap ok to go to another page
     showDialog(
       context: context,
@@ -176,53 +169,53 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
 
-  void iOSPermission() {
-    _firebaseMessaging.setAutoInitEnabled(true);
-    _firebaseMessaging.getNotificationSettings();
-    _firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
-  }
+Future onSelectNotification(RemoteMessage payload) async {
+  if (payload.data != null) {
+    var id = payload.data["id"];
+    var notificationType = payload.data["notificationType"];
 
-  @override
-  Widget build(BuildContext context) {
-    return HomeScreen();
-  }
-
-  Future onSelectNotification(RemoteMessage payload) async {
-    if (payload.data != null) {
-      var id = payload.data["id"];
-      var notificationType = payload.data["notificationType"];
-
-      if (id != null) {
-        //Get.to(() => ChatPage(peerId: payload.data["id"]));
-      } else if (notificationType != null) {
-        navigateToScreen(notificationType);
-      }
+    if (id != null) {
+      //Get.to(() => ChatPage(peerId: payload.data["id"]));
+    } else if (notificationType != null) {
+      notificationCounterValueNotifier.value++;
+      notificationCounterValueNotifier.notifyListeners();
+      print("Message============");
+      var userId = payload.data["userId"];
+      navigateToScreen(notificationType, userId);
     }
   }
+}
 
-  navigateToScreen(String screen) {
-    // print("switch:::::::::");
+navigateToScreen(String screen, id) {
+  print("switch:::::::::" + id.toString());
+  switch (screen) {
+    case "1":
+      Get.to(() => MapHomeScreen(
+            isFromNotification: true,
+            userId: id,
+          ));
+      break;
   }
 }
 
 Future<void> setUserData(User user) async {
   //
-  print("aaa=======");
-  AppConstants.fullName = user.firstName+" "+user.lastName;
+
+  AppConstants.fullName = user.firstName + " " + user.lastName;
   AppConstants.mobileNo = user.mobileNumber;
   AppConstants.email = user.email;
   AppConstants.countryCode = user.countryCode;
   AppConstants.userID = user.id.toString();
-
+//  print("aaa======="+user.id.toString());
   if (user.profilePic != null) {
     AppConstants.profilePic = user.profilePic;
   }
 
   DatabaseMethods databaseMethods = DatabaseMethods();
   try {
-    final QuerySnapshot result =
-        await databaseMethods.getUserInfo(id: int.parse(AppConstants.userID));
+    final QuerySnapshot result = await databaseMethods.getUserInfo(id: int.parse(AppConstants.userID));
 
     final List<DocumentSnapshot> documents = result.docs;
 
@@ -240,19 +233,12 @@ Future<void> setUserData(User user) async {
         'userStatus': 0,
         'unReadMessages': 0
       };
-      bool isUserExist =
-          await databaseMethods.checkUserExist(AppConstants.userID);
+      bool isUserExist = await databaseMethods.checkUserExist(AppConstants.userID);
 
       if (!isUserExist) {
-        print("aaa2======="+isUserExist.toString());
-        databaseMethods.addUserInfo(
-            docId: AppConstants.userID, userData: userData);
+        databaseMethods.addUserInfo(docId: AppConstants.userID, userData: userData);
       } else {
-        print("aaa3======="+isUserExist.toString());
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(AppConstants.userID)
-            .update({
+        await FirebaseFirestore.instance.collection("users").doc(AppConstants.userID).update({
           'nickname': AppConstants.fullName,
           'photoUrl': AppConstants.profilePic,
           "firebaseToken": firebaseToken,
@@ -273,8 +259,6 @@ Future<void> showNotification(
   String channelId = '1234',
   String channelTitle = 'Android Channel',
 }) async {
-  notificationCounterValueNotifier.value++;
-  notificationCounterValueNotifier.notifyListeners();
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
     channelId,
     channelTitle,
@@ -283,9 +267,8 @@ Future<void> showNotification(
     priority: Priority.high,
   );
   var iOSPlatformChannelSpecifics = IOSNotificationDetails(presentSound: true);
-  var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics);
+  var platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
     notificationId,
     notificationTitle,

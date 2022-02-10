@@ -41,9 +41,10 @@ class ApiKeys {
 }
 
 abstract class SocketEvents{
-
+  static String socketUrl="http://3.13.6.132:3900";
   static String updateDriverLocation="updateDriverLocation";
   static String getRequest="getRequest";
   static String sendRequest="sendRequest";
   static String acceptRequest="acceptRequest";
+  static String sendAcceptReqResponse="sendAcceptReqResponse";
 }

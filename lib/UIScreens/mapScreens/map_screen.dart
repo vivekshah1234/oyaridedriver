@@ -1,36 +1,40 @@
 import 'dart:async';
 import 'dart:typed_data';
+
 import 'package:badges/badges.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:fcm_config/fcm_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as poly_util;
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
+import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
+import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:oyaridedriver/Common/all_colors.dart';
-import 'package:oyaridedriver/Common/extension_widgets.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:oyaridedriver/UIScreens/rider_details_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_list_cart_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
+
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 // ignore_for_file: prefer_const_constructors
 
 class MapHomeScreen extends StatefulWidget {
-  const MapHomeScreen({Key? key}) : super(key: key);
+  final bool isFromNotification;
+  final dynamic userId;
+
+  MapHomeScreen({required this.isFromNotification, this.userId});
 
   @override
   _MapHomeScreenState createState() => _MapHomeScreenState();
@@ -54,10 +58,11 @@ class _MapHomeScreenState extends State<MapHomeScreen>
 
   @override
   void initState() {
+    printInfo(info: "notificationFrom=========" + widget.isFromNotification.toString());
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
     getCurrentPosition();
-    homeController.connectToSocket();
+    homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
   }
 
   getCurrentPosition() async {
@@ -70,8 +75,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       zoom: 14.4746,
     );
     Map<String, dynamic> map = {};
-    _locationSubscription =
-        _locationTracker.onLocationChanged.handleError((onError) {
+    _locationSubscription = _locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
       _locationSubscription?.cancel();
       setState(() {
@@ -89,8 +93,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   }
 
   addMyMarker(latitude, longitude) async {
-    Uint8List? imageData =
-        await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
+    Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
     _markers.add(Marker(
         markerId: MarkerId("myLocation"),
         position: LatLng(latitude, longitude),
@@ -106,8 +109,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   void onNotify(RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     var notificationType = message.data["notificationType"];
-    showNotification(1234, notification!.title.toString(),
-        notification.body.toString(), "GET PAYLOAD FROM message userECT");
+    showNotification(
+        1234, notification!.title.toString(), notification.body.toString(), "GET PAYLOAD FROM message userECT");
     if (notificationType == "1") {
       printInfo(info: "notifying1=========" + message.data.toString());
       Map<String, String> map = {
@@ -155,17 +158,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                           setState(() {});
                         },
                         child: ValueListenableBuilder(
-                          builder: (BuildContext context,
-                              int newNotificationCounterValue, Widget? child) {
+                          builder: (BuildContext context, int newNotificationCounterValue, Widget? child) {
                             return Badge(
                               badgeColor: AllColors.greenColor,
                               toAnimate: true,
-                              badgeContent: Padding(
-                                  padding: const EdgeInsets.only(top: 30.0),
-                                  child: Container()),
-                              showBadge: newNotificationCounterValue == 0
-                                  ? false
-                                  : true,
+                              badgeContent: Padding(padding: const EdgeInsets.only(top: 30.0), child: Container()),
+                              showBadge: newNotificationCounterValue == 0 ? false : true,
                               //  showBadge: true,
                               child: CircleAvatar(
                                 backgroundColor: AllColors.whiteColor,
@@ -191,13 +189,10 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                 homeController.changeUserStatus(map, context);
                               },
                               child: Container(
-                                decoration: BoxDecoration(
-                                    color: AllColors.blackColor,
-                                    borderRadius: BorderRadius.circular(13)),
-                                margin:
-                                    const EdgeInsets.only(top: 15, bottom: 15),
-                                padding:
-                                    const EdgeInsets.only(left: 5, right: 5),
+                                decoration:
+                                    BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(13)),
+                                margin: const EdgeInsets.only(top: 15, bottom: 15),
+                                padding: const EdgeInsets.only(left: 5, right: 5),
                                 child: Row(
                                   children: [
                                     const CircleAvatar(
@@ -224,13 +219,10 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                 homeController.changeUserStatus(map, context);
                               },
                               child: Container(
-                                decoration: BoxDecoration(
-                                    color: AllColors.blackColor,
-                                    borderRadius: BorderRadius.circular(13)),
-                                margin:
-                                    const EdgeInsets.only(top: 15, bottom: 15),
-                                padding:
-                                    const EdgeInsets.only(left: 5, right: 5),
+                                decoration:
+                                    BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(13)),
+                                margin: const EdgeInsets.only(top: 15, bottom: 15),
+                                padding: const EdgeInsets.only(left: 5, right: 5),
                                 child: Row(
                                   children: [
                                     textWidget(
@@ -286,58 +278,39 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                   : Container(
                                       child: status == -1
                                           ? SizedBox(
-                                              height: calculateHeight(
-                                                  MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  context),
+                                              height: calculateHeight(MediaQuery.of(context).size.height, context),
                                               child: SwipeCards(
-                                                matchEngine:
-                                                    controller.matchEngine,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
+                                                matchEngine: controller.matchEngine,
+                                                itemBuilder: (BuildContext context, int index) {
                                                   return GestureDetector(
                                                       onTap: () {
-                                                        Get.to(() =>
-                                                            RiderDetailScreen(
-                                                                controller
-                                                                        .requestList[
-                                                                    index]));
+                                                        Get.to(() => RiderDetailScreen(controller.requestList[index]));
                                                       },
                                                       child: RiderRequest(
-                                                        name: controller
-                                                            .requestList[index]
-                                                            .userName,
-                                                        imgUrl: controller
-                                                            .requestList[index]
-                                                            .profilePic,
-                                                        km: controller
-                                                            .requestList[index]
-                                                            .kilometer
-                                                            .toDouble(),
+                                                        name: controller.requestList[index].userName,
+                                                        imgUrl: controller.requestList[index].profilePic,
+                                                        km: controller.requestList[index].kilometer.toDouble(),
                                                         price: 50.0,
-                                                        pickUpPoint: controller
-                                                            .requestList[index]
-                                                            .sourceAddress,
-                                                        dropOffPoint: controller
-                                                            .requestList[index]
-                                                            .destinationAddress,
+                                                        pickUpPoint: controller.requestList[index].sourceAddress,
+                                                        dropOffPoint: controller.requestList[index].destinationAddress,
                                                         acceptOnTap: () {
-                                                          controller.matchEngine
-                                                              .currentItem
-                                                              ?.like();
+                                                          controller.matchEngine.currentItem?.like();
                                                           acceptRequest(index);
+                                                          Map<String, dynamic> map = {
+                                                            "trip_id": controller.requestList[index].id,
+                                                            "driver_id": AppConstants.userID
+                                                          };
+                                                          homeController.acceptRequest(map);
                                                           setState(() {});
                                                         },
                                                         ignoreOnTap: () {
-                                                          controller.matchEngine
-                                                              .currentItem
-                                                              ?.nope();
+                                                          controller.matchEngine.currentItem?.nope();
                                                           printInfo(info: "nope2");
-                                                          printInfo(info: "i====="+index.toString());
-                                                          printInfo(info: "swipeItems===="+controller.swipeItems.length.toString());
-                                                          if(index==controller.requestList.length-1){
+                                                          printInfo(info: "i=====" + index.toString());
+                                                          printInfo(
+                                                              info: "swipeItems====" +
+                                                                  controller.swipeItems.length.toString());
+                                                          if (index == controller.requestList.length - 1) {
                                                             controller.allDataClear();
                                                           }
                                                           setState(() {});
@@ -354,24 +327,19 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                               ),
                                             )
                                           : Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
+                                              width: MediaQuery.of(context).size.width,
                                               decoration: BoxDecoration(
                                                 color: AllColors.whiteColor,
-                                                borderRadius:
-                                                    const BorderRadius.only(
+                                                borderRadius: const BorderRadius.only(
                                                   topRight: Radius.circular(40),
                                                   topLeft: Radius.circular(40),
                                                 ),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.grey
-                                                        .withOpacity(0.5),
+                                                    color: Colors.grey.withOpacity(0.5),
                                                     spreadRadius: 5,
                                                     blurRadius: 7,
-                                                    offset: const Offset(0,
-                                                        3), // changes position of shadow
+                                                    offset: const Offset(0, 3), // changes position of shadow
                                                   ),
                                                 ],
                                               ),
@@ -382,8 +350,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                       ? RiderDetails(
                                                           name: "Stella Josh",
                                                           callButton: () {
-                                                            url_launcher.launch(
-                                                                "tel://21213123123");
+                                                            url_launcher.launch("tel://21213123123");
                                                           },
                                                         )
                                                       : status == 2
@@ -394,16 +361,13 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                           children: [
                                                             SmallButton(
                                                               text: "CANCEL",
-                                                              color: AllColors
-                                                                  .blueColor,
+                                                              color: AllColors.blueColor,
                                                               onPressed: () {
                                                                 cancelRide();
-                                                                _locationSubscription
-                                                                    ?.cancel();
+                                                                _locationSubscription?.cancel();
                                                                 // _locationTracker.
                                                                 setState(() {
-                                                                  _locationSubscription =
-                                                                      null;
+                                                                  _locationSubscription = null;
                                                                 });
                                                               },
                                                             ),
@@ -413,82 +377,58 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                             if (status < 1)
                                                               SmallButton(
                                                                 text: "ARRIVED",
-                                                                color: AllColors
-                                                                    .greenColor,
+                                                                color: AllColors.greenColor,
                                                                 onPressed: () {
                                                                   status = 1;
 
-                                                                  setState(
-                                                                      () {});
+                                                                  setState(() {});
                                                                 },
                                                               )
-                                                            else if (status ==
-                                                                1)
+                                                            else if (status == 1)
                                                               SmallButton(
-                                                                text:
-                                                                    "PICKED UP",
-                                                                color: AllColors
-                                                                    .greenColor,
+                                                                text: "PICKED UP",
+                                                                color: AllColors.greenColor,
                                                                 onPressed: () {
                                                                   status = 2;
 
-                                                                  setState(
-                                                                      () {});
+                                                                  setState(() {});
                                                                 },
                                                               )
-                                                            else if (status ==
-                                                                2)
+                                                            else if (status == 2)
                                                               Container()
                                                             // Expanded(child: greenButton(txt: "ACCEPT",function: (){})),
                                                           ],
                                                         ).putPadding(
                                                           0,
                                                           20,
-                                                          context
-                                                              .widthPct(0.08),
-                                                          context
-                                                              .widthPct(0.08),
+                                                          context.widthPct(0.08),
+                                                          context.widthPct(0.08),
                                                         )
                                                       : status == 2
                                                           ? AppButton(
-                                                                  text:
-                                                                      "TAP WHEN DROP",
-                                                                  onPressed:
-                                                                      () {
+                                                                  text: "TAP WHEN DROP",
+                                                                  onPressed: () {
                                                                     status = 3;
-                                                                    print(
-                                                                        "tap");
-                                                                    setState(
-                                                                        () {});
+                                                                    print("tap");
+                                                                    setState(() {});
                                                                   },
-                                                                  color: AllColors
-                                                                      .greenColor)
-                                                              .paddingSymmetric(
-                                                                  horizontal:
-                                                                      15)
+                                                                  color: AllColors.greenColor)
+                                                              .paddingSymmetric(horizontal: 15)
                                                           : AppButton(
-                                                                  text:
-                                                                      "CONFIRM PAYMENT",
-                                                                  onPressed:
-                                                                      () {
+                                                                  text: "CONFIRM PAYMENT",
+                                                                  onPressed: () {
                                                                     status = 4;
-                                                                    setState(
-                                                                        () {});
+                                                                    setState(() {});
                                                                   },
-                                                                  color: AllColors
-                                                                      .greenColor)
-                                                              .paddingSymmetric(
-                                                                  horizontal:
-                                                                      15),
+                                                                  color: AllColors.greenColor)
+                                                              .paddingSymmetric(horizontal: 15),
                                                 ],
                                               ),
                                             ),
                                     ))
                     ],
                   )),
-              Visibility(
-                  visible: controller.isLoading.value,
-                  child: greenLoadingWidget())
+              Visibility(visible: controller.isLoading.value, child: greenLoadingWidget())
             ],
           );
         });
@@ -518,22 +458,17 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     _polyLine.clear();
     var points = poly_util.PolygonUtil.decode(route);
     for (var pointLatLng in points) {
-      polyLineCoordinates
-          .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
     }
 
-    _polyLine.add(Polyline(
-        polylineId: PolylineId("poly"),
-        color: AllColors.blueColor,
-        width: 4,
-        points: polyLineCoordinates));
+    _polyLine.add(
+        Polyline(polylineId: PolylineId("poly"), color: AllColors.blueColor, width: 4, points: polyLineCoordinates));
     setState(() {});
   }
 
   setMarker({required LatLng source, required LatLng destination}) async {
     _markers.clear();
-    Uint8List? imageData =
-        await getBytesFromAsset(ImageAssets.greenLocationPin, 100);
+    Uint8List? imageData = await getBytesFromAsset(ImageAssets.greenLocationPin, 100);
     _markers.add(Marker(
         markerId: MarkerId("markerSource"),
         position: source,
@@ -577,11 +512,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     try {
       var location = await determinePosition();
       _lastMapPosition = LatLng(location.latitude, location.longitude);
-      Uint8List? imageData =
-          await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
+      Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
 
-      _locationSubscription =
-          _locationTracker.onLocationChanged.handleError((onError) {
+      _locationSubscription = _locationTracker.onLocationChanged.handleError((onError) {
         printInfo(info: "Error=====" + onError);
         _locationSubscription?.cancel();
         setState(() {
@@ -590,14 +523,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       }).listen((newLocalData) async {
         if (_mapController != null) {
           final GoogleMapController controller = await _mapController.future;
-          _lastMapPosition =
-              LatLng(newLocalData.latitude!, newLocalData.longitude!);
+          _lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
           controller.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  bearing: 192.833,
-                  target: _lastMapPosition,
-                  tilt: 0,
-                  zoom: 12)));
+              CameraPosition(bearing: 192.833, target: _lastMapPosition, tilt: 0, zoom: 12)));
 
           updateMarkerAndCircle(newLocalData, imageData!);
         }
@@ -622,8 +550,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor:
-                status == 0 ? AllColors.whiteColor : AllColors.greenColor,
+            backgroundColor: status == 0 ? AllColors.whiteColor : AllColors.greenColor,
             child: const Icon(
               Icons.location_on,
               color: AllColors.blackColor,
@@ -631,8 +558,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
           ),
           Expanded(child: dottedLine()),
           CircleAvatar(
-            backgroundColor:
-                status <= 1 ? AllColors.whiteColor : AllColors.greenColor,
+            backgroundColor: status <= 1 ? AllColors.whiteColor : AllColors.greenColor,
             child: const Icon(
               Icons.directions_car,
               color: AllColors.blackColor,
@@ -640,8 +566,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
           ),
           Expanded(child: dottedLine2()),
           CircleAvatar(
-            backgroundColor:
-                status <= 2 ? AllColors.whiteColor : AllColors.greenColor,
+            backgroundColor: status <= 2 ? AllColors.whiteColor : AllColors.greenColor,
             child: const Icon(
               Icons.flag_sharp,
               color: AllColors.blackColor,
@@ -692,14 +617,13 @@ class _MapHomeScreenState extends State<MapHomeScreen>
         Expanded(
           flex: 2,
           child: Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             shadowColor: Colors.grey.shade900,
             child: Column(
               children: [
                 const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      "https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg"),
+                  backgroundImage:
+                      NetworkImage("https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg"),
                   radius: 35,
                 ).putPadding(10, 10, 25, 25),
                 // SizedBox(height: 10,),
@@ -722,27 +646,18 @@ class _MapHomeScreenState extends State<MapHomeScreen>
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.30,
             child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               shadowColor: Colors.grey.shade900,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   textWidget(
-                      txt: "Waiting",
-                      bold: FontWeight.w500,
-                      fontSize: 18,
-                      italic: false,
-                      color: AllColors.blackColor),
+                      txt: "Waiting", bold: FontWeight.w500, fontSize: 18, italic: false, color: AllColors.blackColor),
                   const SizedBox(
                     height: 10,
                   ),
                   textWidget(
-                      txt: "00:00:00",
-                      bold: FontWeight.w500,
-                      fontSize: 18,
-                      italic: false,
-                      color: AllColors.blackColor),
+                      txt: "00:00:00", bold: FontWeight.w500, fontSize: 18, italic: false, color: AllColors.blackColor),
                 ],
               ),
             ),
@@ -782,17 +697,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
               Column(
                 children: [
                   textWidget(
-                      txt: "\$50",
-                      fontSize: 17,
-                      color: AllColors.blackColor,
-                      bold: FontWeight.w800,
-                      italic: false),
+                      txt: "\$50", fontSize: 17, color: AllColors.blackColor, bold: FontWeight.w800, italic: false),
                   textWidget(
-                      txt: "15 km",
-                      fontSize: 15,
-                      color: AllColors.greyColor,
-                      bold: FontWeight.normal,
-                      italic: false),
+                      txt: "15 km", fontSize: 15, color: AllColors.greyColor, bold: FontWeight.normal, italic: false),
                 ],
               )
             ],
@@ -804,17 +711,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 textWidget(
-                    txt: "Booking ID",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false),
+                    txt: "Booking ID", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
                 textWidget(
-                    txt: "#TXN67876",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false)
+                    txt: "#TXN67876", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
             const SizedBox(
@@ -831,17 +730,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 textWidget(
-                    txt: "Total",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false),
-                textWidget(
-                    txt: "\$50",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false)
+                    txt: "Total", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+                textWidget(txt: "\$50", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
             const SizedBox(
@@ -858,17 +748,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 textWidget(
-                    txt: "Payment",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false),
-                textWidget(
-                    txt: "Cash",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false)
+                    txt: "Payment", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+                textWidget(txt: "Cash", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
             const SizedBox(
@@ -896,9 +777,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       //do your stuff
-      homeController.connectToSocket();
+      homeController.connectToSocket(isFromNotification: false);
     }
-
   }
 }
 
@@ -938,10 +818,7 @@ class NoRequestCart extends StatelessWidget {
           ),
           Text(
             "Welcome, ${AppConstants.fullName}",
-            style: TextStyle(
-                fontSize: 20,
-                color: AllColors.blueColor,
-                fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, color: AllColors.blueColor, fontWeight: FontWeight.bold),
           ).paddingOnly(top: 0, bottom: 15),
           Container(
             height: 1.5,
@@ -954,10 +831,7 @@ class NoRequestCart extends StatelessWidget {
           Text(
             "Currently,You don't have any request.",
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20,
-                color: AllColors.blueColor,
-                fontWeight: FontWeight.w300),
+            style: TextStyle(fontSize: 20, color: AllColors.blueColor, fontWeight: FontWeight.w300),
           )
         ],
       ),
@@ -999,9 +873,7 @@ class FetchingTheRequests extends StatelessWidget {
             width: 100,
             margin: const EdgeInsets.only(top: 10, bottom: 25),
             height: 5,
-            decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(10)),
           ),
           const Padding(
             padding: EdgeInsets.only(left: 15.0, bottom: 15),

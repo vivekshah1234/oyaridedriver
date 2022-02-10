@@ -29,6 +29,7 @@ class RequestModel {
     required this.userName,
     required this.profilePic,
   });
+
   late final int id;
   late final int userId;
   late final dynamic driverId;
@@ -58,7 +59,7 @@ class RequestModel {
   late final String userName;
   late final String profilePic;
 
-  RequestModel.fromJson(Map<String, dynamic> json){
+  RequestModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     driverId = json['driver_id'];
@@ -121,4 +122,21 @@ class RequestModel {
     _data['profile_pic'] = profilePic;
     return _data;
   }
+}
+
+class Content {
+  final String name;
+  final String imgurl;
+  final double charge;
+  final double kiloMeter;
+  final String pickUpPoint;
+  final String destinationPoint;
+
+  Content(
+      {required this.name,
+      required this.imgurl,
+      required this.charge,
+      required this.kiloMeter,
+      required this.pickUpPoint,
+      required this.destinationPoint});
 }

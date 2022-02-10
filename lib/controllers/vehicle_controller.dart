@@ -15,7 +15,8 @@ class VehicleController extends GetxController {
   List<VehicleList> vehicleList = <VehicleList>[].obs;
   List<VehicleTypes> vehicleTypes = <VehicleTypes>[].obs;
 
-  RxString selectedVehicleType="selectedVehicleType".obs;
+  RxString selectedVehicleType = "selectedVehicleType".obs;
+
   getVehicles() async {
     isLoading(true);
     vehicleList.clear();
@@ -34,8 +35,7 @@ class VehicleController extends GetxController {
         if (value.code == 200) {
           Map<String, dynamic> valueMap = json.decode(value.response);
           if (valueMap["status"] == 200) {
-            VehicleListModel vehicleListModel =
-                VehicleListModel.fromJson(valueMap);
+            VehicleListModel vehicleListModel = VehicleListModel.fromJson(valueMap);
             vehicleList.addAll(vehicleListModel.data);
             isLoading(false);
           } else {
@@ -54,8 +54,8 @@ class VehicleController extends GetxController {
     }
   }
 
-  changeActiveVehicle(Map<String,String> map,context) async {
-  //  isLoading(true);
+  changeActiveVehicle(Map<String, String> map, context) async {
+    //  isLoading(true);
     bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
     printInfo(info: "expire token====" + hasExpired.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,25 +66,24 @@ class VehicleController extends GetxController {
       prefs.setString("token", AppConstants.userToken);
     }
     if (AppConstants.userToken != "userToken") {
-    postAPIWithHeader(ApiConstant.changeActiveVehicle, map, (value){
-      if (value.code == 200) {
-        Map<String, dynamic> valueMap = json.decode(value.response);
-        if (valueMap["status"] == 200) {
-
-          isLoading(false);
+      postAPIWithHeader(ApiConstant.changeActiveVehicle, map, (value) {
+        if (value.code == 200) {
+          Map<String, dynamic> valueMap = json.decode(value.response);
+          if (valueMap["status"] == 200) {
+            isLoading(false);
+          } else {
+            isLoading(false);
+            printError(
+              info: valueMap["status"].toString(),
+            );
+          }
         } else {
           isLoading(false);
           printError(
-            info: valueMap["status"].toString(),
+            info: value.response.toString(),
           );
         }
-      } else {
-        isLoading(false);
-        printError(
-          info: value.response.toString(),
-        );
-      }
-    });
-  }
+      });
+    }
   }
 }

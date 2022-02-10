@@ -6,11 +6,9 @@ import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
-
 
 // ignore_for_file: prefer_const_constructors
 class SignUpScreen extends StatefulWidget {
@@ -71,11 +69,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //height: double.infinity,
                       decoration: BoxDecoration(
                           color: AllColors.greenColor,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(40),
-                              topLeft: Radius.circular(40))),
-                      padding: EdgeInsets.only(
-                          top: 50, bottom: 0, left: 25, right: 25),
+                          borderRadius: BorderRadius.only(topRight: Radius.circular(40), topLeft: Radius.circular(40))),
+                      padding: EdgeInsets.only(top: 50, bottom: 0, left: 25, right: 25),
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -96,28 +91,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: context.heightPct(.07),
                             ),
                             AppButton(
-                                onPressed: () {
-                                  if (txtNum.text.isNotEmpty) {
-                                    if (txtPwd.text.isNotEmpty) {
-                                      Map<String, String> map = {};
-                                      map["country_code"]=countryCode.toString();
-                                      map["mobile_number"] = txtNum.text.toString();
-                                      map["password"] = txtPwd.text.toString();
-                                      map["role"]="driver";
+                                    onPressed: () {
+                                      if (txtNum.text.isNotEmpty) {
+                                        if (txtPwd.text.isNotEmpty) {
+                                          Map<String, String> map = {};
+                                          map["country_code"] = countryCode.toString();
+                                          map["mobile_number"] = txtNum.text.toString();
+                                          map["password"] = txtPwd.text.toString();
+                                          map["role"] = "driver";
 
-                                     signUpController.register1(map, context);
-
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
-                                    }
-                                  } else {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
-                                  }
-                                },
-                                text: "NEXT",
-                                color: AllColors.blueColor).paddingSymmetric(horizontal: 45),
+                                          signUpController.register1(map, context);
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(whiteSnackBar(ErrorMessage.passwordError));
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(whiteSnackBar(ErrorMessage.numberError));
+                                      }
+                                    },
+                                    text: "NEXT",
+                                    color: AllColors.blueColor)
+                                .paddingSymmetric(horizontal: 45),
                             SizedBox(
                               height: context.heightPct(.07),
                             ),
@@ -139,15 +134,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ))
                   ],
                 ),
-                Visibility(
-                    visible: controller.isLoading.value,
-                    child: Center(child: whiteLoadingWidget()))
+                Visibility(visible: controller.isLoading.value, child: Center(child: whiteLoadingWidget()))
               ],
             );
           }),
     );
   }
-
 
   bool showPassWord = true;
 
@@ -188,8 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Icons.visibility_off,
                               color: AllColors.whiteColor,
                             )),
-                  labelStyle: TextStyle(
-                      color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                   border: const UnderlineInputBorder(
                     borderSide: BorderSide(color: AllColors.whiteColor),
                   ),
@@ -257,8 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: TextStyle(color: AllColors.whiteColor),
                   decoration: InputDecoration(
                     labelText: labelText,
-                    labelStyle: TextStyle(
-                        color: AllColors.whiteColor, fontSize: mediumFontSize),
+                    labelStyle: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: AllColors.whiteColor),
                     ),
@@ -298,8 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 Text(
                   countryCode!.dialCode.toString(),
-                  style: TextStyle(
-                      color: AllColors.whiteColor, fontSize: mediumFontSize),
+                  style: TextStyle(color: AllColors.whiteColor, fontSize: mediumFontSize),
                 ),
                 const Icon(
                   Icons.keyboard_arrow_down,
@@ -325,10 +314,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {
-          // print(code!.name);
-          // print(code.code);
-          // print(code.dialCode);
-          // print(code.flagUri);
+
           countryCode = code!.dialCode.toString();
           setState(() {});
         },

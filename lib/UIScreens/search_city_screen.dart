@@ -9,10 +9,11 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Models/place_details_model.dart';
 import 'package:oyaridedriver/Models/search_location_model.dart';
+
 class SearchCity extends StatefulWidget {
   final callBack;
 
-  SearchCity(this.callBack);
+  const SearchCity(this.callBack);
 
   @override
   State<StatefulWidget> createState() => _SearchState();
@@ -34,6 +35,7 @@ class _SearchState extends State<SearchCity> {
 
     myFocusNode = FocusNode();
   }
+
   _SearchState() {
     _searchQuery.addListener(() {
       // if (debounceTimer != null) {
@@ -65,7 +67,7 @@ class _SearchState extends State<SearchCity> {
 
     final repos = await getSuggestions(query);
 
-    if (this._searchQuery.text == query && this.mounted) {
+    if (_searchQuery.text == query && mounted) {
       setState(() {
         _isSearching = false;
         if (repos != null) {
@@ -88,19 +90,23 @@ class _SearchState extends State<SearchCity> {
         appBar: AppBar(
           backgroundColor: AllColors.whiteColor,
           automaticallyImplyLeading: false,
-          leading:  Padding(
+          leading: Padding(
             padding: const EdgeInsets.only(left: 18.0),
             child: GestureDetector(
-                onTap: (){
+                onTap: () {
                   Get.back();
                 },
-
-                child: const Icon(Icons.arrow_back_ios,color: AllColors.blackColor,size: 35,)),
-          ),titleSpacing: 0,
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  color: AllColors.blackColor,
+                  size: 35,
+                )),
+          ),
+          titleSpacing: 0,
           centerTitle: false,
           title: TextField(
             autofocus: true,
-            focusNode:myFocusNode ,
+            focusNode: myFocusNode,
             controller: _searchQuery,
             cursorColor: Colors.black,
             style: const TextStyle(color: Colors.black),
@@ -132,22 +138,20 @@ class _SearchState extends State<SearchCity> {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () async {
-                 final pDetails = await getPlaceDetails(_results[index].placeId);
+                final pDetails = await getPlaceDetails(_results[index].placeId);
 
-
-                 Map<String, dynamic> map={
-                   "cityLatitude":pDetails.result.geometry.location.lat,
-                   "cityLongitude":pDetails.result.geometry.location.lng,
-                   "cityName":pDetails.result.formattedAddress
-                 };
+                Map<String, dynamic> map = {
+                  "cityLatitude": pDetails.result.geometry.location.lat,
+                  "cityLongitude": pDetails.result.geometry.location.lng,
+                  "cityName": pDetails.result.formattedAddress
+                };
 
                 widget.callBack(map);
 
                 Navigator.pop(context, true);
               },
               child: Container(
-                padding:
-                const EdgeInsets.only(left: 10, bottom: 10, top: 10, right: 10),
+                padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10, right: 10),
                 child: Text(
                   _results[index].description,
                   style: const TextStyle(color: Colors.black, fontSize: 18),
@@ -157,6 +161,7 @@ class _SearchState extends State<SearchCity> {
           });
     }
   }
+
   @override
   void dispose() {
     myFocusNode.dispose();
@@ -187,10 +192,10 @@ getSuggestions(String query) async {
   try {
     var uri = Uri.parse(
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&types=geocode&language=en&key=${ApiKeys.mapApiKey}");
-    print("URI==="+uri.toString());
+    print("URI===" + uri.toString());
     var response = await http.get(uri);
     Map<String, dynamic> res = json.decode(response.body);
-     print(res);
+    print(res);
     GoogleSearchModel objData = GoogleSearchModel.fromJson(res);
     List<Predictions>? ra = objData.predictions;
     // print(ra![0].placeId);
@@ -204,14 +209,14 @@ getSuggestions(String query) async {
 Future<PlaceDetails> getPlaceDetails(String placeId) async {
   await Future.delayed(const Duration(seconds: 1));
   try {
-    var uri = Uri.parse(
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${ApiKeys.mapApiKey}");
-    print("URI2==="+uri.toString());
+    var uri =
+        Uri.parse("https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=${ApiKeys.mapApiKey}");
+    print("URI2===" + uri.toString());
     var response = await http.get(uri);
     Map<String, dynamic> res = json.decode(response.body);
 
-   PlaceDetails objData = PlaceDetails.fromJson(res);
-   // print(objData.result!.name.toString());
+    PlaceDetails objData = PlaceDetails.fromJson(res);
+    // print(objData.result!.name.toString());
     return objData;
   } catch (e) {
     print(e);

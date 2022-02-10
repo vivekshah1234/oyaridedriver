@@ -14,7 +14,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,10 @@ class _SettingScreenState extends State<SettingScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
             child: GestureDetector(
-              onTap: () {
-                Get.to(() => const EditProfileScreen());
-              },
-              child: const SettingOptions("Privacy Policy")
-            ),
+                onTap: () {
+                  Get.to(() => const EditProfileScreen());
+                },
+                child: const SettingOptions("Privacy Policy")),
           ),
           const Divider(
             color: AllColors.greyColor,
@@ -56,11 +55,10 @@ class _SettingScreenState extends State<SettingScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
             child: GestureDetector(
-              onTap: () {
-                Get.to(() => const EditProfileScreen());
-              },
-              child: const SettingOptions("Terms and Conditions")
-            ),
+                onTap: () {
+                  Get.to(() => const EditProfileScreen());
+                },
+                child: const SettingOptions("Terms and Conditions")),
           ),
           const Divider(
             color: AllColors.greyColor,
@@ -70,37 +68,35 @@ class _SettingScreenState extends State<SettingScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
             child: GestureDetector(
-              onTap: () {
-                Get.to(() => const EditProfileScreen());
-              },
-              child: const SettingOptions("Help")
-            ),
+                onTap: () {
+                  Get.to(() => const EditProfileScreen());
+                },
+                child: const SettingOptions("Help")),
           ),
         ],
       ),
     );
   }
 }
-class SettingOptions extends StatelessWidget {
 
+class SettingOptions extends StatelessWidget {
   final String title;
+
   const SettingOptions(this.title);
+
   @override
   Widget build(BuildContext context) {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        textWidget(
-            txt: title,
-            fontSize: 16,
-            color: AllColors.greenColor,
-            bold: FontWeight.w600,
-            italic: false),
+        textWidget(txt: title, fontSize: 16, color: AllColors.greenColor, bold: FontWeight.w600, italic: false),
         Padding(
           padding: const EdgeInsets.only(right: 18.0),
-          child: Icon(Icons.arrow_forward_ios,color: AllColors.greenColor,),
+          child: Icon(
+            Icons.arrow_forward_ios,
+            color: AllColors.greenColor,
+          ),
         ),
-
       ],
     );
   }

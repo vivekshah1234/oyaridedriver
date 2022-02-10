@@ -18,7 +18,7 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: appBarWidget("Payment History",scaffoldKey),
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
     );
   }
 }

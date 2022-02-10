@@ -55,9 +55,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
 
   setPolyline() async {
     var result = await polylinePoints.getRouteBetweenCoordinates(
-        ApiKeys.mapApiKey,
-        const PointLatLng(22.6916, 72.8634),
-        const PointLatLng(23.0225, 72.5714));
+        ApiKeys.mapApiKey, const PointLatLng(22.6916, 72.8634), const PointLatLng(23.0225, 72.5714));
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
@@ -66,10 +64,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
     }
     setState(() {
       _polyLine.add(Polyline(
-          polylineId: const PolylineId("poly"),
-          color: AllColors.blueColor,
-          width: 3,
-          points: polylineCoordinates));
+          polylineId: const PolylineId("poly"), color: AllColors.blueColor, width: 3, points: polylineCoordinates));
     });
   }
 
@@ -103,38 +98,37 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:  [
+                  children: [
                     Text(
                       "29 Sept,2021, 9:29 PM",
-                      style:
-                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
                     ),
                     Text(
                       "\$60",
-                      style:
-                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
                     ),
                   ],
                 ),
-                const SizedBox(height: 5,),
+                const SizedBox(
+                  height: 5,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:  [
-                     Text(
+                  children: [
+                    Text(
                       "Maruti Suzuki Wagon R",
                       style:
-                      TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize,color: AllColors.greyColor),
+                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize, color: AllColors.greyColor),
                     ),
                     Text(
                       "Tip",
                       style:
-                      TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize,color: AllColors.blueColor),
+                          TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize, color: AllColors.blueColor),
                     ),
                   ],
                 ),
-
                 Padding(
-                  padding: const EdgeInsets.only(left: 25,right: 25,top: 15,bottom: 15),
+                  padding: const EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 15),
                   child: Row(
                     children: [
                       Expanded(
@@ -148,29 +142,29 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                  // Text( "Source Location",
-                                  //       style: TextStyle(
-                                  //         fontSize: smallFontSize,
-                                  //         color: AllColors.greyColor,
-                                  //         fontWeight: normalFontWeight,)),
-                                  //   const SizedBox(
-                                  //     height: 3,
-                                  //   ),
-                                    Text(
-                                         "Shri Santram Mandir Marg, Shanti Nagar, Nadiad, Gujarat 387001",
+                                    // Text( "Source Location",
+                                    //       style: TextStyle(
+                                    //         fontSize: smallFontSize,
+                                    //         color: AllColors.greyColor,
+                                    //         fontWeight: normalFontWeight,)),
+                                    //   const SizedBox(
+                                    //     height: 3,
+                                    //   ),
+                                    Text("Shri Santram Mandir Marg, Shanti Nagar, Nadiad, Gujarat 387001",
                                         style: TextStyle(
-                                        fontSize: smallFontSize,
-                                        color: AllColors.greyColor,
-                                        fontWeight: normalFontWeight,)),
+                                          fontSize: smallFontSize,
+                                          color: AllColors.greyColor,
+                                          fontWeight: normalFontWeight,
+                                        )),
                                   ],
                                 ),
                               ),
                               node: TimelineNode(
                                   indicator: ContainerIndicator(
                                       child: CircleAvatar(
-                                        backgroundColor: AllColors.greenColor,
-                                        radius: 4,
-                                      )),
+                                    backgroundColor: AllColors.greenColor,
+                                    radius: 4,
+                                  )),
                                   endConnector: const DashedLineConnector(
                                     color: AllColors.greyColor,
                                   )),
@@ -191,12 +185,12 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                     // const SizedBox(
                                     //   height: 3,
                                     // ),
-                                    Text(
-                                      "Makarba, Ahmedabad, Gujarat 380051",
+                                    Text("Makarba, Ahmedabad, Gujarat 380051",
                                         style: TextStyle(
                                           fontSize: smallFontSize,
                                           color: AllColors.greyColor,
-                                          fontWeight: normalFontWeight,)),
+                                          fontWeight: normalFontWeight,
+                                        )),
                                   ],
                                 ),
                               ),
@@ -206,23 +200,26 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                 ),
                                 indicator: ContainerIndicator(
                                     child: CircleAvatar(
-                                      backgroundColor: AllColors.blueColor,
-                                      radius: 4,
-                                    )),
+                                  backgroundColor: AllColors.blueColor,
+                                  radius: 4,
+                                )),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Expanded(flex: 2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color:Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(5)
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          decoration:
+                              BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(5)),
+                          padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
+                          child: const Center(
+                              child: Text(
+                            "Receipt",
+                            style: TextStyle(),
+                          )),
                         ),
-                        padding: const EdgeInsets.only(left: 5,right: 5,bottom: 5,top: 5),
-                        child: const Center(child: Text("Receipt",style: TextStyle(),)),
-                      ),
                       )
                     ],
                   ),
@@ -232,10 +229,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   children: [
                     Text(
                       "Charan rated you",
-                      style:
-                      TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
+                      style: TextStyle(fontWeight: normalFontWeight, fontSize: smallFontSize),
                     ),
-
                     RatingBar.builder(
                       initialRating: 3,
                       minRating: 1,
@@ -254,11 +249,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                     ),
                   ],
                 ),
-
               ],
             ),
           ),
-
         ],
       ),
     );

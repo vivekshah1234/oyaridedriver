@@ -12,8 +12,7 @@ class VehicleManagementScreen extends StatefulWidget {
   const VehicleManagementScreen({Key? key}) : super(key: key);
 
   @override
-  _VehicleManagementScreenState createState() =>
-      _VehicleManagementScreenState();
+  _VehicleManagementScreenState createState() => _VehicleManagementScreenState();
 }
 
 class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
@@ -50,7 +49,9 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                     ),
                     AppButton(
                             onPressed: () async {
-                              await Get.to(() =>  AddNewVehicleScreen(toEdit: false,));
+                              await Get.to(() => AddNewVehicleScreen(
+                                    toEdit: false,
+                                  ));
                               vehicleController.getVehicles();
                             },
                             text: "ADD NEW VEHICLE",
@@ -76,16 +77,16 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
 
           return GestureDetector(
             onTap: () async {
-              await  Get.to(()=>  AddNewVehicleScreen(
-                toEdit: true,
-              txtCarNumber: vehicle.licencePlate.toString(),
-                txtColor: vehicle.vehicleColor.toString(),
-                txtTaxiType: vehicle.vehicleTypeId.toString(),
-                txtVehicleBrand: vehicle.vehicleManufacturer.toString(),
-                txtVehicleModel: vehicle.vehicleModel.toString(),
-                txtVehicleYear: vehicle.vehicleYear.toString(),
-                vehicleId: vehicle.id.toString(),
-              ));
+              await Get.to(() => AddNewVehicleScreen(
+                    toEdit: true,
+                    txtCarNumber: vehicle.licencePlate.toString(),
+                    txtColor: vehicle.vehicleColor.toString(),
+                    txtTaxiType: vehicle.vehicleTypeId.toString(),
+                    txtVehicleBrand: vehicle.vehicleManufacturer.toString(),
+                    txtVehicleModel: vehicle.vehicleModel.toString(),
+                    txtVehicleYear: vehicle.vehicleYear.toString(),
+                    vehicleId: vehicle.id.toString(),
+                  ));
               vehicleController.getVehicles();
             },
             child: Container(
@@ -95,8 +96,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 30.0, top: 17, bottom: 17, right: 30),
+                padding: const EdgeInsets.only(left: 30.0, top: 17, bottom: 17, right: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -118,14 +118,10 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                           children: [
                             Text(vehicle.vehicleModel,
                                 style: const TextStyle(
-                                    fontSize: 19,
-                                    color: AllColors.blackColor,
-                                    fontWeight: FontWeight.w600)),
+                                    fontSize: 19, color: AllColors.blackColor, fontWeight: FontWeight.w600)),
                             Text(vehicle.licencePlate,
                                 style: const TextStyle(
-                                    fontSize: 15,
-                                    color: AllColors.blackColor,
-                                    fontWeight: FontWeight.w600)),
+                                    fontSize: 15, color: AllColors.blackColor, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ],
@@ -133,21 +129,17 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                     SizedBox(
                       width: 30,
                       child: RadioListTile(
-                        groupValue:vehicle.isActiveVehicle,
-                        value:index,
+                        groupValue: vehicle.isActiveVehicle,
+                        value: index,
                         tileColor: Colors.white,
                         selectedTileColor: Colors.white,
                         activeColor: AllColors.greenColor,
                         onChanged: (val) {
-                          setState(()  {
+                          setState(() {
                             // radioItemHolder = nList[i].number;
 
-                            Map<String, String> map = {
-                              "vehicle_id": vehicle.id.toString()
-                            };
-                            setState(() {
-
-                            });
+                            Map<String, String> map = {"vehicle_id": vehicle.id.toString()};
+                            setState(() {});
                             vehicleController.changeActiveVehicle(map, context);
                             // vehicleController.getVehicles();
                           });

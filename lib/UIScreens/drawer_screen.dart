@@ -11,12 +11,11 @@ import 'package:oyaridedriver/UIScreens/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
-import 'package:oyaridedriver/UIScreens/your_tripe_screen.dart';
+import 'package:oyaridedriver/UIScreens/your_trip_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'document_management_screen.dart';
 import 'authScreens/login_screen.dart';
-// ignore_for_file: prefer_const_constructors
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({Key? key}) : super(key: key);
@@ -26,25 +25,23 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-   List<DrawerItems> drawerList = [
+  List<DrawerItems> drawerList = [
     DrawerItems(
-        0, ImageAssets.paymentIcon, "Home", MapHomeScreen()),
-
-    DrawerItems(1, ImageAssets.yourTripeIcon, "Your Trip", YourTripScreen()),
-    DrawerItems(2, ImageAssets.yourTripeIcon, "Vehicle Management",
-        VehicleManagementScreen()),
-    DrawerItems(3, ImageAssets.yourTripeIcon, "Document Management",
-        DocumentManagementScreen(true)),
-    DrawerItems(4, ImageAssets.chatIcon, "Message", ChatScreen()),
-    DrawerItems(5, ImageAssets.settingIcon, "Settings", SettingScreen()),
-    DrawerItems(6, ImageAssets.logoutIcon, "Logout",  Container()),
+        0,
+        ImageAssets.paymentIcon,
+        "Home",
+        MapHomeScreen(
+          isFromNotification: false,
+        )),
+    DrawerItems(1, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
+    DrawerItems(2, ImageAssets.yourTripeIcon, "Vehicle Management",const VehicleManagementScreen()),
+    DrawerItems(3, ImageAssets.yourTripeIcon, "Document Management",const DocumentManagementScreen(true)),
+    DrawerItems(4, ImageAssets.chatIcon, "Message",const ChatScreen()),
+    DrawerItems(5, ImageAssets.settingIcon, "Settings",const SettingScreen()),
+    DrawerItems(6, ImageAssets.logoutIcon, "Logout", Container()),
   ];
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +57,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
               padding: const EdgeInsets.only(left: 30.0, bottom: 20),
               child: Row(
                 children: [
-                  AppConstants.profilePic!="profilePic"? CircleAvatar(
-                    backgroundImage: NetworkImage( AppConstants.profilePic),
-                    backgroundColor: AllColors.greenColor,
-                    radius: 28,
-                  ):CircleAvatar(
-                    backgroundImage: NetworkImage( imgUrl),
-                    backgroundColor: AllColors.blueColor,
-                    radius: 28,
-                  ),
-                  SizedBox(
+                  AppConstants.profilePic != "profilePic"
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(AppConstants.profilePic),
+                          backgroundColor: AllColors.greenColor,
+                          radius: 28,
+                        )
+                      : CircleAvatar(
+                          backgroundImage: NetworkImage(imgUrl),
+                          backgroundColor: AllColors.blueColor,
+                          radius: 28,
+                        ),
+                  const SizedBox(
                     width: 15,
                   ),
                   textWidget(
@@ -81,7 +80,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ],
               ),
             ),
-
             Expanded(child: listView())
           ],
         ),
@@ -89,16 +87,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
     );
   }
 
-
-
-
-
   Widget listView() {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.greenColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+          borderRadius:const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
       child: ListView.builder(
           itemCount: drawerList.length,
           itemBuilder: (context, index) {
@@ -106,10 +99,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               //minVerticalPadding: 10,
               title: Text(
                 drawerList[index].name,
-                style: TextStyle(
-                    color: AllColors.whiteColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
+                style:const TextStyle(color: AllColors.whiteColor, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               leading: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
@@ -130,77 +120,58 @@ class _DrawerScreenState extends State<DrawerScreen> {
           }),
     );
   }
-   logoutDialog() {
-     showAnimatedDialog(
-       context: context,
-       barrierColor: Colors.transparent,
-       builder: (BuildContext context) {
-         return Column(
-           children: [
-             textWidget(
-                 txt: "Are you sure you want to logout?",
-                 fontSize: 14,
-                 color: AllColors.blueColor,
-                 bold: FontWeight.bold,
-                  italic: false
-             ),
-             SizedBox(
-               height: 15,
-             ),
-             AppButton(
-                 text: "Logout".toUpperCase(),color: AllColors.greenColor,
-                 onPressed: () async {
-                   AppConstants.userToken = "userToken";
-                   SharedPreferences sp = await SharedPreferences.getInstance();
-                   FirebaseMessaging _firebaseMessaging =
-                       FirebaseMessaging.instance;
-                   _firebaseMessaging.deleteToken();
-                   destroyData();
-                   sp.remove("token");
-                   sp.remove("userData");
-                   sp.remove("currentRole");
 
+  logoutDialog() {
+    showAnimatedDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Column(
+          children: [
+            textWidget(
+                txt: "Are you sure you want to logout?",
+                fontSize: 14,
+                color: AllColors.blueColor,
+                bold: FontWeight.bold,
+                italic: false),
+            const SizedBox(
+              height: 15,
+            ),
+            AppButton(
+                text: "Logout".toUpperCase(),
+                color: AllColors.greenColor,
+                onPressed: () async {
+                  AppConstants.userToken = "userToken";
+                  SharedPreferences sp = await SharedPreferences.getInstance();
+                  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+                  _firebaseMessaging.deleteToken();
+                  destroyData();
+                  sp.remove("token");
+                  sp.remove("userData");
+                  sp.remove("currentRole");
 
-                   Get.offAll(() => LoginScreen());
-                 })
-           ],
-         ).alertCard(context);
-       },
-       animationType: DialogTransitionType.slideFromBottomFade,
-       curve: Curves.fastOutSlowIn,
-       duration: const Duration(milliseconds: 500),
-     );
-   }
-  Widget textWidget(
-      {required String txt,
-      required double fontSize,
-      required Color color,
-      required FontWeight bold,
-      required bool italic}) {
-    return Text(
-      txt,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: color,
-        fontSize: fontSize,
-        fontWeight: bold,
-        fontStyle: italic ? FontStyle.italic : FontStyle.normal,
-      ),
+                  Get.offAll(() => LoginScreen());
+                })
+          ],
+        ).alertCard(context);
+      },
+      animationType: DialogTransitionType.slideFromBottomFade,
+      curve: Curves.fastOutSlowIn,
+      duration: const Duration(milliseconds: 500),
     );
   }
-}
 
+}
 
 destroyData() {
   AppConstants.userToken = "userToken";
   AppConstants.profilePic = "profilePic";
   AppConstants.userID = "user_id";
-   AppConstants.email = "email_id";
+  AppConstants.email = "email_id";
   AppConstants.fullName = "fullName";
   AppConstants.countryCode = "countryCode";
   AppConstants.mobileNo = "mobileNo";
   AppConstants.isVerified = false;
-
 }
 
 class DrawerItems {
