@@ -7,7 +7,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/UIScreens/chat_screen.dart';
+import 'package:oyaridedriver/UIScreens/chat_list_screen.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
@@ -36,7 +36,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     DrawerItems(1, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
     DrawerItems(2, ImageAssets.yourTripeIcon, "Vehicle Management",const VehicleManagementScreen()),
     DrawerItems(3, ImageAssets.yourTripeIcon, "Document Management",const DocumentManagementScreen(true)),
-    DrawerItems(4, ImageAssets.chatIcon, "Message",const ChatScreen()),
+    DrawerItems(4, ImageAssets.chatIcon, "Message",const ChatListScreen()),
     DrawerItems(5, ImageAssets.settingIcon, "Settings",const SettingScreen()),
     DrawerItems(6, ImageAssets.logoutIcon, "Logout", Container()),
   ];

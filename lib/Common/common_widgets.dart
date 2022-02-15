@@ -1,16 +1,18 @@
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
+import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:timelines/timelines.dart';
 import 'all_colors.dart';
 import 'image_assets.dart';
-// ignore_for_file: prefer_const_constructors
 
 toast(String txt) {
   return Fluttertoast.showToast(
@@ -56,8 +58,7 @@ Widget shimmer(width, height) {
       child: Container(
         width: height,
         height: width,
-        decoration: BoxDecoration(
-            color: Colors.grey[400], borderRadius: BorderRadius.circular(2)),
+        decoration: BoxDecoration(color: Colors.grey[400], borderRadius: BorderRadius.circular(2)),
 
         // child: Text("shimmer1"),
       ),
@@ -66,7 +67,7 @@ Widget shimmer(width, height) {
 }
 
 Widget whiteLoadingWidget() {
-  return SizedBox(
+  return const SizedBox(
     child: Center(child: SpinKitFadingCircle(color: AllColors.whiteColor)),
     height: 70,
     width: 70,
@@ -80,24 +81,6 @@ Widget greenLoadingWidget() {
     width: 70,
   );
 }
-//
-// Widget greenButton({required String txt, function}) {
-//   return SizedBox(
-//     width: double.infinity,
-//   //  margin: const EdgeInsets.only(left: 45, right: 45),
-//     child: ElevatedButton(
-//       onPressed: function,
-//       style: buttonStyleGreen(),
-//       child: Text(
-//         txt,
-//         style: const TextStyle(
-//             color: AllColors.whiteColor,
-//             fontSize: 19,
-//             fontWeight: FontWeight.w500),
-//       ),
-//     ),
-//   );
-// }
 
 AppBar appBarWidget(txt, GlobalKey<ScaffoldState> scaffoldKey) {
   return AppBar(
@@ -116,12 +99,7 @@ AppBar appBarWidget(txt, GlobalKey<ScaffoldState> scaffoldKey) {
         ),
       ),
     ),
-    title: textWidget(
-        txt: txt,
-        fontSize: 25,
-        color: AllColors.blackColor,
-        bold: FontWeight.w600,
-        italic: false),
+    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
     centerTitle: true,
   );
 }
@@ -136,18 +114,13 @@ AppBar appBarWidget2(txt) {
           onTap: () {
             Get.back();
           },
-          child: Icon(
+          child: const Icon(
             Icons.arrow_back_ios,
             color: AllColors.blackColor,
             size: 35,
           )),
     ),
-    title: textWidget(
-        txt: txt,
-        fontSize: 25,
-        color: AllColors.blackColor,
-        bold: FontWeight.w600,
-        italic: false),
+    title: textWidget(txt: txt, fontSize: 25, color: AllColors.blackColor, bold: FontWeight.w600, italic: false),
     centerTitle: true,
   );
 }
@@ -181,8 +154,7 @@ SnackBar whiteSnackBar(
     SnackBar(
       content: Text(
         txt,
-        style:
-            TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
       ),
       backgroundColor: AllColors.whiteColor,
     );
@@ -193,16 +165,22 @@ SnackBar greenSnackBar(
     SnackBar(
       content: Text(
         txt,
-        style:
-            TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
+        style: const TextStyle(color: AllColors.blackColor, fontWeight: FontWeight.bold),
       ),
       backgroundColor: AllColors.greenColor,
+    );
+
+BoxShadow boxShadow() => BoxShadow(
+      color: Colors.grey.withOpacity(0.5),
+      spreadRadius: 5,
+      blurRadius: 7,
+      offset: const Offset(0, 3), // changes position of shadow
     );
 
 class RiderRequest extends StatelessWidget {
   final String name;
   final String imgUrl;
-  final double price;
+  final String price;
   final double km;
   final String pickUpPoint;
   final String dropOffPoint;
@@ -261,11 +239,11 @@ class RiderRequest extends StatelessWidget {
                       Text(
                         pickUpPoint,
                         maxLines: 1,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AllColors.greyColor,
-
-                        ),)
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -296,13 +274,13 @@ class RiderRequest extends StatelessWidget {
                         height: 3,
                       ),
                       Text(
-                       dropOffPoint,
-                          maxLines: 1,
-                          style: TextStyle(
+                        dropOffPoint,
+                        maxLines: 1,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AllColors.greyColor,
-
-                        ),)
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -335,10 +313,7 @@ class RiderRequest extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                SmallButton(
-                    text: "ACCEPT",
-                    color: AllColors.greenColor,
-                    onPressed: acceptOnTap),
+                SmallButton(text: "ACCEPT", color: AllColors.greenColor, onPressed: acceptOnTap),
               ],
             ),
           )
@@ -347,11 +322,7 @@ class RiderRequest extends StatelessWidget {
     );
   }
 
-  Widget userDetails(
-      {required String txt,
-      required String imgUrl,
-      required double charge,
-      required double kiloMeter}) {
+  Widget userDetails({required String txt, required String imgUrl, required String charge, required double kiloMeter}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -380,9 +351,7 @@ class RiderRequest extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: ScreenUtil().setSp(17),
-                          color: AllColors.blackColor)),
+                          fontWeight: FontWeight.w800, fontSize: ScreenUtil().setSp(17), color: AllColors.blackColor)),
                 ),
               ],
             ),
@@ -413,67 +382,361 @@ class RiderRequest extends StatelessWidget {
 }
 
 class RiderDetails extends StatelessWidget {
-  String name;
+  final String name;
+  final String profilePic;
   final GestureTapCallback callButton;
+  final GestureTapCallback cancelTap;
+  final GestureTapCallback arrivedTap;
+  final GestureTapCallback chatTap;
 
-  RiderDetails({required this.name, required this.callButton});
+  const RiderDetails(
+      {Key? key,
+      required this.name,
+      required this.callButton,
+      required this.profilePic,
+      required this.cancelTap,
+      required this.arrivedTap,
+      required this.chatTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      shadowColor: Colors.grey.shade900,
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AllColors.blackColor,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+          child: Row(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(imgUrl),
-                radius: 35,
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.location_on,
+                  color: AllColors.blackColor,
+                ),
               ),
-              const SizedBox(
-                width: 20,
+              Expanded(child: dottedLine()),
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.directions_car,
+                  color: AllColors.blackColor,
+                ),
               ),
-              Expanded(
-                child: Text(name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: ScreenUtil().setSp(18),
-                        color: AllColors.blackColor)),
-              )
-            ],
-          ).putPadding(10, 10, 25, 25),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GiveRatingWidget(
-                initialRating: 3,
-                onRatingUpdate: (val) {
-                  printInfo(info: val.toString());
-                },
-              ),
-              GestureDetector(
-                onTap: callButton,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AllColors.greenColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.only(top: 2, bottom: 2),
-                  width: 100,
-                  child: const Icon(
-                    Icons.phone,
-                    color: AllColors.whiteColor,
-                  ),
+              Expanded(child: dottedLine()),
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.flag_sharp,
+                  color: AllColors.blackColor,
                 ),
               )
             ],
-          )
-        ],
-      ).putPadding(10, 10, 10, 10),
-    ).putPadding(10, 10, 25, 25);
+          ),
+        ),
+        Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shadowColor: Colors.grey.shade900,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(profilePic),
+                    radius: 35,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Text(name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(18),
+                            color: AllColors.blackColor)),
+                  )
+                ],
+              ).putPadding(10, 10, 25, 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GiveRatingWidget(
+                    initialRating: 0.0,
+                    onRatingUpdate: (val) {
+                      printInfo(info: val.toString());
+                    },
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: callButton,
+                        child: Container(
+                          decoration:
+                              BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(7)),
+                          width: context.widthPct(0.2),
+                          height: 30,
+                          child: Image.asset(
+                            ImageAssets.callIcon,
+                            scale: 6,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: chatTap,
+                        child: Container(
+                            decoration:
+                                BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(7)),
+                            width: context.widthPct(0.2),
+                            height: 30,
+                            child: Image.asset(
+                              ImageAssets.chatIcon,
+                              scale: 7,
+                            )),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ).putPadding(10, 10, 10, 10),
+        ).putPadding(10, 10, 25, 25),
+        Row(
+          children: [
+            SmallButton(
+              text: "CANCEL",
+              color: AllColors.blueColor,
+              onPressed: () {
+                cancelTap();
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            SmallButton(
+              text: "ARRIVED",
+              color: AllColors.greenColor,
+              onPressed: () {
+                arrivedTap();
+              },
+            )
+          ],
+        ).putPadding(
+          0,
+          20,
+          context.widthPct(0.08),
+          context.widthPct(0.08),
+        )
+      ],
+    );
+  }
+
+  Widget dottedLine() {
+    return const DottedLine(
+      direction: Axis.horizontal,
+      lineLength: double.infinity,
+      lineThickness: 2.0,
+      dashLength: 4.0,
+      dashColor: AllColors.whiteColor,
+      // dashGradient: const [Colors.red, Colors.blue],
+      dashRadius: 0.0,
+      dashGapLength: 4.0,
+      dashGapColor: Colors.transparent,
+      //  dashGapGradient: const [Colors.red, Colors.blue],
+      dashGapRadius: 0.0,
+    );
+  }
+}
+
+class ReachedAtLoc extends StatelessWidget {
+  final String name;
+  final String profilePic;
+  final GestureTapCallback callButton;
+  final GestureTapCallback cancelTap;
+  final GestureTapCallback pickedTap;
+  final GestureTapCallback chatTap;
+
+  const ReachedAtLoc(
+      {Key? key,
+      required this.name,
+      required this.callButton,
+      required this.profilePic,
+      required this.cancelTap,
+      required this.pickedTap,
+      required this.chatTap})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AllColors.blackColor,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.location_on,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine()),
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.directions_car,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine()),
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.flag_sharp,
+                  color: AllColors.blackColor,
+                ),
+              )
+            ],
+          ),
+        ),
+        Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shadowColor: Colors.grey.shade900,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(profilePic),
+                    radius: 35,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: Text(name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: ScreenUtil().setSp(18),
+                            color: AllColors.blackColor)),
+                  )
+                ],
+              ).putPadding(10, 10, 25, 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GiveRatingWidget(
+                    initialRating: 3,
+                    onRatingUpdate: (val) {
+                      printInfo(info: val.toString());
+                    },
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: callButton,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AllColors.greenColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.only(top: 2, bottom: 2),
+                          width: 70,
+                          child: const Icon(
+                            Icons.phone,
+                            color: AllColors.whiteColor,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      GestureDetector(
+                        onTap: chatTap,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AllColors.greenColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.only(top: 2, bottom: 2),
+                          width: 70,
+                          child: const Icon(
+                            Icons.chat_bubble,
+                            color: AllColors.whiteColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ).putPadding(10, 10, 10, 10),
+        ).putPadding(10, 10, 25, 25),
+        Row(
+          children: [
+            SmallButton(
+              text: "CANCEL",
+              color: AllColors.blueColor,
+              onPressed: () {
+                cancelTap();
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            SmallButton(
+              text: "PICKED UP",
+              color: AllColors.greenColor,
+              onPressed: () {
+                pickedTap();
+              },
+            )
+          ],
+        ).putPadding(
+          0,
+          20,
+          context.widthPct(0.08),
+          context.widthPct(0.08),
+        )
+      ],
+    );
+  }
+
+  Widget dottedLine() {
+    return const DottedLine(
+      direction: Axis.horizontal,
+      lineLength: double.infinity,
+      lineThickness: 2.0,
+      dashLength: 4.0,
+      dashColor: AllColors.whiteColor,
+      // dashGradient: const [Colors.red, Colors.blue],
+      dashRadius: 0.0,
+      dashGapLength: 4.0,
+      dashGapColor: Colors.transparent,
+      //  dashGapGradient: const [Colors.red, Colors.blue],
+      dashGapRadius: 0.0,
+    );
   }
 }
 
@@ -481,7 +744,7 @@ class GiveRatingWidget extends StatefulWidget {
   final double initialRating;
   final onRatingUpdate;
 
-  GiveRatingWidget({required this.initialRating, required this.onRatingUpdate});
+  const GiveRatingWidget({required this.initialRating, required this.onRatingUpdate});
 
   @override
   State<GiveRatingWidget> createState() => _GiveRatingWidgetState();
@@ -514,8 +777,7 @@ class AppButton extends StatelessWidget {
   final String text;
   final Color color;
 
-  const AppButton(
-      {required this.onPressed, required this.text, required this.color});
+  const AppButton({required this.onPressed, required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -527,16 +789,12 @@ class AppButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(color),
           shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-            return RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25));
+            return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
           }),
         ),
         child: Text(
           text,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
+          style: const TextStyle(color: AllColors.whiteColor, fontSize: 17, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -548,8 +806,7 @@ class SmallButton extends StatelessWidget {
   final GestureTapCallback onPressed;
   final Color color;
 
-  const SmallButton(
-      {required this.text, required this.color, required this.onPressed});
+  const SmallButton({required this.text, required this.color, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -561,18 +818,515 @@ class SmallButton extends StatelessWidget {
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(color),
           shape: MaterialStateProperty.resolveWith<OutlinedBorder>((_) {
-            return RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25));
+            return RoundedRectangleBorder(borderRadius: BorderRadius.circular(25));
           }),
         ),
         child: Text(
           text,
-          style: const TextStyle(
-              color: AllColors.whiteColor,
-              fontSize: 17,
-              fontWeight: FontWeight.w500),
+          style: const TextStyle(color: AllColors.whiteColor, fontSize: 17, fontWeight: FontWeight.w500),
         ),
       ),
+    );
+  }
+}
+
+class FetchingTheRequests extends StatelessWidget {
+  final double bigFont = 23.0;
+  final double smallFont = 14.0;
+  final double mediumFont = 16.0;
+
+  final FontWeight largeFontWeight = FontWeight.w900;
+  final FontWeight mediumFontWeight = FontWeight.w600;
+  final FontWeight normalFontWeight = FontWeight.normal;
+  final String text;
+
+  const FetchingTheRequests(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: AllColors.whiteColor,
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(40),
+          topLeft: Radius.circular(40),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            margin: const EdgeInsets.only(top: 10, bottom: 25),
+            height: 5,
+            decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(10)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, bottom: 15),
+            child: Text(
+              text,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          dividerWidget(),
+          LinearProgressIndicator(
+            backgroundColor: AllColors.blueColor,
+            valueColor: AlwaysStoppedAnimation(AllColors.greenColor),
+            minHeight: 5,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget dividerWidget() {
+  return Divider(
+    color: Colors.grey.shade300,
+    height: 2,
+    thickness: 1.5,
+  );
+}
+
+class NoRequestCart extends StatelessWidget {
+  final bool userOnline;
+
+  NoRequestCart({required this.userOnline});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        userOnline
+            ? Container()
+            : SizedBox(
+                //width: 300,
+                height: 30,
+                child: Marquee(
+                  text: 'To receiver requests, you need to go online.',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  scrollAxis: Axis.horizontal,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  blankSpace: 20.0,
+                  velocity: 100.0,
+
+                  //pauseAfterRound: const Duration(seconds: 1),
+                  startPadding: 10.0,
+                  accelerationDuration: const Duration(seconds: 1),
+                  accelerationCurve: Curves.linear,
+                  // decelerationDuration: const Duration(milliseconds: 500),
+                  // decelerationCurve: Curves.easeOut,
+                ),
+              ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            color: AllColors.whiteColor,
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.only(top: 7, bottom: 20),
+          child: Column(
+            children: [
+              Container(
+                height: 4,
+                width: MediaQuery.of(context).size.width * 0.35,
+                margin: const EdgeInsets.only(top: 5, bottom: 15),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              Text(
+                "Welcome, ${AppConstants.fullName}",
+                style: TextStyle(fontSize: 20, color: AllColors.blueColor, fontWeight: FontWeight.bold),
+              ).paddingOnly(top: 0, bottom: 15),
+              Container(
+                height: 1.5,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.grey.shade300,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Currently,You don't have any request.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, color: AllColors.blueColor, fontWeight: FontWeight.w300),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class WhileTravelingCart extends StatelessWidget {
+  final String name;
+  final String profilePic;
+  final GestureTapCallback dropTap;
+
+  WhileTravelingCart({required this.name, required this.profilePic, required this.dropTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AllColors.blackColor,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.location_on,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine()),
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.directions_car,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine2()),
+              const CircleAvatar(
+                backgroundColor: AllColors.whiteColor,
+                child: Icon(
+                  Icons.flag_sharp,
+                  color: AllColors.blackColor,
+                ),
+              )
+            ],
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //  crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.30,
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  shadowColor: Colors.grey.shade900,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(profilePic),
+                        radius: 35,
+                      ).putPadding(10, 10, 25, 25),
+                      // SizedBox(height: 10,),
+                      textWidget(
+                          txt: name, bold: FontWeight.w600, fontSize: 18, italic: false, color: AllColors.blackColor),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      GiveRatingWidget(initialRating: 3, onRatingUpdate: (val) {})
+                    ],
+                  ).putPadding(20, 20, 20, 20),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.30,
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  shadowColor: Colors.grey.shade900,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      textWidget(
+                          txt: "Waiting",
+                          bold: FontWeight.w500,
+                          fontSize: 18,
+                          italic: false,
+                          color: AllColors.blackColor),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      textWidget(
+                          txt: "00:00:00",
+                          bold: FontWeight.w500,
+                          fontSize: 18,
+                          italic: false,
+                          color: AllColors.blackColor),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        AppButton(
+                onPressed: () {
+                  dropTap();
+                },
+                text: "TAP WHEN DROP",
+                color: AllColors.greenColor)
+            .paddingSymmetric(horizontal: 25),
+        const SizedBox(
+          height: 10,
+        )
+      ],
+    );
+  }
+
+  Widget dottedLine() {
+    return DottedLine(
+      direction: Axis.horizontal,
+      lineLength: double.infinity,
+      lineThickness: 2.0,
+      dashLength: 4.0,
+      dashColor: AllColors.greenColor,
+      // dashGradient: const [Colors.red, Colors.blue],
+      dashRadius: 0.0,
+      dashGapLength: 4.0,
+      dashGapColor: Colors.transparent,
+      //  dashGapGradient: const [Colors.red, Colors.blue],
+      dashGapRadius: 0.0,
+    );
+  }
+
+  Widget dottedLine2() {
+    return const DottedLine(
+      direction: Axis.horizontal,
+      lineLength: double.infinity,
+      lineThickness: 2.0,
+      dashLength: 4.0,
+      dashColor: AllColors.whiteColor,
+      // dashGradient: const [Colors.red, Colors.blue],
+      dashRadius: 0.0,
+      dashGapLength: 4.0,
+      dashGapColor: Colors.transparent,
+      //  dashGapGradient: const [Colors.red, Colors.blue],
+      dashGapRadius: 0.0,
+    );
+  }
+}
+
+class CompleteRide extends StatelessWidget {
+  String name, kilometer, price, bookingId;
+  int paymentType;
+  final GestureTapCallback confirmPayment;
+
+  CompleteRide(
+      {required this.name,
+      required this.price,
+      required this.kilometer,
+      required this.confirmPayment,
+      required this.paymentType,
+      required this.bookingId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            color: AllColors.blackColor,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            ),
+          ),
+          padding: const EdgeInsets.only(top: 15, bottom: 10, left: 20, right: 20),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.location_on,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine2()),
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.directions_car,
+                  color: AllColors.blackColor,
+                ),
+              ),
+              Expanded(child: dottedLine2()),
+              CircleAvatar(
+                backgroundColor: AllColors.greenColor,
+                child: const Icon(
+                  Icons.flag_sharp,
+                  color: AllColors.blackColor,
+                ),
+              )
+            ],
+          ),
+        ),
+        Container(
+          color: Colors.grey.shade50,
+          padding: const EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
+          margin: const EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(imgUrl),
+                    radius: 35,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  textWidget(
+                      txt: name, bold: FontWeight.w800, fontSize: 18, italic: false, color: AllColors.blackColor),
+                ],
+              ),
+              Column(
+                children: [
+                  textWidget(
+                      txt: "\$$price", fontSize: 17, color: AllColors.blackColor, bold: FontWeight.w800, italic: false),
+                  textWidget(
+                      txt: "$kilometer km",
+                      fontSize: 15,
+                      color: AllColors.greyColor,
+                      bold: FontWeight.normal,
+                      italic: false),
+                ],
+              )
+            ],
+          ),
+        ),
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                textWidget(
+                    txt: "Booking ID", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+                textWidget(
+                    txt: bookingId, fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
+              ],
+            ).putPadding(0, 0, 10, 10),
+            const SizedBox(
+              height: 12,
+            ),
+            const Divider(
+              height: 2,
+              color: AllColors.greyColor,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                textWidget(
+                    txt: "Total", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+                textWidget(
+                    txt: "\$$price", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
+              ],
+            ).putPadding(0, 0, 10, 10),
+            const SizedBox(
+              height: 12,
+            ),
+            const Divider(
+              height: 2,
+              color: AllColors.greyColor,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                textWidget(
+                    txt: "Payment", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+                textWidget(
+                    txt: paymentType == 0 ? "Cash" : "with PayStack",
+                    fontSize: 18,
+                    color: AllColors.blackColor,
+                    bold: FontWeight.w300,
+                    italic: false)
+              ],
+            ).putPadding(0, 0, 10, 10),
+            const SizedBox(
+              height: 12,
+            ),
+            const Divider(
+              height: 2,
+              color: AllColors.greyColor,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+          ],
+        ).putPadding(10, 10, 10, 10),
+        AppButton(
+                onPressed: () {
+                  confirmPayment();
+                },
+                text: "CONFIRM PAYMENT",
+                color: AllColors.greenColor)
+            .paddingSymmetric(horizontal: 25),
+        const SizedBox(
+          height: 10,
+        )
+      ],
+    );
+  }
+
+  Widget dottedLine2() {
+    return DottedLine(
+      direction: Axis.horizontal,
+      lineLength: double.infinity,
+      lineThickness: 2.0,
+      dashLength: 4.0,
+      dashColor: AllColors.greenColor,
+      // dashGradient: const [Colors.red, Colors.blue],
+      dashRadius: 0.0,
+      dashGapLength: 4.0,
+      dashGapColor: Colors.transparent,
+      //  dashGapGradient: const [Colors.red, Colors.blue],
+      dashGapRadius: 0.0,
     );
   }
 }

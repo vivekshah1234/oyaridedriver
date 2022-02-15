@@ -2,10 +2,8 @@ class ApiConstant {
   static String baseUrl = "http://3.13.6.132:3900/api";
   static String signUp = "/auth/register";
   static String login = "/auth/login";
-
   static String resetPassword = "auth/reset-password";
   static String refreshToken = "auth/refresh-token";
-
   static String addDeviceInfo = "/user/device";
   static String userStatus="/user/online-status";
   static String updateLocation="/user/update-location";
@@ -47,4 +45,12 @@ abstract class SocketEvents{
   static String sendRequest="sendRequest";
   static String acceptRequest="acceptRequest";
   static String sendAcceptReqResponse="sendAcceptReqResponse";
+  static String reachedAtLocation="reachedAtLocation";
+  static String sendReachedAtLocationResponse="sendReachedAtLocationResponse";
+  static String pickUpTheRider="pickUpTheRider";
+  static String startRide="startRide";
+  static String completeRide="completeRide";
+  static String sendCompleteRideResponse="sendCompleteRideResponse";
+  static String startRideDetails="startRideDetails";
+  static String paymentVerifyDriver="paymentVerifyDriver";
 }

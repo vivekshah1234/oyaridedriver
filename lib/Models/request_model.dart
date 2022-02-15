@@ -3,6 +3,7 @@ class RequestModel {
     required this.id,
     required this.userId,
     this.driverId,
+    required this.bookingId,
     this.vehicleId,
     required this.vehicleType,
     required this.sourceAddress,
@@ -24,6 +25,8 @@ class RequestModel {
     required this.status,
     this.customerCancellation,
     this.driverCancellation,
+    required this.price,
+    required this.paymentStatus,
     required this.createdAt,
     required this.updatedAt,
     required this.userName,
@@ -33,6 +36,7 @@ class RequestModel {
   late final int id;
   late final int userId;
   late final dynamic driverId;
+  late final int bookingId;
   late final dynamic vehicleId;
   late final int vehicleType;
   late final String sourceAddress;
@@ -54,6 +58,8 @@ class RequestModel {
   late final int status;
   late final dynamic customerCancellation;
   late final dynamic driverCancellation;
+  late final String price;
+  late final String paymentStatus;
   late final String createdAt;
   late final String updatedAt;
   late final String userName;
@@ -63,6 +69,7 @@ class RequestModel {
     id = json['id'];
     userId = json['user_id'];
     driverId = json['driver_id'];
+    bookingId = json['booking_id'];
     vehicleId = json['vehicle_id'];
     vehicleType = json['vehicle_type'];
     sourceAddress = json['source_address'];
@@ -84,6 +91,8 @@ class RequestModel {
     status = json['status'];
     customerCancellation = json['customer_cancellation'];
     driverCancellation = json['driver_cancellation'];
+    price = json['price'];
+    paymentStatus = json['payment_status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     userName = json['user_name'];
@@ -95,6 +104,7 @@ class RequestModel {
     _data['id'] = id;
     _data['user_id'] = userId;
     _data['driver_id'] = driverId;
+    _data['booking_id'] = bookingId;
     _data['vehicle_id'] = vehicleId;
     _data['vehicle_type'] = vehicleType;
     _data['source_address'] = sourceAddress;
@@ -116,6 +126,8 @@ class RequestModel {
     _data['status'] = status;
     _data['customer_cancellation'] = customerCancellation;
     _data['driver_cancellation'] = driverCancellation;
+    _data['price'] = price;
+    _data['payment_status'] = paymentStatus;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     _data['user_name'] = userName;
