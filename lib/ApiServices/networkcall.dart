@@ -137,3 +137,17 @@ multipartPostAPI(
     // return null;
   }
 }
+
+getAPIForMap(String methodName, Function(ResponseAPI) callback) {
+  var uri = Uri.parse(methodName);
+  http.get(uri,).then((value) {
+    debugPrint("==request== $uri");
+    _handleResponse(value, callback);
+  }).onError((error, stackTrace) {
+    debugPrint("onError== $error");
+    _handleError(error, callback);
+  }).catchError((error) {
+    debugPrint("catchError== $error");
+    _handleError(error, callback);
+  });
+}

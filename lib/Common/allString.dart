@@ -62,3 +62,11 @@ class PlaceHolder {
   static String countryPlaceHolder="Enter your country here";
   static String zipCodePlaceHolder="Enter location zipcode here";
 }
+
+abstract class MarkerPolylineId{
+ static String myLocationMarker="myLocation";
+ static String sourceMarker="sourceMarker";
+ static String destinationMarker="destinationMarker";
+ static String sourceToDesPolyline="sourceToDesPolyline";
+ static String myLocToSourcePolyline="myLocToSource";
+}

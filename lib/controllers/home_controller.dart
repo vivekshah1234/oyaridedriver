@@ -7,9 +7,11 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/Models/acceptedDriverModel.dart';
+import 'package:oyaridedriver/Models/calculateDistanceModel.dart';
 import 'package:oyaridedriver/Models/request_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:get/get.dart';
@@ -45,8 +47,9 @@ class HomeController extends GetxController {
   Completer<GoogleMapController> mapController = Completer();
   late double latitude, longitude;
   late CameraPosition kGooglePlex;
+  late CameraPosition kGooglePlex2;
   late LatLng lastMapPosition;
-
+  late LatLng lastMapPositionPrivious;
   RxBool isLoadingMap = true.obs;
   Set<Marker> markers = {};
   Set<Polyline> polyLine = <Polyline>{};
@@ -67,12 +70,18 @@ class HomeController extends GetxController {
   }
 
   getCurrentPosition() async {
+    isLoadingMap(true);
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
     lastMapPosition = LatLng(latitude, longitude);
+    lastMapPositionPrivious = LatLng(latitude, longitude);
     kGooglePlex = CameraPosition(
       target: lastMapPosition,
+      zoom: 14.4746,
+    );
+    kGooglePlex2 = CameraPosition(
+      target: lastMapPositionPrivious,
       zoom: 14.4746,
     );
     Map<String, dynamic> map = {};
@@ -87,27 +96,28 @@ class HomeController extends GetxController {
       map["userId"] = AppConstants.userID;
       updateLocation2(map);
     });
-    addMyMarker(latitude, longitude);
-    isLoadingMap(false);
+    addMyMarker(latitude, longitude, position.heading);
   }
 
-  addMyMarker(latitude, longitude) async {
+  addMyMarker(double latitude, double longitude, double heading) async {
     Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
     markers.add(Marker(
-        markerId: const MarkerId("myLocation"),
+        markerId: MarkerId(MarkerPolylineId.myLocationMarker),
         position: LatLng(latitude, longitude),
         draggable: false,
+        rotation: heading,
         zIndex: 2,
         flat: true,
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.fromBytes(imageData!)));
+    isLoadingMap(false);
   }
 
   void updateMarkerAndCircle(var newLocalData, Uint8List imageData) {
     LatLng latLng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
 
     markers.add(Marker(
-        markerId: const MarkerId("home"),
+        markerId: MarkerId(MarkerPolylineId.myLocationMarker),
         position: latLng,
         rotation: newLocalData.heading!,
         draggable: false,
@@ -117,31 +127,57 @@ class HomeController extends GetxController {
         icon: BitmapDescriptor.fromBytes(imageData)));
   }
 
-  startLiveTracking() async {
+  RxBool cameraAnimate = false.obs;
+
+  startLiveTracking(
+      {required String id,
+      required double sourceLatitude,
+      required double sourceLongitude,
+      required double destinationLatitude,
+      required double destinationLongitude}) async {
+    Map<String, dynamic> majoinRoomMap = {};
+    majoinRoomMap["shipper_order_id"] = id;
+    double distance = 0.0;
+    _socket.emit("joinRoom", majoinRoomMap);
     try {
       var location = await determinePosition();
       lastMapPosition = LatLng(location.latitude, location.longitude);
       Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
-
+      Map<String, dynamic> map = {};
       locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
         printInfo(info: "Error=====" + onError);
         locationSubscription?.cancel();
 
         locationSubscription = null;
       }).listen((newLocalData) async {
-        if (mapController != null) {
-          final GoogleMapController controller = await mapController.future;
+        cameraAnimate(true);
+        printInfo(
+            info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
+        // distance = await getDistance(
+        //     sourceLatitude: newLocalData.latitude!,
+        //     sourceLongitude: newLocalData.longitude!,
+        //     destinationLatitude: destinationLatitude,
+        //     destinationLongitude: destinationLongitude);
+        // if(distance!=null){
+          map["latitude"] = newLocalData.latitude;
+          map["longitude"] = newLocalData.longitude;
+          map["heading"] = newLocalData.heading;
+          map["shipper_order_id"] = id;
+          map["distance"] = distance.toString();
+          _socket.emit('updateLocation', map);
+          lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
           lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-          controller.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(bearing: 192.833, target: lastMapPosition, tilt: 0, zoom: 12)));
-
           updateMarkerAndCircle(newLocalData, imageData!);
-        }
+          cameraAnimate(false);
+       // }
+
       });
+      isLoadingDriver(false);
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         debugPrint("Permission Denied");
       }
+      isLoadingDriver(false);
     }
   }
 
@@ -152,8 +188,30 @@ class HomeController extends GetxController {
       required double destinationLongitude}) async {
     isAddingMarkerAndPolyline(true);
     polyLineCoordinates.clear();
-    polyLine.clear();
+    var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
+        PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
+    printInfo(info: "result>>>-----    " + result.status.toString());
+    if (result.points.isNotEmpty) {
+      for (var pointLatLng in result.points) {
+        polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      }
 
+      polyLine.add(Polyline(
+          polylineId: PolylineId(MarkerPolylineId.sourceToDesPolyline),
+          color: AllColors.blueColor,
+          width: 4,
+          points: polyLineCoordinates));
+    }
+    isAddingMarkerAndPolyline(false);
+  }
+
+  setPolylineMyLocToUserSourceLoc(
+      {required double sourceLatitude,
+      required double sourceLongitude,
+      required double destinationLatitude,
+      required double destinationLongitude}) async {
+    isAddingMarkerAndPolyline(true);
+    polyLineCoordinates.clear();
     var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
         PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
     printInfo(info: "result>>>-----    " + result.status.toString());
@@ -162,16 +220,18 @@ class HomeController extends GetxController {
         polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       }
       polyLine.add(Polyline(
-          polylineId: const PolylineId("poly"), color: AllColors.blueColor, width: 4, points: polyLineCoordinates));
+          polylineId: PolylineId(MarkerPolylineId.myLocToSourcePolyline),
+          color: AllColors.greenColor,
+          width: 4,
+          points: polyLineCoordinates));
     }
-    isAddingMarkerAndPolyline(false);
   }
 
   setMarker({required LatLng source, required LatLng destination}) async {
     // markers.clear();
     Uint8List? imageData = await getBytesFromAsset(ImageAssets.greenLocationPin, 100);
     markers.add(Marker(
-        markerId: const MarkerId("markerSource"),
+        markerId: MarkerId(MarkerPolylineId.sourceMarker),
         position: source,
         draggable: false,
         zIndex: 2,
@@ -179,13 +239,31 @@ class HomeController extends GetxController {
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.fromBytes(imageData!)));
     markers.add(Marker(
-        markerId: const MarkerId("markerDestination"),
+        markerId: MarkerId(MarkerPolylineId.destinationMarker),
         position: destination,
         draggable: false,
         zIndex: 2,
         flat: true,
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.defaultMarker));
+  }
+
+  getDistance(
+      {required double sourceLatitude,
+      required double sourceLongitude,
+      required double destinationLatitude,
+      required double destinationLongitude}) {
+    String url =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=$sourceLatitude,$sourceLongitude&destinations=$destinationLatitude,$destinationLongitude&key=${ApiKeys.mapApiKey}";
+    getAPIForMap(url, (value) {
+      if (value.code == 200) {
+        Map<String, dynamic> valueMap = json.decode(value.response);
+        CalculateDistanceModel calculateDistanceModel = CalculateDistanceModel.fromJson(valueMap);
+        printInfo(info: "Distance==" + calculateDistanceModel.rows[0].elements[0].duration.toString());
+        return calculateDistanceModel.rows[0].elements[0].duration;
+      }
+      return 0.0;
+    });
   }
 
   //All Socket operations
@@ -217,8 +295,8 @@ class HomeController extends GetxController {
   }
 
   reconnectSocket() {
-    printInfo(info:"Socket Connected???==="+ _socket.connected.toString());
-    if (_socket.connected==false) {
+    printInfo(info: "Socket Connected???===" + _socket.connected.toString());
+    if (_socket.connected == false) {
       _socket.connect();
       _socket.on("connect", (_) {
         printInfo(info: 'Socket Re-Connected===' + _socket.connected.toString());
@@ -256,8 +334,8 @@ class HomeController extends GetxController {
       requestList.add(requestModel);
       init(requestList);
       currentAppState(1);
-      printInfo(info:"len==========="+ requestList.length.toString());
-      printInfo(info:"swipeItems==========="+ swipeItems.isNotEmpty.toString());
+      printInfo(info: "len===========" + requestList.length.toString());
+      printInfo(info: "swipeItems===========" + swipeItems.isNotEmpty.toString());
       if (swipeItems.isNotEmpty) {
         printInfo(info: "inside===");
         isAddingData(false);
@@ -283,23 +361,34 @@ class HomeController extends GetxController {
         printInfo(info: "getAcceptedData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
         acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap);
+        currentAppState(2);
+        polyLineCoordinates.clear();
+        polyLine.clear();
+
         double sourceLatitude = double.parse(acceptedDriverModel.tripData.sourceLatitude);
         double sourceLongitude = double.parse(acceptedDriverModel.tripData.sourceLongitude);
         double destinationLatitude = double.parse(acceptedDriverModel.tripData.destinationLatitude);
         double destinationLongitude = double.parse(acceptedDriverModel.tripData.destinationLongitude);
-
+        getCurrentPosition();
         setMarker(
             source: LatLng(sourceLatitude, sourceLongitude),
             destination: LatLng(destinationLatitude, destinationLongitude));
+        setPolylineMyLocToUserSourceLoc(
+            sourceLatitude: latitude,
+            sourceLongitude: longitude,
+            destinationLatitude: sourceLatitude,
+            destinationLongitude: sourceLongitude);
         setPolyline(
             sourceLatitude: sourceLatitude,
             sourceLongitude: sourceLongitude,
             destinationLatitude: destinationLatitude,
             destinationLongitude: destinationLongitude);
-
-        currentAppState(2);
-
-        isLoadingDriver(false);
+        startLiveTracking(
+            id: AppConstants.userID,
+            sourceLatitude: sourceLatitude,
+            sourceLongitude: sourceLongitude,
+            destinationLatitude: destinationLatitude,
+            destinationLongitude: destinationLongitude);
       });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -362,18 +451,6 @@ class HomeController extends GetxController {
       printError(info: "Socket Error" + Ex.toString());
     }
   }
-  // paymentCompleted(Map<String, dynamic> map){
-  //   changingAppState(true);
-  //   printInfo(info: "request accepted==============" + map.toString());
-  //   reconnectSocket();
-  //   try {
-  //     _socket.emit(SocketEvents.payment, map);
-  //     currentAppState(5);
-  //     changingAppState(false);
-  //   } catch (Ex) {
-  //     printError(info: "Socket Error" + Ex.toString());
-  //   }
-  // }
 
   confirmPayment(Map<String, dynamic> map) {
     isLoadingDriver(true);
@@ -381,10 +458,7 @@ class HomeController extends GetxController {
     reconnectSocket();
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);
-
       currentAppState(0);
-
-      //  });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
     }
@@ -429,7 +503,7 @@ class HomeController extends GetxController {
   }
 
   init(List<RequestModel> requestList) {
-    for (int i = 0; i < requestList.length ; i++) {
+    for (int i = 0; i < requestList.length; i++) {
       swipeItems.add(SwipeItem(
           content: Content(
               name: requestList[i].userName,

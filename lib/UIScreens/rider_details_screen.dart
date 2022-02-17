@@ -253,16 +253,16 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                     ],
                   ),
                 ),
-                AppButton(
-                  text: "ACCEPT",
-                  onPressed: () {},
-                  color: AllColors.greenColor,
-                ),
-                AppButton(
-                  onPressed: () {},
-                  color: AllColors.blueColor,
-                  text: "IGNORE",
-                ),
+                // AppButton(
+                //   text: "ACCEPT",
+                //   onPressed: () {},
+                //   color: AllColors.greenColor,
+                // ),
+                // AppButton(
+                //   onPressed: () {},
+                //   color: AllColors.blueColor,
+                //   text: "IGNORE",
+                // ),
               ],
             ),
           ),

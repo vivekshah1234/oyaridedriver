@@ -131,9 +131,13 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       !AppConstants.userOnline
                           ? GestureDetector(
                               onTap: () {
+                                if(controller.currentAppState.value==0){
                                 Map<String, String> map = {};
                                 map["is_available"] = "1";
                                 _homeController.changeUserStatus(map);
+                                }else{
+                                  toast("You can not be online while you are already on a ride.");
+                                }
                               },
                               child: Container(
                                 decoration:
@@ -210,7 +214,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               children: [
                                 GoogleMap(
                                   mapType: MapType.terrain,
-                                  initialCameraPosition: controller.kGooglePlex,
+                                  initialCameraPosition:
+                                      controller.cameraAnimate.value ? controller.kGooglePlex2 : controller.kGooglePlex,
                                   onMapCreated: (GoogleMapController mapController) {
                                     controller.mapController.complete(mapController);
                                   },
@@ -309,10 +314,10 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                           },
                                                           chatTap: () {
                                                             Get.to(() => ChatPage(
-                                                              peerId: controller.acceptedDriverModel.userData.id.toString()
-
-                                                                  .toString(),
-                                                            ));
+                                                                  peerId: controller.acceptedDriverModel.userData.id
+                                                                      .toString()
+                                                                      .toString(),
+                                                                ));
                                                           },
                                                           cancelTap: () {},
                                                           arrivedTap: () {
@@ -385,12 +390,14 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                                           .acceptedDriverModel.tripData.kilometer
                                                                           .toString(),
                                                                       confirmPayment: () {
-                                                                        Map<String,dynamic> map={
-                                                                          "trip_id":controller.acceptedDriverModel.tripData.id.toString(),
-                                                                          "payment_status":"1"
+                                                                        Map<String, dynamic> map = {
+                                                                          "trip_id": controller
+                                                                              .acceptedDriverModel.tripData.id
+                                                                              .toString(),
+                                                                          "payment_status": "1"
                                                                         };
-                                                                      _homeController.confirmPayment(map);
-                                                                       // animatedGif();
+                                                                        _homeController.confirmPayment(map);
+                                                                        // animatedGif();
                                                                       },
                                                                     )
                                                                   : Container(),
