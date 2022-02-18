@@ -136,7 +136,8 @@ class HomeController extends GetxController {
       required double destinationLatitude,
       required double destinationLongitude}) async {
     Map<String, dynamic> majoinRoomMap = {};
-    majoinRoomMap["shipper_order_id"] = id;
+    majoinRoomMap["driver_id"] = id;
+    printInfo(info: "Join room===" + majoinRoomMap.toString());
     double distance = 0.0;
     _socket.emit("joinRoom", majoinRoomMap);
     try {
@@ -153,24 +154,17 @@ class HomeController extends GetxController {
         cameraAnimate(true);
         printInfo(
             info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
-        // distance = await getDistance(
-        //     sourceLatitude: newLocalData.latitude!,
-        //     sourceLongitude: newLocalData.longitude!,
-        //     destinationLatitude: destinationLatitude,
-        //     destinationLongitude: destinationLongitude);
-        // if(distance!=null){
-          map["latitude"] = newLocalData.latitude;
-          map["longitude"] = newLocalData.longitude;
-          map["heading"] = newLocalData.heading;
-          map["shipper_order_id"] = id;
-          map["distance"] = distance.toString();
-          _socket.emit('updateLocation', map);
-          lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-          lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-          updateMarkerAndCircle(newLocalData, imageData!);
-          cameraAnimate(false);
-       // }
-
+        map["latitude"] = newLocalData.latitude;
+        map["longitude"] = newLocalData.longitude;
+        map["heading"] = newLocalData.heading;
+        map["driver_id"] = id;
+        map["distance"] = distance.toString();
+        _socket.emit('updateLocation', map);
+        lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+        lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+        updateMarkerAndCircle(newLocalData, imageData!);
+        cameraAnimate(false);
+        // }
       });
       isLoadingDriver(false);
     } on PlatformException catch (e) {
@@ -188,6 +182,8 @@ class HomeController extends GetxController {
       required double destinationLongitude}) async {
     isAddingMarkerAndPolyline(true);
     polyLineCoordinates.clear();
+    isAddingMarkerAndPolyline(false);
+    isAddingMarkerAndPolyline(true);
     var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
         PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
     printInfo(info: "result>>>-----    " + result.status.toString());
@@ -205,25 +201,40 @@ class HomeController extends GetxController {
     isAddingMarkerAndPolyline(false);
   }
 
-  setPolylineMyLocToUserSourceLoc(
-      {required double sourceLatitude,
-      required double sourceLongitude,
-      required double destinationLatitude,
-      required double destinationLongitude}) async {
+  List<TaskModel> listofTasks = [];
+
+  setPolylineMyLocToUserSourceLoc() async {
     isAddingMarkerAndPolyline(true);
-    polyLineCoordinates.clear();
-    var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
-        PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
-    printInfo(info: "result>>>-----    " + result.status.toString());
-    if (result.points.isNotEmpty) {
-      for (var pointLatLng in result.points) {
-        polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+    printInfo(info: "llllllllll================="+listofTasks.length.toString());
+    for (int i = 0; i < listofTasks.length; i++) {
+      Polyline polyline;
+      if (listofTasks != null && listofTasks.isNotEmpty) {
+        for (var one in listofTasks) {
+          try {
+            // List<LatLng> polylineCoordinates = [];
+            // PolylinePoints polylinePoints = PolylinePoints();
+            polyLineCoordinates.clear();
+            var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
+                PointLatLng(one.slatitude, one.slongitude), PointLatLng(one.dlatitude, one.dlongitude));
+
+            if (result.points.isNotEmpty) {
+              for (var point in result.points) {
+                polyLineCoordinates.add(LatLng(point.latitude, point.longitude));
+              }
+            }
+
+            polyline = Polyline(
+                polylineId: PolylineId("poly" + i.toString()),
+                color: i == 0 ? AllColors.blueColor : AllColors.greenColor,
+                width: 4,
+                points: polyLineCoordinates);
+            polyLine.add(polyline);
+            isAddingMarkerAndPolyline(false);
+          } catch (e) {
+            print("Ex--- $e");
+          }
+        }
       }
-      polyLine.add(Polyline(
-          polylineId: PolylineId(MarkerPolylineId.myLocToSourcePolyline),
-          color: AllColors.greenColor,
-          width: 4,
-          points: polyLineCoordinates));
     }
   }
 
@@ -362,33 +373,35 @@ class HomeController extends GetxController {
         Map<String, dynamic> valueMap = json.decode(data);
         acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap);
         currentAppState(2);
-        polyLineCoordinates.clear();
-        polyLine.clear();
 
         double sourceLatitude = double.parse(acceptedDriverModel.tripData.sourceLatitude);
         double sourceLongitude = double.parse(acceptedDriverModel.tripData.sourceLongitude);
         double destinationLatitude = double.parse(acceptedDriverModel.tripData.destinationLatitude);
         double destinationLongitude = double.parse(acceptedDriverModel.tripData.destinationLongitude);
         getCurrentPosition();
+
+        listofTasks = [
+          TaskModel("1", "one", latitude, longitude, destinationLatitude, destinationLongitude),
+          TaskModel("2", "two", sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude)
+        ];
+
         setMarker(
             source: LatLng(sourceLatitude, sourceLongitude),
             destination: LatLng(destinationLatitude, destinationLongitude));
-        setPolylineMyLocToUserSourceLoc(
-            sourceLatitude: latitude,
-            sourceLongitude: longitude,
-            destinationLatitude: sourceLatitude,
-            destinationLongitude: sourceLongitude);
-        setPolyline(
-            sourceLatitude: sourceLatitude,
-            sourceLongitude: sourceLongitude,
-            destinationLatitude: destinationLatitude,
-            destinationLongitude: destinationLongitude);
+        printInfo(info: "len====" + listofTasks.length.toString());
+        setPolylineMyLocToUserSourceLoc();
+
         startLiveTracking(
             id: AppConstants.userID,
             sourceLatitude: sourceLatitude,
             sourceLongitude: sourceLongitude,
             destinationLatitude: destinationLatitude,
             destinationLongitude: destinationLongitude);
+        // setPolylineMyLocToUserSourceLoc(
+        //     sourceLatitude: sourceLatitude,
+        //     sourceLongitude: sourceLongitude,
+        //     destinationLatitude: destinationLatitude,
+        //     destinationLongitude: destinationLongitude);
       });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -440,6 +453,7 @@ class HomeController extends GetxController {
     reconnectSocket();
     try {
       _socket.emit(SocketEvents.completeRide, map);
+
       _socket.on(SocketEvents.sendCompleteRideResponse, (data) {
         printInfo(info: "dropRideData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
@@ -543,4 +557,15 @@ class HomeController extends GetxController {
     swipeItems.clear();
     isAddingData(false);
   }
+}
+
+class TaskModel {
+  String name;
+  String address;
+  double slatitude;
+  double dlatitude;
+  double slongitude;
+  double dlongitude;
+
+  TaskModel(this.name, this.address, this.slatitude, this.slongitude, this.dlatitude, this.dlongitude);
 }
