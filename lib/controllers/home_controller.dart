@@ -389,8 +389,11 @@ class HomeController extends GetxController {
             source: LatLng(sourceLatitude, sourceLongitude),
             destination: LatLng(destinationLatitude, destinationLongitude));
         printInfo(info: "len====" + listofTasks.length.toString());
-        setPolylineMyLocToUserSourceLoc();
-
+      //  setPolylineMyLocToUserSourceLoc();
+        setPolyline(  sourceLatitude: sourceLatitude,
+            sourceLongitude: sourceLongitude,
+            destinationLatitude: destinationLatitude,
+            destinationLongitude: destinationLongitude);
         startLiveTracking(
             id: AppConstants.userID,
             sourceLatitude: sourceLatitude,
