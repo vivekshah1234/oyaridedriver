@@ -46,6 +46,9 @@ class TripData {
     required this.status,
     required this.price,
     this.customerCancellation,
+     this.paymentStatus,
+     this.paymentMode,
+     this.paymentTransId,
     this.driverCancellation,
     required this.createdAt,
     required this.updatedAt,
@@ -76,6 +79,9 @@ class TripData {
   late final dynamic customerCancellation;
   late final dynamic driverCancellation;
   late final String price;
+  late final dynamic paymentStatus;
+  late final dynamic paymentMode;
+  late final dynamic paymentTransId;
   late final String createdAt;
   late final String updatedAt;
 
@@ -104,6 +110,9 @@ class TripData {
     polygone = json['polygone'];
     status = json['status'];
     price = json['price'];
+    paymentStatus = json['payment_status'];
+    paymentMode = json['payment_mode'];
+    paymentTransId = json['payment_trans_id'];
     customerCancellation = json['customer_cancellation'];
     driverCancellation = json['driver_cancellation'];
     createdAt = json['created_at'];
@@ -138,6 +147,9 @@ class TripData {
     _data['price'] = price;
     _data['customer_cancellation'] = customerCancellation;
     _data['driver_cancellation'] = driverCancellation;
+    _data['payment_status'] = paymentStatus;
+    _data['payment_mode'] = paymentMode;
+    _data['payment_trans_id'] = paymentTransId;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     return _data;

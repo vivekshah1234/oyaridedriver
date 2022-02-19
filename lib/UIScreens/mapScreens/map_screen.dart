@@ -220,7 +220,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                     controller.mapController.complete(mapController);
                                   },
                                   markers: controller.markers,
-                                  polylines: controller.polyLine,
+                                  polylines: Set<Polyline>.of(controller.polylines.values),
                                 ),
                                 Visibility(
                                     visible: controller.isAddingMarkerAndPolyline.value, child: greenLoadingWidget())
@@ -278,8 +278,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                       ));
                                                 },
                                                 onStackFinished: () {
-                                                  controller.polyLineCoordinates.clear();
-                                                  controller.polyLine.clear();
+
+                                                  // controller.polyLine.clear();
                                                   controller.markers.clear();
 
                                                   setState(() {});

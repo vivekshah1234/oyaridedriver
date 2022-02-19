@@ -52,7 +52,8 @@ class HomeController extends GetxController {
   late LatLng lastMapPositionPrivious;
   RxBool isLoadingMap = true.obs;
   Set<Marker> markers = {};
-  Set<Polyline> polyLine = <Polyline>{};
+
+  //Set<Polyline> polyLine = <Polyline>{};
 
   List<LatLng> polyLineCoordinates = <LatLng>[];
   late PolylinePoints polylinePoints;
@@ -66,7 +67,71 @@ class HomeController extends GetxController {
     getCurrentPosition();
     polylinePoints = PolylinePoints();
     init(requestList);
+    getBackgroundDetails();
     super.onInit();
+  }
+
+  getBackgroundDetails() async {
+    isLoading(true);
+
+    bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
+    print("expire token====" + hasExpired.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (hasExpired == true) {
+      //refreshToken
+      var token = await refreshTokenApi();
+      AppConstants.userToken = token;
+      prefs.setString("token", AppConstants.userToken);
+    }
+
+    if (AppConstants.userToken != "userToken") {
+      getAPI(ApiConstant.getTripDetails, (value) {
+        if (value.code == 200) {
+          //printInfo(info:"acceptedDriverModel====="+ value.response.toString());
+          Map<String, dynamic> valueMap = json.decode(value.response);
+          if (valueMap["data"] == null) {
+            acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap["data"]);
+            printInfo(info: "acceptedDriverModel=====" + acceptedDriverModel.toString());
+            if (valueMap["status"] == 200) {
+              printInfo(info: "status======" + acceptedDriverModel.tripData.status.toString());
+              switch (acceptedDriverModel.tripData.status) {
+                case 1:
+                  break;
+                case 2:
+                  Map<String, dynamic> map = {
+                    "trip_id": acceptedDriverModel.tripData.id,
+                  };
+                  reachedAtLoc(map);
+                  break;
+                case 3:
+                  Map<String, dynamic> map = {
+                    "trip_id": acceptedDriverModel.tripData.id,
+                  };
+                  dropAtLoc(map);
+                  break;
+                case 4:
+                  break;
+                case 5:
+                  Map<String, dynamic> map = {
+                    "trip_id": acceptedDriverModel.tripData.id,
+                  };
+                  pickedUp(map);
+                  break;
+                case 6:
+                  break;
+                case 7:
+                  break;
+              }
+              isLoading(false);
+            }
+            isLoading(false);
+          }
+        } else {
+          isLoading(false);
+          printError(info: value.response.toString());
+        }
+      });
+    }
   }
 
   getCurrentPosition() async {
@@ -180,63 +245,29 @@ class HomeController extends GetxController {
       required double sourceLongitude,
       required double destinationLatitude,
       required double destinationLongitude}) async {
-    isAddingMarkerAndPolyline(true);
-    polyLineCoordinates.clear();
-    isAddingMarkerAndPolyline(false);
-    isAddingMarkerAndPolyline(true);
-    var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
-        PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
-    printInfo(info: "result>>>-----    " + result.status.toString());
-    if (result.points.isNotEmpty) {
-      for (var pointLatLng in result.points) {
-        polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-      }
-
-      polyLine.add(Polyline(
-          polylineId: PolylineId(MarkerPolylineId.sourceToDesPolyline),
-          color: AllColors.blueColor,
-          width: 4,
-          points: polyLineCoordinates));
-    }
-    isAddingMarkerAndPolyline(false);
+    // isAddingMarkerAndPolyline(true);
+    // polyLineCoordinates.clear();
+    // isAddingMarkerAndPolyline(false);
+    // isAddingMarkerAndPolyline(true);
+    // var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
+    //     PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
+    // printInfo(info: "result>>>-----    " + result.status.toString());
+    // if (result.points.isNotEmpty) {
+    //   for (var pointLatLng in result.points) {
+    //     polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+    //   }
+    //
+    //   polyLine.add(Polyline(
+    //       polylineId: PolylineId(MarkerPolylineId.sourceToDesPolyline),
+    //       color: AllColors.blueColor,
+    //       width: 4,
+    //       points: polyLineCoordinates));
+    // }
+    // isAddingMarkerAndPolyline(false);
   }
 
   List<TaskModel> listofTasks = [];
-
-  setPolylineMyLocToUserSourceLoc() async {
-    isAddingMarkerAndPolyline(true);
-    printInfo(info: "llllllllll================="+listofTasks.length.toString());
-    for (int i = 0; i < listofTasks.length; i++) {
-      Polyline polyline;
-      if (listofTasks != null && listofTasks.isNotEmpty) {
-        for (var one in listofTasks) {
-          try {
-            // List<LatLng> polylineCoordinates = [];
-            // PolylinePoints polylinePoints = PolylinePoints();
-            polyLineCoordinates.clear();
-            var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
-                PointLatLng(one.slatitude, one.slongitude), PointLatLng(one.dlatitude, one.dlongitude));
-
-            if (result.points.isNotEmpty) {
-              for (var point in result.points) {
-                polyLineCoordinates.add(LatLng(point.latitude, point.longitude));
-              }
-            }
-
-            polyline = Polyline(
-                polylineId: PolylineId("poly" + i.toString()),
-                color: i == 0 ? AllColors.blueColor : AllColors.greenColor,
-                width: 4,
-                points: polyLineCoordinates);
-            polyLine.add(polyline);
-            isAddingMarkerAndPolyline(false);
-          } catch (e) {
-            print("Ex--- $e");
-          }
-        }
-      }
-    }
-  }
+  Map<PolylineId, Polyline> polylines = {};
 
   setMarker({required LatLng source, required LatLng destination}) async {
     // markers.clear();
@@ -381,19 +412,17 @@ class HomeController extends GetxController {
         getCurrentPosition();
 
         listofTasks = [
-          TaskModel("1", "one", latitude, longitude, destinationLatitude, destinationLongitude),
+          TaskModel("1", "one", latitude, longitude, sourceLatitude, sourceLongitude),
           TaskModel("2", "two", sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude)
         ];
-
+        printInfo(info: sourceLatitude.toString() + ',' + sourceLongitude.toString());
+        printInfo(info: latitude.toString() + ',' + longitude.toString());
         setMarker(
             source: LatLng(sourceLatitude, sourceLongitude),
             destination: LatLng(destinationLatitude, destinationLongitude));
-        printInfo(info: "len====" + listofTasks.length.toString());
-      //  setPolylineMyLocToUserSourceLoc();
-        setPolyline(  sourceLatitude: sourceLatitude,
-            sourceLongitude: sourceLongitude,
-            destinationLatitude: destinationLatitude,
-            destinationLongitude: destinationLongitude);
+
+        setPolylineMyLocToUserSourceLoc();
+
         startLiveTracking(
             id: AppConstants.userID,
             sourceLatitude: sourceLatitude,
@@ -409,6 +438,44 @@ class HomeController extends GetxController {
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
     }
+  }
+
+  setPolylineMyLocToUserSourceLoc() async {
+    isAddingMarkerAndPolyline(true);
+    if (listofTasks.isNotEmpty) {
+      printInfo(info: "l===========" + listofTasks.length.toString());
+      for (int i = 0; i < listofTasks.length; i++) {
+        try {
+          List<LatLng> polylineCoordinates = [];
+          PolylinePoints polylinePoints = PolylinePoints();
+          var result = await polylinePoints.getRouteBetweenCoordinates(
+              ApiKeys.mapApiKey,
+              PointLatLng(listofTasks[i].slatitude, listofTasks[i].slongitude),
+              PointLatLng(listofTasks[i].dlatitude, listofTasks[i].dlongitude));
+
+          if (result.points.isNotEmpty) {
+            for (var point in result.points) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            }
+          }
+          _addPolyLine(polylineCoordinates, i);
+          isAddingMarkerAndPolyline(false);
+        } catch (e) {
+          print("Ex--- $e");
+        }
+      }
+    }
+  }
+
+  _addPolyLine(List<LatLng> polylineCoordinates, int i) {
+    PolylineId id = PolylineId("poly${i.toString()}");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: i == 0 ? AllColors.blueColor : AllColors.greenColor,
+      points: polylineCoordinates,
+      width: 4,
+    );
+    polylines[id] = polyline;
   }
 
   RxBool isLoadingDriver = false.obs;
@@ -455,17 +522,33 @@ class HomeController extends GetxController {
     printInfo(info: "dropped ====" + map.toString());
     reconnectSocket();
     try {
+      leaveTrackingRoom(AppConstants.userID);
       _socket.emit(SocketEvents.completeRide, map);
 
       _socket.on(SocketEvents.sendCompleteRideResponse, (data) {
         printInfo(info: "dropRideData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
         acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap);
+        markers.clear();
+        polylines.clear();
+
         currentAppState(5);
         isLoadingDriver(false);
       });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
+    }
+  }
+
+  leaveTrackingRoom(String id) {
+    Map<String, dynamic> map = {};
+    map["driver_id"] = id;
+    reconnectSocket();
+    try {
+      _socket.emit("leaveRoom", map);
+      printInfo(info: "Left the room===========");
+    } on PlatformException catch (e) {
+      printError(info: e.toString());
     }
   }
 

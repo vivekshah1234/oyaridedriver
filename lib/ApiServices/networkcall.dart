@@ -72,17 +72,17 @@ _handleResponse(value, Function(ResponseAPI) callback) {
 }
 
 _handleError(value, Function(ResponseAPI) callback) {
-  if (!value.toString().contains("errno = 111")) {
-    callback.call(ResponseAPI(0, "No internet connection", isError: true, error: value.toString()));
-  } else {
-    debugPrint("error::::::::::::::");
-    callback.call(ResponseAPI(
-      0,
-      "Something went wrong",
-      isError: true,
-      error: value.toString(),
-    ));
-  }
+  // if (!value.toString().contains("errno = 111")) {
+  //   callback.call(ResponseAPI(0, "No internet connection", isError: true, error: value.toString()));
+  // } else {
+  //   debugPrint("error::::::::::::::");
+  //   callback.call(ResponseAPI(
+  //     0,
+  //     "Something went wrong",
+  //     isError: true,
+  //     error: value.toString(),
+  //   ));
+  //}
 }
 
 putAPI(String methodName, Map<String, dynamic> param, Function(ResponseAPI) callback) {
