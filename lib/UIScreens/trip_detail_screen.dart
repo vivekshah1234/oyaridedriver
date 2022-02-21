@@ -7,10 +7,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
+import 'package:oyaridedriver/Models/YourTripHistoryModel.dart';
 import 'package:timelines/timelines.dart';
 
 class TripDetailScreen extends StatefulWidget {
-  const TripDetailScreen({Key? key}) : super(key: key);
+  final HistoryTrip tripDetails;
+
+  const TripDetailScreen({required this.tripDetails});
 
   @override
   _TripDetailScreenState createState() => _TripDetailScreenState();
@@ -40,8 +43,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   getCurrentPosition() async {
     // Position position = await Geolocator.getCurrentPosition(
     //     desiredAccuracy: LocationAccuracy.high);
-    latitude = 22.6916;
-    longitude = 72.8634;
+    latitude = double.parse(widget.tripDetails.sourceLatitude);
+    longitude = double.parse(widget.tripDetails.sourceLongitude);
     _kGooglePlex = CameraPosition(
       target: LatLng(latitude, longitude),
       zoom: 14.4746,
@@ -53,7 +56,10 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
 
   setPolyline() async {
     var result = await _polylinePoints.getRouteBetweenCoordinates(
-        ApiKeys.mapApiKey, const PointLatLng(22.6916, 72.8634), const PointLatLng(23.0225, 72.5714));
+        ApiKeys.mapApiKey,
+        PointLatLng(double.parse(widget.tripDetails.sourceLatitude), double.parse(widget.tripDetails.sourceLongitude)),
+        PointLatLng(double.parse(widget.tripDetails.destinationLatitude),
+            double.parse(widget.tripDetails.destinationLongitude)));
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
@@ -98,11 +104,13 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "29 Sept,2021, 9:29 PM",
+                      widget.tripDetails.createdAt.substring(0, 10) +
+                          "," +
+                          widget.tripDetails.createdAt.substring(12, 19),
                       style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                     Text(
-                      "\$60",
+                      "\$${widget.tripDetails.price}",
                       style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                   ],
@@ -118,11 +126,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       style: TextStyle(
                           fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.greyColor),
                     ),
-                    Text(
-                      "Tip",
-                      style: TextStyle(
-                          fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.blueColor),
-                    ),
+
                   ],
                 ),
                 Padding(
@@ -148,7 +152,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                     //   const SizedBox(
                                     //     height: 3,
                                     //   ),
-                                    Text("Shri Santram Mandir Marg, Shanti Nagar, Nadiad, Gujarat 387001",
+                                    Text(widget.tripDetails.sourceAddress,
                                         style: TextStyle(
                                           fontSize: _smallFontSize,
                                           color: AllColors.greyColor,
@@ -183,7 +187,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                     // const SizedBox(
                                     //   height: 3,
                                     // ),
-                                    Text("Makarba, Ahmedabad, Gujarat 380051",
+                                    Text(widget.tripDetails.destinationAddress,
                                         style: TextStyle(
                                           fontSize: _smallFontSize,
                                           color: AllColors.greyColor,

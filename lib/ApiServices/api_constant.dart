@@ -14,6 +14,7 @@ class ApiConstant {
   static String changeActiveVehicle="/user/change-active-vehicle";
   static String editVehicle="/user/edit-vehicle";
   static String getTripDetails="/user/getLastTripDetailDriver";
+  static String geTripHistory="/user/getTripListDriver";
 }
 
 abstract class AppConstants {

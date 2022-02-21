@@ -108,6 +108,7 @@ class HomeController extends GetxController {
                     "trip_id": acceptedDriverModel.tripData.id,
                   };
                   dropAtLoc(map);
+
                   break;
                 case 4:
                   break;
@@ -126,6 +127,7 @@ class HomeController extends GetxController {
             }
             isLoading(false);
           }
+          isLoading(false);
         } else {
           isLoading(false);
           printError(info: value.response.toString());

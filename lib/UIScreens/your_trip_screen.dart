@@ -1,9 +1,9 @@
 import 'dart:collection';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:oyaridedriver/controllers/your_trip_history_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
@@ -31,46 +31,60 @@ class _YourTripScreenState extends State<YourTripScreen> {
   final FontWeight _largeFontWeight = FontWeight.w900;
   final FontWeight _mediumFontWeight = FontWeight.w600;
   final FontWeight _normalFontWeight = FontWeight.normal;
-  final GlobalKey<ScaffoldState> _scaffoldKey =  GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  YourTripController yourTripController = Get.put(YourTripController());
+
+  @override
+  void initState() {
+    yourTripController.getTripHistory();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBarWidget("Your Trip", _scaffoldKey),
-      drawer: DrawerScreen(),
-      body: Column(
-        children: [
-          calendarWidget(),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-              ),
-              padding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [totalJobs(), totalEarn()],
+      drawer: const DrawerScreen(),
+      body: GetX<YourTripController>(
+          init: YourTripController(),
+          builder: (YourTripController controller) {
+            if (controller.isLoading.value) {
+              return Center(child: greenLoadingWidget());
+            }
+            return Column(
+              children: [
+                calendarWidget(),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                    ),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [totalJobs(), totalEarn()],
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(child: tripListview(controller))
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(child: cartListview())
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+                )
+              ],
+            );
+          }),
     );
   }
 
   Widget totalJobs() {
     return Container(
-      decoration: BoxDecoration(
-          color: AllColors.blackColor, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
@@ -105,8 +119,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
 
   Widget totalEarn() {
     return Container(
-      decoration: BoxDecoration(
-          color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
       child: Row(
         children: [
@@ -143,14 +156,16 @@ class _YourTripScreenState extends State<YourTripScreen> {
     );
   }
 
-  Widget cartListview() {
+  Widget tripListview(YourTripController controller) {
     return ListView.builder(
-        itemCount: 3,
+        itemCount: controller.historyTripList.length,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              Get.to(() => const TripDetailScreen());
+              Get.to(() => TripDetailScreen(
+                    tripDetails: controller.historyTripList[index],
+                  ));
             },
             child: Container(
               decoration: BoxDecoration(
@@ -167,8 +182,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
               ),
               margin: const EdgeInsets.only(top: 10, bottom: 10),
               child: Container(
-                padding:
-                    const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -178,13 +192,13 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             textWidget(
-                                txt: "29 Sept 2021",
+                                txt: controller.historyTripList[index].createdAt.substring(0, 10),
                                 fontSize: ScreenUtil().setSp(_mediumFontSize),
                                 color: AllColors.blackColor,
                                 bold: _normalFontWeight,
                                 italic: false),
                             textWidget(
-                                txt: "\$60",
+                                txt: "\$${controller.historyTripList[index].price}",
                                 fontSize: ScreenUtil().setSp(_mediumFontSize),
                                 color: AllColors.blackColor,
                                 bold: _mediumFontWeight,
@@ -209,7 +223,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                     bold: _normalFontWeight,
                                     italic: false),
                                 textWidget(
-                                    txt: "Cash",
+                                    txt: controller.historyTripList[index].paymentMode.toUpperCase(),
                                     fontSize: ScreenUtil().setSp(_mediumFontSize),
                                     color: AllColors.blackColor,
                                     bold: _mediumFontWeight,
@@ -254,7 +268,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                         TimelineTile(
                           nodeAlign: TimelineNodeAlign.start,
                           contents: Container(
-                            padding:const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -268,7 +282,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                   height: 3,
                                 ),
                                 textWidget(
-                                    txt: "Medical Education Center",
+                                    txt: controller.historyTripList[index].sourceAddress,
                                     fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: _normalFontWeight,
@@ -303,7 +317,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                   height: 3,
                                 ),
                                 textWidget(
-                                    txt: "Barthingam Collage",
+                                    txt: controller.historyTripList[index].destinationAddress,
                                     fontSize: ScreenUtil().setSp(_smallFontSize),
                                     color: AllColors.greyColor,
                                     bold: _normalFontWeight,
@@ -337,14 +351,14 @@ class _YourTripScreenState extends State<YourTripScreen> {
       firstDay: kFirstDay,
       lastDay: kLastDay,
       focusedDay: _focusedDay,
-      daysOfWeekVisible: true,startingDayOfWeek:StartingDayOfWeek.sunday ,
-
+      daysOfWeekVisible: true,
+      startingDayOfWeek: StartingDayOfWeek.sunday,
       calendarFormat: _calendarFormat,
-      calendarBuilders: CalendarBuilders(
-        singleMarkerBuilder: (context, dateTime,_){
-          return Container(color: Colors.green,);
-        }
-      ),
+      calendarBuilders: CalendarBuilders(singleMarkerBuilder: (context, dateTime, _) {
+        return Container(
+          color: Colors.green,
+        );
+      }),
       selectedDayPredicate: (day) {
         // Use `selectedDayPredicate` to determine which day is currently selected.
         // If this returns true, then `day` will be marked as selected.
@@ -362,7 +376,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
           });
         }
       },
-          onPageChanged: (focusedDay) {
+      onPageChanged: (focusedDay) {
         // No need to call `setState()` here
         _focusedDay = focusedDay;
       },
@@ -406,8 +420,8 @@ final kEvents = LinkedHashMap<DateTime, List<Event>>(
 
 final _kEventSource = {
   for (var item in List.generate(50, (index) => index))
-    DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5): List.generate(
-        item % 4 + 1, (index) => Event('Event $item | ${index + 1}'))
+    DateTime.utc(kFirstDay.year, kFirstDay.month, item * 5):
+        List.generate(item % 4 + 1, (index) => Event('Event $item | ${index + 1}'))
 }..addAll({
     kToday: [
       const Event('Today\'s Event 1'),
@@ -467,8 +481,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
     super.dispose();
   }
 
-  bool get canClearSelection =>
-      _selectedDays.isNotEmpty || _rangeStart != null || _rangeEnd != null;
+  bool get canClearSelection => _selectedDays.isNotEmpty || _rangeStart != null || _rangeEnd != null;
 
   List<Event> _getEventsForDay(DateTime day) {
     return kEvents[day] ?? [];
@@ -524,7 +537,7 @@ class _TableComplexExampleState extends State<TableComplexExample> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('TableCalendar - Complex'),
+        title: const Text('TableCalendar - Complex'),
       ),
       body: Column(
         children: [
@@ -547,13 +560,13 @@ class _TableComplexExampleState extends State<TableComplexExample> {
                 },
                 onLeftArrowTap: () {
                   _pageController.previousPage(
-                    duration:const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOut,
                   );
                 },
                 onRightArrowTap: () {
                   _pageController.nextPage(
-                    duration:const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOut,
                   );
                 },
@@ -653,23 +666,23 @@ class _CalendarHeader extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon:const Icon(Icons.calendar_today, size: 20.0),
+            icon: const Icon(Icons.calendar_today, size: 20.0),
             visualDensity: VisualDensity.compact,
             onPressed: onTodayButtonTap,
           ),
           if (clearButtonVisible)
             IconButton(
-              icon:const Icon(Icons.clear, size: 20.0),
+              icon: const Icon(Icons.clear, size: 20.0),
               visualDensity: VisualDensity.compact,
               onPressed: onClearButtonTap,
             ),
           const Spacer(),
           IconButton(
-            icon:const Icon(Icons.chevron_left),
+            icon: const Icon(Icons.chevron_left),
             onPressed: onLeftArrowTap,
           ),
           IconButton(
-            icon:const Icon(Icons.chevron_right),
+            icon: const Icon(Icons.chevron_right),
             onPressed: onRightArrowTap,
           ),
         ],
