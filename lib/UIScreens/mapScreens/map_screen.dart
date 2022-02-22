@@ -28,6 +28,7 @@ import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
+import '../notification_screen.dart';
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -102,6 +103,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       GestureDetector(
                         onTap: () {
                           notificationCounterValueNotifier.value = 0;
+                          Get.to(()=> const NotificationScreen());
                           setState(() {});
                         },
                         child: ValueListenableBuilder(
@@ -442,112 +444,6 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     );
   }
 
-  Widget userCart3({name, kilometer, price}) {
-    return Column(
-      children: [
-        Container(
-          color: Colors.grey.shade50,
-          padding: const EdgeInsets.only(left: 7, right: 7, top: 7, bottom: 7),
-          margin: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(imgUrl),
-                    radius: 35,
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  textWidget(
-                      txt: name, bold: FontWeight.w800, fontSize: 18, italic: false, color: AllColors.blackColor),
-                ],
-              ),
-              Column(
-                children: [
-                  textWidget(
-                      txt: "\$${price}",
-                      fontSize: 17,
-                      color: AllColors.blackColor,
-                      bold: FontWeight.w800,
-                      italic: false),
-                  textWidget(
-                      txt: "${kilometer} km",
-                      fontSize: 15,
-                      color: AllColors.greyColor,
-                      bold: FontWeight.normal,
-                      italic: false),
-                ],
-              )
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                textWidget(
-                    txt: "Booking ID", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
-                textWidget(
-                    txt: "#TXN67876", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
-              ],
-            ).putPadding(0, 0, 10, 10),
-            const SizedBox(
-              height: 12,
-            ),
-            const Divider(
-              height: 2,
-              color: AllColors.greyColor,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                textWidget(
-                    txt: "Total", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
-                textWidget(
-                    txt: "\$${price}", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
-              ],
-            ).putPadding(0, 0, 10, 10),
-            const SizedBox(
-              height: 12,
-            ),
-            const Divider(
-              height: 2,
-              color: AllColors.greyColor,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                textWidget(
-                    txt: "Payment", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
-                textWidget(txt: "Cash", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
-              ],
-            ).putPadding(0, 0, 10, 10),
-            const SizedBox(
-              height: 12,
-            ),
-            const Divider(
-              height: 2,
-              color: AllColors.greyColor,
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-          ],
-        ).putPadding(10, 10, 10, 10),
-        AppButton(onPressed: () {}, text: "CONFIRM Payment", color: AllColors.greenColor)
-      ],
-    );
-  }
 
   @override
   void onClick(RemoteMessage notification) {

@@ -21,7 +21,7 @@ class TripDetailScreen extends StatefulWidget {
 
 class _TripDetailScreenState extends State<TripDetailScreen> {
   final Completer<GoogleMapController> _controller = Completer();
-  late double latitude, longitude;
+  late double sourceLatitude, sourceLongitude,destinationLatitude, destinationLongitude;
   late CameraPosition _kGooglePlex;
   final List<LatLng> _polylineCoordinates = [];
   bool _isLoading = true;
@@ -43,12 +43,24 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   getCurrentPosition() async {
     // Position position = await Geolocator.getCurrentPosition(
     //     desiredAccuracy: LocationAccuracy.high);
-    latitude = double.parse(widget.tripDetails.sourceLatitude);
-    longitude = double.parse(widget.tripDetails.sourceLongitude);
+    sourceLatitude = double.parse(widget.tripDetails.sourceLatitude);
+    sourceLongitude = double.parse(widget.tripDetails.sourceLongitude);
+    destinationLatitude=double.parse(widget.tripDetails.destinationLatitude);
+    destinationLongitude=double.parse(widget.tripDetails.destinationLongitude);
     _kGooglePlex = CameraPosition(
-      target: LatLng(latitude, longitude),
+      target: LatLng(sourceLatitude, sourceLongitude),
       zoom: 14.4746,
     );
+   //.  final GoogleMapController controller = await _controller.future;
+   // await updateCameraLocation(LatLng(sourceLatitude, sourceLongitude), LatLng(destinationLatitude, destinationLongitude), controller);
+    _markers.add(Marker(markerId: const MarkerId("source"),
+
+        position: LatLng(sourceLatitude,sourceLongitude),
+        icon: BitmapDescriptor.defaultMarkerWithHue(129)));
+    _markers.add(Marker(markerId: const MarkerId("destination"),
+
+        position: LatLng(destinationLatitude,destinationLongitude),
+        icon: BitmapDescriptor.defaultMarker));
 
     _isLoading = false;
     setState(() {});
@@ -57,9 +69,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   setPolyline() async {
     var result = await _polylinePoints.getRouteBetweenCoordinates(
         ApiKeys.mapApiKey,
-        PointLatLng(double.parse(widget.tripDetails.sourceLatitude), double.parse(widget.tripDetails.sourceLongitude)),
-        PointLatLng(double.parse(widget.tripDetails.destinationLatitude),
-            double.parse(widget.tripDetails.destinationLongitude)));
+        PointLatLng(sourceLatitude, sourceLongitude),
+        PointLatLng(destinationLatitude,
+           destinationLongitude));
 
     if (result.points.isNotEmpty) {
       for (var point in result.points) {
@@ -126,7 +138,6 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       style: TextStyle(
                           fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.greyColor),
                     ),
-
                   ],
                 ),
                 Padding(
@@ -230,7 +241,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Charan rated you",
+                      "${widget.tripDetails.userDetail.firstName} rated you",
                       style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                     ),
                     RatingBar.builder(
@@ -257,5 +268,43 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
         ],
       ),
     );
+  }
+  Future<void> updateCameraLocation(
+      LatLng source,
+      LatLng destination,
+      GoogleMapController mapController,
+      ) async {
+    if (mapController == null) return;
+
+    LatLngBounds bounds;
+
+    if (source.latitude > destination.latitude &&
+        source.longitude > destination.longitude) {
+      bounds = LatLngBounds(southwest: destination, northeast: source);
+    } else if (source.longitude > destination.longitude) {
+      bounds = LatLngBounds(
+          southwest: LatLng(source.latitude, destination.longitude),
+          northeast: LatLng(destination.latitude, source.longitude));
+    } else if (source.latitude > destination.latitude) {
+      bounds = LatLngBounds(
+          southwest: LatLng(destination.latitude, source.longitude),
+          northeast: LatLng(source.latitude, destination.longitude));
+    } else {
+      bounds = LatLngBounds(southwest: source, northeast: destination);
+    }
+
+    CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 70);
+
+    return checkCameraLocation(cameraUpdate, mapController);
+  }
+  Future<void> checkCameraLocation(
+      CameraUpdate cameraUpdate, GoogleMapController mapController) async {
+    mapController.animateCamera(cameraUpdate);
+    LatLngBounds l1 = await mapController.getVisibleRegion();
+    LatLngBounds l2 = await mapController.getVisibleRegion();
+
+    if (l1.southwest.latitude == -90 || l2.southwest.latitude == -90) {
+      return checkCameraLocation(cameraUpdate, mapController);
+    }
   }
 }

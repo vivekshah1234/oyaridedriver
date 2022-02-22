@@ -38,7 +38,7 @@ class HomeController extends GetxController {
 
   final List<SwipeItem> swipeItems = <SwipeItem>[];
   late MatchEngine matchEngine;
-  List<Map<String, dynamic>> dataList = [];
+
   RxBool isAddingData = false.obs;
   RxList<RequestModel> requestList = <RequestModel>[].obs;
   RxInt currentAppState = 0.obs;
@@ -56,7 +56,7 @@ class HomeController extends GetxController {
   //Set<Polyline> polyLine = <Polyline>{};
 
   List<LatLng> polyLineCoordinates = <LatLng>[];
-  late PolylinePoints polylinePoints;
+
   StreamSubscription<LocationData>? locationSubscription;
 
   Location locationTracker = Location();
@@ -64,11 +64,14 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    allInitMehtods();
+    super.onInit();
+  }
+
+  allInitMehtods() {
     getCurrentPosition();
-    polylinePoints = PolylinePoints();
     init(requestList);
     getBackgroundDetails();
-    super.onInit();
   }
 
   getBackgroundDetails() async {
@@ -89,7 +92,7 @@ class HomeController extends GetxController {
         if (value.code == 200) {
           //printInfo(info:"acceptedDriverModel====="+ value.response.toString());
           Map<String, dynamic> valueMap = json.decode(value.response);
-          if (valueMap["data"] == null) {
+          if (valueMap["data"] != null) {
             acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap["data"]);
             printInfo(info: "acceptedDriverModel=====" + acceptedDriverModel.toString());
             if (valueMap["status"] == 200) {
@@ -181,17 +184,19 @@ class HomeController extends GetxController {
   }
 
   void updateMarkerAndCircle(var newLocalData, Uint8List imageData) {
-    LatLng latLng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+    if (newLocalData != null) {
+      LatLng latLng = LatLng(newLocalData.sourceLatitude!, newLocalData.sourceLongitude!);
 
-    markers.add(Marker(
-        markerId: MarkerId(MarkerPolylineId.myLocationMarker),
-        position: latLng,
-        rotation: newLocalData.heading!,
-        draggable: false,
-        zIndex: 2,
-        flat: true,
-        anchor: const Offset(0.5, 0.5),
-        icon: BitmapDescriptor.fromBytes(imageData)));
+      markers.add(Marker(
+          markerId: MarkerId(MarkerPolylineId.myLocationMarker),
+          position: latLng,
+          rotation: newLocalData.heading!,
+          draggable: false,
+          zIndex: 2,
+          flat: true,
+          anchor: const Offset(0.5, 0.5),
+          icon: BitmapDescriptor.fromBytes(imageData)));
+    }
   }
 
   RxBool cameraAnimate = false.obs;
@@ -217,21 +222,23 @@ class HomeController extends GetxController {
         locationSubscription?.cancel();
 
         locationSubscription = null;
-      }).listen((newLocalData) async {
-        cameraAnimate(true);
-        printInfo(
-            info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
-        map["latitude"] = newLocalData.latitude;
-        map["longitude"] = newLocalData.longitude;
-        map["heading"] = newLocalData.heading;
-        map["driver_id"] = id;
-        map["distance"] = distance.toString();
-        _socket.emit('updateLocation', map);
-        lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-        lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-        updateMarkerAndCircle(newLocalData, imageData!);
-        cameraAnimate(false);
-        // }
+      }).listen((LocationData newLocalData) async {
+        if (newLocalData.latitude != null) {
+          cameraAnimate(true);
+          printInfo(
+              info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
+          map["latitude"] = newLocalData.latitude;
+          map["longitude"] = newLocalData.longitude;
+          map["heading"] = newLocalData.heading;
+          map["driver_id"] = id;
+          map["distance"] = distance.toString();
+          _socket.emit('updateLocation', map);
+          lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+          lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+          updateMarkerAndCircle(newLocalData, imageData!);
+          cameraAnimate(false);
+          // }
+        }
       });
       isLoadingDriver(false);
     } on PlatformException catch (e) {
@@ -240,32 +247,6 @@ class HomeController extends GetxController {
       }
       isLoadingDriver(false);
     }
-  }
-
-  setPolyline(
-      {required double sourceLatitude,
-      required double sourceLongitude,
-      required double destinationLatitude,
-      required double destinationLongitude}) async {
-    // isAddingMarkerAndPolyline(true);
-    // polyLineCoordinates.clear();
-    // isAddingMarkerAndPolyline(false);
-    // isAddingMarkerAndPolyline(true);
-    // var result = await polylinePoints.getRouteBetweenCoordinates(ApiKeys.mapApiKey,
-    //     PointLatLng(sourceLatitude, sourceLongitude), PointLatLng(destinationLatitude, destinationLongitude));
-    // printInfo(info: "result>>>-----    " + result.status.toString());
-    // if (result.points.isNotEmpty) {
-    //   for (var pointLatLng in result.points) {
-    //     polyLineCoordinates.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
-    //   }
-    //
-    //   polyLine.add(Polyline(
-    //       polylineId: PolylineId(MarkerPolylineId.sourceToDesPolyline),
-    //       color: AllColors.blueColor,
-    //       width: 4,
-    //       points: polyLineCoordinates));
-    // }
-    // isAddingMarkerAndPolyline(false);
   }
 
   List<TaskModel> listofTasks = [];
@@ -372,17 +353,19 @@ class HomeController extends GetxController {
   fetchRequests() {
     reconnectSocket();
     _socket.on(SocketEvents.sendRequest, (data) {
-      printInfo(info: "getData===" + data.toString());
-      Map<String, dynamic> valueMap = json.decode(data);
-      RequestModel requestModel = RequestModel.fromJson(valueMap);
-      requestList.add(requestModel);
-      init(requestList);
-      currentAppState(1);
-      printInfo(info: "len===========" + requestList.length.toString());
-      printInfo(info: "swipeItems===========" + swipeItems.isNotEmpty.toString());
-      if (swipeItems.isNotEmpty) {
-        printInfo(info: "inside===");
-        isAddingData(false);
+      if (data != null) {
+        printInfo(info: "getData===" + data.toString());
+        Map<String, dynamic> valueMap = json.decode(data);
+        RequestModel requestModel = RequestModel.fromJson(valueMap);
+        requestList.add(requestModel);
+        init(requestList);
+        currentAppState(1);
+        printInfo(info: "len===========" + requestList.length.toString());
+        printInfo(info: "swipeItems===========" + swipeItems.isNotEmpty.toString());
+        if (swipeItems.isNotEmpty) {
+          //   printInfo(info: "inside===");
+          isAddingData(false);
+        }
       }
       // return streamSocket.addResponse;
     });
@@ -401,6 +384,7 @@ class HomeController extends GetxController {
     AppConstants.userOnline = false;
     try {
       _socket.emit(SocketEvents.acceptRequest, map);
+      allDataClear();
       _socket.on(SocketEvents.sendAcceptReqResponse, (data) {
         printInfo(info: "getAcceptedData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
@@ -431,11 +415,6 @@ class HomeController extends GetxController {
             sourceLongitude: sourceLongitude,
             destinationLatitude: destinationLatitude,
             destinationLongitude: destinationLongitude);
-        // setPolylineMyLocToUserSourceLoc(
-        //     sourceLatitude: sourceLatitude,
-        //     sourceLongitude: sourceLongitude,
-        //     destinationLatitude: destinationLatitude,
-        //     destinationLongitude: destinationLongitude);
       });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -533,7 +512,8 @@ class HomeController extends GetxController {
         acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap);
         markers.clear();
         polylines.clear();
-
+        locationSubscription?.cancel();
+        locationSubscription = null;
         currentAppState(5);
         isLoadingDriver(false);
       });
@@ -560,6 +540,7 @@ class HomeController extends GetxController {
     reconnectSocket();
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);
+      allInitMehtods();
       currentAppState(0);
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -622,9 +603,9 @@ class HomeController extends GetxController {
             acceptRequest(map);
           },
           nopeAction: () {
-            printInfo(info: "nope");
-            printInfo(info: "i=====" + i.toString());
-            printInfo(info: "swipeItems====" + swipeItems.length.toString());
+            // printInfo(info: "nope");
+            // printInfo(info: "i=====" + i.toString());
+            // printInfo(info: "swipeItems====" + swipeItems.length.toString());
             if (i == requestList.length - 1) {
               allDataClear();
             }
