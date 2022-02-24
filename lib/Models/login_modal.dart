@@ -1,3 +1,4 @@
+import 'package:oyaridedriver/Models/sign_up_model.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
 
 class LoginModel {

@@ -53,6 +53,16 @@ class _YourTripScreenState extends State<YourTripScreen> {
             if (controller.isLoading.value) {
               return Center(child: greenLoadingWidget());
             }
+            if( controller.historyTripList.isEmpty){
+              return  Center(
+                child: textWidget(
+                    txt: "You do not have any trip history.",
+                    fontSize: ScreenUtil().setSp(_largeFontSize),
+                    color: AllColors.blueColor,
+                    bold: FontWeight.normal,
+                    italic: false),
+              );
+            }
             return Column(
               children: [
                 calendarWidget(),

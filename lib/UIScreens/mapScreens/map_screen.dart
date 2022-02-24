@@ -29,6 +29,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -103,7 +104,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       GestureDetector(
                         onTap: () {
                           notificationCounterValueNotifier.value = 0;
-                          Get.to(()=> const NotificationScreen());
+                          Get.to(() => const NotificationScreen());
                           setState(() {});
                         },
                         child: ValueListenableBuilder(
@@ -133,11 +134,11 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       !AppConstants.userOnline
                           ? GestureDetector(
                               onTap: () {
-                                if(controller.currentAppState.value==0){
-                                Map<String, String> map = {};
-                                map["is_available"] = "1";
-                                _homeController.changeUserStatus(map);
-                                }else{
+                                if (controller.currentAppState.value == 0) {
+                                  Map<String, String> map = {};
+                                  map["is_available"] = "1";
+                                  _homeController.changeUserStatus(map);
+                                } else {
                                   toast("You can not be online while you are already on a ride.");
                                 }
                               },
@@ -280,7 +281,6 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                       ));
                                                 },
                                                 onStackFinished: () {
-
                                                   // controller.polyLine.clear();
                                                   controller.markers.clear();
 
@@ -288,57 +288,51 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                 },
                                               ),
                                             )
-                                          : Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              decoration: BoxDecoration(
-                                                color: AllColors.whiteColor,
-                                                borderRadius: const BorderRadius.only(
-                                                  topRight: Radius.circular(40),
-                                                  topLeft: Radius.circular(40),
+                                          : Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    UrlLauncher.launch("tel://112");
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: AllColors.blueColor,
+                                                        borderRadius: BorderRadius.circular(15)),
+                                                    padding:
+                                                        const EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
+                                                    margin: const EdgeInsets.only(left: 15),
+                                                    child: textWidget(
+                                                        txt: "CALL SOS",
+                                                        fontSize: 15,
+                                                        color: AllColors.redColor,
+                                                        bold: FontWeight.w600,
+                                                        italic: false),
+                                                  ),
                                                 ),
-                                                boxShadow: [boxShadow()],
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  controller.currentAppState.value == 2 &&
-                                                          !controller.isLoadingDriver.value
-                                                      ? RiderDetails(
-                                                          name: controller.acceptedDriverModel.userData.firstName +
-                                                              " " +
-                                                              controller.acceptedDriverModel.userData.lastName,
-                                                          profilePic:
-                                                              controller.acceptedDriverModel.userData.profilePic,
-                                                          callButton: () {
-                                                            String number = controller
-                                                                    .acceptedDriverModel.userData.countryCode +
-                                                                controller.acceptedDriverModel.userData.mobileNumber;
-                                                            url_launcher.launch("tel://$number");
-                                                          },
-                                                          chatTap: () {
-                                                            Get.to(() => ChatPage(
-                                                                  peerId: controller.acceptedDriverModel.userData.id
-                                                                      .toString()
-                                                                      .toString(),
-                                                                ));
-                                                          },
-                                                          cancelTap: () {},
-                                                          arrivedTap: () {
-                                                            Map<String, dynamic> map = {
-                                                              "trip_id":
-                                                                  controller.acceptedDriverModel.tripData.id.toString(),
-                                                            };
-                                                            _homeController.reachedAtLoc(map);
-                                                          },
-                                                        )
-                                                      : controller.currentAppState.value == 3 &&
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  decoration: BoxDecoration(
+                                                    color: AllColors.whiteColor,
+                                                    borderRadius: const BorderRadius.only(
+                                                      topRight: Radius.circular(40),
+                                                      topLeft: Radius.circular(40),
+                                                    ),
+                                                    boxShadow: [boxShadow()],
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      controller.currentAppState.value == 2 &&
                                                               !controller.isLoadingDriver.value
-                                                          ? ReachedAtLoc(
+                                                          ? RiderDetails(
                                                               name: controller.acceptedDriverModel.userData.firstName +
                                                                   " " +
                                                                   controller.acceptedDriverModel.userData.lastName,
                                                               profilePic:
                                                                   controller.acceptedDriverModel.userData.profilePic,
-                                                              chatTap: () {},
                                                               callButton: () {
                                                                 String number = controller
                                                                         .acceptedDriverModel.userData.countryCode +
@@ -346,68 +340,122 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                                         .acceptedDriverModel.userData.mobileNumber;
                                                                 url_launcher.launch("tel://$number");
                                                               },
-                                                              cancelTap: () {},
-                                                              pickedTap: () {
+                                                              chatTap: () {
+                                                                Get.to(() => ChatPage(
+                                                                      peerId: controller.acceptedDriverModel.userData.id
+                                                                          .toString()
+                                                                          .toString(),
+                                                                    ));
+                                                              },
+                                                              cancelTap: () {
+                                                                Map<String, String> map = {
+                                                                  "trip_id": controller.acceptedDriverModel.tripData.id
+                                                                      .toString(),
+                                                                  "user_id": controller.acceptedDriverModel.userData.id.toString()
+                                                                };
+                                                                _homeController.cancelRider(map);
+                                                              },
+                                                              arrivedTap: () {
                                                                 Map<String, dynamic> map = {
                                                                   "trip_id": controller.acceptedDriverModel.tripData.id
                                                                       .toString(),
                                                                 };
-                                                                _homeController.pickedUp(map);
+                                                                _homeController.reachedAtLoc(map);
                                                               },
                                                             )
-                                                          : controller.currentAppState.value == 4 &&
+                                                          : controller.currentAppState.value == 3 &&
                                                                   !controller.isLoadingDriver.value
-                                                              ? WhileTravelingCart(
+                                                              ? ReachedAtLoc(
                                                                   name: controller
                                                                           .acceptedDriverModel.userData.firstName +
                                                                       " " +
                                                                       controller.acceptedDriverModel.userData.lastName,
                                                                   profilePic: controller
                                                                       .acceptedDriverModel.userData.profilePic,
-                                                                  dropTap: () {
+                                                                  chatTap: () {},
+                                                                  callButton: () {
+                                                                    String number = controller
+                                                                            .acceptedDriverModel.userData.countryCode +
+                                                                        controller
+                                                                            .acceptedDriverModel.userData.mobileNumber;
+                                                                    url_launcher.launch("tel://$number");
+                                                                  },
+                                                                  cancelTap: () {
+                                                                    Map<String, String> map = {
+                                                                      "trip_id": controller.acceptedDriverModel.tripData.id
+                                                                          .toString(),
+                                                                      "user_id": controller.acceptedDriverModel.userData.id.toString()
+                                                                    };
+                                                                    _homeController.cancelRider(map);
+                                                                  },
+                                                                  pickedTap: () {
                                                                     Map<String, dynamic> map = {
                                                                       "trip_id": controller
                                                                           .acceptedDriverModel.tripData.id
                                                                           .toString(),
                                                                     };
-                                                                    _homeController.dropAtLoc(map);
+                                                                    _homeController.pickedUp(map);
                                                                   },
                                                                 )
-                                                              : controller.currentAppState.value == 5 &&
+                                                              : controller.currentAppState.value == 4 &&
                                                                       !controller.isLoadingDriver.value
-                                                                  ? CompleteRide(
+                                                                  ? WhileTravelingCart(
                                                                       name: controller
                                                                               .acceptedDriverModel.userData.firstName +
                                                                           " " +
                                                                           controller
                                                                               .acceptedDriverModel.userData.lastName,
-                                                                      price:
-                                                                          controller.acceptedDriverModel.tripData.price,
-                                                                      bookingId: controller
-                                                                          .acceptedDriverModel.tripData.bookingId
-                                                                          .toString(),
-                                                                      paymentType: controller
-                                                                          .acceptedDriverModel.userData.paymentType,
-                                                                      kilometer: controller
-                                                                          .acceptedDriverModel.tripData.kilometer
-                                                                          .toString(),
-                                                                      confirmPayment: () {
+                                                                      profilePic: controller
+                                                                          .acceptedDriverModel.userData.profilePic,
+                                                                      dropTap: () {
                                                                         Map<String, dynamic> map = {
                                                                           "trip_id": controller
                                                                               .acceptedDriverModel.tripData.id
                                                                               .toString(),
-                                                                          "payment_status": "1"
                                                                         };
-                                                                        _homeController.confirmPayment(map);
-                                                                        // animatedGif();
+                                                                        _homeController.dropAtLoc(map);
                                                                       },
                                                                     )
-                                                                  : Container(),
-                                                  controller.isLoadingDriver.value
-                                                      ? const FetchingTheRequests("Loading.....")
-                                                      : Container()
-                                                ],
-                                              ),
+                                                                  : controller.currentAppState.value == 5 &&
+                                                                          !controller.isLoadingDriver.value
+                                                                      ? CompleteRide(
+                                                                          name: controller.acceptedDriverModel.userData
+                                                                                  .firstName +
+                                                                              " " +
+                                                                              controller.acceptedDriverModel.userData
+                                                                                  .lastName,
+                                                                          profilePic: controller
+                                                                              .acceptedDriverModel.userData.profilePic,
+                                                                          price: controller
+                                                                              .acceptedDriverModel.tripData.price,
+                                                                          bookingId: controller
+                                                                              .acceptedDriverModel.tripData.bookingId
+                                                                              .toString(),
+                                                                          paymentType: controller
+                                                                              .acceptedDriverModel.userData.paymentType,
+                                                                          kilometer: controller
+                                                                              .acceptedDriverModel.tripData.kilometer
+                                                                              .toString(),
+                                                                          confirmPayment: () {
+                                                                            Map<String, dynamic> map = {
+                                                                              "trip_id": controller
+                                                                                  .acceptedDriverModel.tripData.id
+                                                                                  .toString(),
+                                                                              "payment_status": "1"
+                                                                            };
+                                                                            _homeController.confirmPayment(map);
+                                                                            animatedGif();
+                                                                            // animatedGif();
+                                                                          },
+                                                                        )
+                                                                      : Container(),
+                                                      controller.isLoadingDriver.value
+                                                          ? const FetchingTheRequests("Loading.....")
+                                                          : Container()
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                     ))
                     ],
@@ -436,7 +484,27 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return const AnimationComplete().alertCard(context);
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(
+              ImageAssets.animatedGif,
+            ),
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Congrats ${AppConstants.fullName},you have successfully completed your ride.",
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    style: TextStyle(color: AllColors.greenColor, fontSize: 18, fontWeight: FontWeight.w800),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ).alertCard2(context);
       },
       animationType: DialogTransitionType.slideFromBottomFade,
       curve: Curves.fastOutSlowIn,
@@ -444,46 +512,18 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     );
   }
 
-
   @override
   void onClick(RemoteMessage notification) {
     // TODO: implement onClick
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       //do your stuff
       _homeController.connectToSocket(isFromNotification: false);
+      final GoogleMapController controller = await _homeController.mapController.future;
+      _homeController.onMapCreated(controller);
     }
-  }
-}
-
-class AnimationComplete extends StatelessWidget {
-  const AnimationComplete({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Image.asset(
-          ImageAssets.animatedGif,
-        ),
-        Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                "Congrats ${AppConstants.fullName},you have successfully completed your ride.",
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                style: TextStyle(color: AllColors.greenColor, fontSize: 18, fontWeight: FontWeight.w800),
-              ),
-            ],
-          ),
-        )
-      ],
-    );
   }
 }

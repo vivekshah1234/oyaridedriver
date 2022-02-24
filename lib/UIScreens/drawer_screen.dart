@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'document_management_screen.dart';
 import 'authScreens/login_screen.dart';
+import 'driver_payment_list_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({Key? key}) : super(key: key);
@@ -25,23 +26,22 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
- final List<DrawerItems> _drawerList = [
+  final List<DrawerItems> _drawerList = [
     DrawerItems(
         0,
         ImageAssets.paymentIcon,
         "Home",
-        MapHomeScreen(
+        const MapHomeScreen(
           isFromNotification: false,
         )),
-    DrawerItems(1, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
-    DrawerItems(2, ImageAssets.yourTripeIcon, "Vehicle Management",const VehicleManagementScreen()),
-    DrawerItems(3, ImageAssets.yourTripeIcon, "Document Management",const DocumentManagementScreen(true)),
-    DrawerItems(4, ImageAssets.chatIcon, "Message",const ChatListScreen()),
-    DrawerItems(5, ImageAssets.settingIcon, "Settings",const SettingScreen()),
-    DrawerItems(6, ImageAssets.logoutIcon, "Logout", Container()),
+    DrawerItems(1, ImageAssets.phoneIcon, "Payment", const DriverPaymentListScreen()),
+    DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
+    DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management", const VehicleManagementScreen()),
+    DrawerItems(4, ImageAssets.yourTripeIcon, "Document Management", const DocumentManagementScreen(true)),
+    DrawerItems(5, ImageAssets.chatIcon, "Message", const ChatListScreen()),
+    DrawerItems(6, ImageAssets.settingIcon, "Settings", const SettingScreen()),
+    DrawerItems(7, ImageAssets.logoutIcon, "Logout", Container()),
   ];
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
     return Container(
       decoration: BoxDecoration(
           color: AllColors.greenColor,
-          borderRadius:const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25))),
       child: ListView.builder(
           itemCount: _drawerList.length,
           itemBuilder: (context, index) {
@@ -99,18 +99,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
               //minVerticalPadding: 10,
               title: Text(
                 _drawerList[index].name,
-                style:const TextStyle(color: AllColors.whiteColor, fontSize: 16, fontWeight: FontWeight.w700),
+                style: const TextStyle(color: AllColors.whiteColor, fontSize: 16, fontWeight: FontWeight.w700),
               ),
               leading: Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: Image.asset(
                   _drawerList[index].iconData,
                   color: AllColors.whiteColor,
-                  scale: 5,
+                  scale: _drawerList[index].id ==1?7:5,
                 ),
               ),
               onTap: () {
-                if (_drawerList[index].id < 6) {
+                if (_drawerList[index].id < 7) {
                   Get.offAll(() => _drawerList[index].screen);
                 } else {
                   logoutDialog();
@@ -160,7 +160,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
       duration: const Duration(milliseconds: 500),
     );
   }
-
 }
 
 destroyData() {

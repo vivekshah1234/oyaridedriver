@@ -15,7 +15,7 @@ class ApiConstant {
   static String editVehicle="/user/edit-vehicle";
   static String getTripDetails="/user/getLastTripDetailDriver";
   static String geTripHistory="/user/getTripListDriver";
-  static String getNotificationList="user/getNotificationList";
+  static String getNotificationList="/user/getNotificationList";
 }
 
 abstract class AppConstants {
@@ -56,5 +56,5 @@ abstract class SocketEvents{
   static String sendCompleteRideResponse="sendCompleteRideResponse";
   static String startRideDetails="startRideDetails";
   static String paymentVerifyDriver="paymentVerifyDriver";
-
+  static String cancelRideByBoth="cancelRideByBoth";
 }

@@ -64,11 +64,11 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    allInitMehtods();
+    allInitMethods();
     super.onInit();
   }
 
-  allInitMehtods() {
+  allInitMethods() {
     getCurrentPosition();
     init(requestList);
     getBackgroundDetails();
@@ -138,7 +138,9 @@ class HomeController extends GetxController {
       });
     }
   }
-
+  void onMapCreated(GoogleMapController controller) {
+    mapController.complete(controller);
+  }
   getCurrentPosition() async {
     isLoadingMap(true);
     Position position = await determinePosition();
@@ -158,7 +160,6 @@ class HomeController extends GetxController {
     locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
       locationSubscription?.cancel();
-
       locationSubscription = null;
     }).listen((newLocalData) async {
       map["latitude"] = newLocalData.latitude;
@@ -166,11 +167,12 @@ class HomeController extends GetxController {
       map["userId"] = AppConstants.userID;
       updateLocation2(map);
     });
+
     addMyMarker(latitude, longitude, position.heading);
   }
 
   addMyMarker(double latitude, double longitude, double heading) async {
-    Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
+    Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
     markers.add(Marker(
         markerId: MarkerId(MarkerPolylineId.myLocationMarker),
         position: LatLng(latitude, longitude),
@@ -183,20 +185,18 @@ class HomeController extends GetxController {
     isLoadingMap(false);
   }
 
-  void updateMarkerAndCircle(var newLocalData, Uint8List imageData) {
-    if (newLocalData != null) {
-      LatLng latLng = LatLng(newLocalData.sourceLatitude!, newLocalData.sourceLongitude!);
+  void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
+    LatLng latLng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
 
-      markers.add(Marker(
-          markerId: MarkerId(MarkerPolylineId.myLocationMarker),
-          position: latLng,
-          rotation: newLocalData.heading!,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: const Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData)));
-    }
+    markers.add(Marker(
+        markerId: MarkerId(MarkerPolylineId.myLocationMarker),
+        position: latLng,
+        rotation: newLocalData.heading!,
+        draggable: false,
+        zIndex: 2,
+        flat: true,
+        anchor: const Offset(0.5, 0.5),
+        icon: BitmapDescriptor.fromBytes(imageData)));
   }
 
   RxBool cameraAnimate = false.obs;
@@ -211,11 +211,12 @@ class HomeController extends GetxController {
     majoinRoomMap["driver_id"] = id;
     printInfo(info: "Join room===" + majoinRoomMap.toString());
     double distance = 0.0;
+    markers.remove(MarkerId(MarkerPolylineId.myLocationMarker));
     _socket.emit("joinRoom", majoinRoomMap);
     try {
       var location = await determinePosition();
       lastMapPosition = LatLng(location.latitude, location.longitude);
-      Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 100);
+      Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
       Map<String, dynamic> map = {};
       locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
         printInfo(info: "Error=====" + onError);
@@ -223,22 +224,20 @@ class HomeController extends GetxController {
 
         locationSubscription = null;
       }).listen((LocationData newLocalData) async {
-        if (newLocalData.latitude != null) {
-          cameraAnimate(true);
-          printInfo(
-              info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
-          map["latitude"] = newLocalData.latitude;
-          map["longitude"] = newLocalData.longitude;
-          map["heading"] = newLocalData.heading;
-          map["driver_id"] = id;
-          map["distance"] = distance.toString();
-          _socket.emit('updateLocation', map);
-          lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-          lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
-          updateMarkerAndCircle(newLocalData, imageData!);
-          cameraAnimate(false);
-          // }
-        }
+        cameraAnimate(true);
+        printInfo(
+            info: "newLocalData====" + newLocalData.latitude.toString() + " ," + newLocalData.longitude.toString());
+        map["latitude"] = newLocalData.latitude;
+        map["longitude"] = newLocalData.longitude;
+        map["heading"] = newLocalData.heading;
+        map["driver_id"] = id;
+        map["distance"] = distance.toString();
+        _socket.emit('updateLocation', map);
+        lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+        lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
+        updateMarkerAndCircle(newLocalData, imageData!);
+        cameraAnimate(false);
+        // }
       });
       isLoadingDriver(false);
     } on PlatformException catch (e) {
@@ -254,7 +253,7 @@ class HomeController extends GetxController {
 
   setMarker({required LatLng source, required LatLng destination}) async {
     // markers.clear();
-    Uint8List? imageData = await getBytesFromAsset(ImageAssets.greenLocationPin, 100);
+    Uint8List? imageData = await getBytesFromAsset(ImageAssets.greenLocationPin, 90);
     markers.add(Marker(
         markerId: MarkerId(MarkerPolylineId.sourceMarker),
         position: source,
@@ -350,6 +349,7 @@ class HomeController extends GetxController {
     }
   }
 
+
   fetchRequests() {
     reconnectSocket();
     _socket.on(SocketEvents.sendRequest, (data) {
@@ -363,6 +363,7 @@ class HomeController extends GetxController {
         printInfo(info: "len===========" + requestList.length.toString());
         printInfo(info: "swipeItems===========" + swipeItems.isNotEmpty.toString());
         if (swipeItems.isNotEmpty) {
+          //   printInfo(info: "inside===");
           //   printInfo(info: "inside===");
           isAddingData(false);
         }
@@ -384,7 +385,7 @@ class HomeController extends GetxController {
     AppConstants.userOnline = false;
     try {
       _socket.emit(SocketEvents.acceptRequest, map);
-      allDataClear();
+
       _socket.on(SocketEvents.sendAcceptReqResponse, (data) {
         printInfo(info: "getAcceptedData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
@@ -479,6 +480,22 @@ class HomeController extends GetxController {
     }
   }
 
+  cancelRider(Map<String, String> map) {
+    isLoadingDriver(true);
+    reconnectSocket();
+    try {
+      _socket.emit(SocketEvents.cancelRideByBoth, map);
+      markers.clear();
+      polylines.clear();
+      locationSubscription?.cancel();
+      locationSubscription = null;
+       currentAppState(0);
+      allInitMethods();
+    } catch (Ex) {
+      printError(info: "Socket Error" + Ex.toString());
+    }
+    isLoadingDriver(false);
+  }
   pickedUp(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "picked up ===" + map.toString());
@@ -540,7 +557,7 @@ class HomeController extends GetxController {
     reconnectSocket();
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);
-      allInitMehtods();
+      allInitMethods();
       currentAppState(0);
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -603,9 +620,9 @@ class HomeController extends GetxController {
             acceptRequest(map);
           },
           nopeAction: () {
-            // printInfo(info: "nope");
-            // printInfo(info: "i=====" + i.toString());
-            // printInfo(info: "swipeItems====" + swipeItems.length.toString());
+            printInfo(info: "nope");
+            printInfo(info: "i=====" + i.toString());
+            printInfo(info: "swipeItems====" + swipeItems.length.toString());
             if (i == requestList.length - 1) {
               allDataClear();
             }

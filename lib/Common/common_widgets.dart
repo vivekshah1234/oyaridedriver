@@ -1147,13 +1147,14 @@ class WhileTravelingCart extends StatelessWidget {
 }
 
 class CompleteRide extends StatelessWidget {
-  String name, kilometer, price, bookingId;
+  String name, kilometer, price, bookingId,profilePic;
   int paymentType;
   final GestureTapCallback confirmPayment;
 
   CompleteRide(
       {required this.name,
       required this.price,
+        required this.profilePic,
       required this.kilometer,
       required this.confirmPayment,
       required this.paymentType,
@@ -1210,7 +1211,7 @@ class CompleteRide extends StatelessWidget {
               Row(
                 children: [
                   CircleAvatar(
-                    backgroundImage: NetworkImage(imgUrl),
+                    backgroundImage: NetworkImage(profilePic),
                     radius: 35,
                   ),
                   const SizedBox(

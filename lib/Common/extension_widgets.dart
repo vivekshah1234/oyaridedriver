@@ -31,8 +31,7 @@ extension PaddingOnWidget on Widget {
 
   Widget putPadding(double top, double bottom, double right, double left) {
     return Padding(
-      padding:
-          EdgeInsets.only(top: top, bottom: bottom, left: left, right: right),
+      padding: EdgeInsets.only(top: top, bottom: bottom, left: left, right: right),
       child: this,
     );
   }
@@ -50,16 +49,12 @@ extension AlertDialogCard on Widget {
                   Container(
                     height: 20,
                   ),
-
                   Container(
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: AllColors.whiteColor,
-                        borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: AllColors.whiteColor, borderRadius: BorderRadius.circular(10)),
                     margin: const EdgeInsets.only(right: 10),
                     child: Column(
                       children: [
-
                         const SizedBox(
                           height: 15,
                         ),
@@ -83,7 +78,53 @@ extension AlertDialogCard on Widget {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child:   Icon(
+                    child: Icon(
+                      Icons.highlight_remove_sharp,
+                      color: AllColors.blueColor,
+                      size: 40,
+                    ),
+                  ))
+            ],
+          )
+        ],
+      );
+
+  Widget alertCard2(context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        //elevation: 0,
+        actions: [
+          Stack(
+            children: [
+              Column(
+                children: [
+                  Container(
+                    height: 20,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(color: AllColors.whiteColor, borderRadius: BorderRadius.circular(10)),
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        this,
+                        const SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
                       Icons.highlight_remove_sharp,
                       color: AllColors.blueColor,
                       size: 40,

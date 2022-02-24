@@ -7,6 +7,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:sized_context/sized_context.dart';
 
@@ -94,9 +95,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: context.heightPct(.07),
                             ),
                             AppButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_txtNum.text.isNotEmpty) {
                                         if (_txtPwd.text.isNotEmpty) {
+                                          SharedPreferences sp=await SharedPreferences.getInstance();
+                                          sp.setString("pwd", _txtPwd.text.toString());
                                           Map<String, String> map = {};
                                           map["country_code"] = _countryCode.toString();
                                           map["mobile_number"] = _txtNum.text.toString();

@@ -5,16 +5,15 @@ import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Models/login_modal.dart';
+import 'package:oyaridedriver/Models/sign_up_model.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
 
-class LoginController extends GetxController{
-
-  RxBool isLoading=false.obs;
-
+class LoginController extends GetxController {
+  RxBool isLoading = false.obs;
 
   login(Map<String, dynamic> map, context) async {
     isLoading(true);
@@ -23,14 +22,18 @@ class LoginController extends GetxController{
       if (value.code == 200) {
         Map<String, dynamic> valueMap = json.decode(value.response);
         if (valueMap["status"] == 200) {
-         LoginModel loginModel=LoginModel.fromJson(valueMap);
-           AppConstants.userID = loginModel.data.user.id.toString();
+          LoginModel loginModel = LoginModel.fromJson(valueMap);
+          AppConstants.userID = loginModel.data.user.id.toString();
+          if (loginModel.data.user.isAvailable == 0) {
+            AppConstants.userOnline = false;
+          } else {
+            AppConstants.userOnline = true;
+          }
+          saveTokenAndUserData(token: loginModel.data.token.toString(), user: loginModel.data.user, context: context);
 
-          saveTokenAndUserData(
-              token: loginModel.data.token.toString(),
-              user: loginModel.data.user,context: context);
-
-          Get.offAll(() =>  MapHomeScreen(isFromNotification: false,));
+          Get.offAll(() => const MapHomeScreen(
+                isFromNotification: false,
+              ));
           isLoading(false);
         } else {
           isLoading(false);
@@ -42,7 +45,8 @@ class LoginController extends GetxController{
       }
     });
   }
-  saveTokenAndUserData({required String token, required User user,context}) async {
+
+  saveTokenAndUserData({required String token, required User user, context}) async {
     AppConstants.userToken = token;
     String jsonString = jsonEncode(user);
 

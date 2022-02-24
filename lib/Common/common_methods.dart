@@ -52,12 +52,12 @@ bool isValidPassword(String value) {
   RegExp regExp = RegExp(pattern);
   return regExp.hasMatch(value);
 }
-
-Future<Uint8List> getMarker2(context) async {
-  ByteData byteData = await DefaultAssetBundle.of(context)
-      .load(ImageAssets.driverCarIcon);
-  return byteData.buffer.asUint8List();
-}
+//
+// Future<Uint8List> getMarker2(context) async {
+//   ByteData byteData = await DefaultAssetBundle.of(context)
+//       .load(ImageAssets.driverCarIcon);
+//   return byteData.buffer.asUint8List();
+// }
 
 Future<Uint8List?> getBytesFromAsset(String path, int width) async {
   ByteData data = await rootBundle.load(path);

@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
+import 'package:oyaridedriver/controllers/notification_list_controller.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -16,65 +18,112 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   double mediumFont = 15.0;
   double smallFont = 12.0;
-  TextEditingController txtSearch=TextEditingController();
+  TextEditingController txtSearch = TextEditingController();
   final border = OutlineInputBorder(
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
       borderSide: BorderSide(
         color: Colors.transparent,
       ));
+  NotificationListController notificationListController = Get.put(NotificationListController());
+
+  @override
+  void initState() {
+    notificationListController.getNotifications();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget2("Notifications"),
-      body: Column(
-        children: [searchTextField(),
-          SizedBox(height: 15,),
-          Expanded(child: notificationList())
-        ],
-      ).paddingSymmetric(horizontal: 25),
+      body: GetX<NotificationListController>(
+          init: NotificationListController(),
+          builder: (NotificationListController controller) {
+            if (controller.isLoading.value) {
+              return Center(child: greenLoadingWidget());
+            }
+            return Column(
+              children: [
+                searchTextField(),
+                SizedBox(
+                  height: 15,
+                ),
+                Expanded(child: notificationList(controller))
+              ],
+            ).paddingSymmetric(horizontal: 25);
+          }),
     );
   }
 
-
-  Widget notificationList(){
+  Widget notificationList(NotificationListController controller) {
     return ListView.builder(
-        itemCount: 3,
+        itemCount: controller.notificationList.length,
         physics: BouncingScrollPhysics(),
-        itemBuilder: (context,index){
-
+        itemBuilder: (context, index) {
           return Card(
-            shadowColor:  Colors.grey.withOpacity(1),shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shadowColor: Colors.grey.withOpacity(1),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Row(
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(imgUrl,width: 55,height: 50,)),
-                    SizedBox(width: 10,),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  Expanded(
+                    child: Row(
                       children: [
-                      textWidget(txt: "Robin Banks", fontSize: mediumFont, color: AllColors.blackColor, bold: FontWeight.w700,),
-                      textWidget(txt: "Received Payment", fontSize: smallFont, color: AllColors.blackColor, bold: FontWeight.normal,),
-                    ],),
-                  ],
-                ),
-                Column(children: [
-                  CircleAvatar(backgroundColor: AllColors.greenColor,radius: 10,),
-                  SizedBox(height: 10,),
-                  textWidget(txt: "45 min ago", fontSize: smallFont, color: AllColors.greyColor, bold: FontWeight.normal,),
-                ],)
-
-              ],),
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              imgUrl,
+                              width: 55,
+                              height: 50,
+                            )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              textWidget(
+                                txt: controller.notificationList[index].notificationTitle,
+                                fontSize: mediumFont,
+                                color: AllColors.blackColor,
+                                bold: FontWeight.w700,
+                              ),
+                              Text(
+                                controller.notificationList[index].description,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: smallFont,
+                                  color: AllColors.blackColor,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      textWidget(
+                        txt: controller.notificationList[index].createdAt.substring(0, 10),
+                        fontSize: smallFont,
+                        color: AllColors.greyColor,
+                        bold: FontWeight.normal,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-
           );
-
         });
   }
 
@@ -100,28 +149,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
             focusedBorder: border,
             enabledBorder: border,
             border: border,
-            hintStyle: TextStyle(
-                fontSize: mediumFont,
-                fontWeight: FontWeight.w600,
-                color: AllColors.blackColor)),
+            hintStyle: TextStyle(fontSize: mediumFont, fontWeight: FontWeight.w600, color: AllColors.blackColor)),
       ),
     );
   }
-  Widget textWidget(
-      {required String txt,
-        required double fontSize,
-        required Color color,
-        required FontWeight bold,
-       }) {
+
+  Widget textWidget({
+    required String txt,
+    required double fontSize,
+    required Color color,
+    required FontWeight bold,
+  }) {
     return Text(
       txt,
       style: TextStyle(
         color: color,
         fontSize: fontSize,
-        fontWeight: bold ,
-
+        fontWeight: bold,
       ),
     );
   }
-
 }

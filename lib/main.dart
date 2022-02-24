@@ -16,6 +16,7 @@ import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ApiServices/api_constant.dart';
+import 'Models/sign_up_model.dart';
 import 'UIScreens/ChatUI/firebase_chat.dart';
 import 'UIScreens/home_screen.dart';
 // ignore_for_file: prefer_const_constructors
@@ -212,6 +213,7 @@ Future<void> setUserData(User user) async {
   if (user.profilePic != null) {
     AppConstants.profilePic = user.profilePic;
   }
+
 
   DatabaseMethods databaseMethods = DatabaseMethods();
   try {

@@ -57,6 +57,7 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   permission_handler: ^8.3.0
   badges: ^2.0.1
+  flutter_credit_card: ^3.0.1
   #map plugins
   google_maps_flutter: ^2.1.1
   flutter_polyline_points: 1.0.0
