@@ -17,8 +17,9 @@ class LoginController extends GetxController {
 
   login(Map<String, dynamic> map, context) async {
     isLoading(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     postAPI(ApiConstant.login, map, (value) {
+      printInfo(info: "code===="+value.code.toString());
       if (value.code == 200) {
         Map<String, dynamic> valueMap = json.decode(value.response);
         if (valueMap["status"] == 200) {

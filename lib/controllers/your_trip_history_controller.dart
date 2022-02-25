@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class YourTripController extends GetxController {
   RxBool isLoading = false.obs;
 
-  List<HistoryTrip> historyTripList = <HistoryTrip>[];
+  List<TripHistoryModel> historyTripList = <TripHistoryModel>[];
 
   getTripHistory() async {
     isLoading(true);
@@ -28,12 +28,12 @@ class YourTripController extends GetxController {
     if (AppConstants.userToken != "userToken") {
       getAPI(ApiConstant.geTripHistory, (value) {
         if (value.code == 200) {
+          printInfo(info: value.response.toString());
           Map<String, dynamic> valueMap = json.decode(value.response);
           if (valueMap["status"] == 200) {
-            YourTripHistoryModel yourTripHistoryModel = YourTripHistoryModel.fromJson(valueMap);
+            YourTripHistoryListModel yourTripHistoryListModel = YourTripHistoryListModel.fromJson(valueMap);
 
-            printInfo(info: value.response.toString());
-            historyTripList.addAll(yourTripHistoryModel.data);
+            historyTripList.addAll(yourTripHistoryListModel.data);
             isLoading(false);
           } else {
             isLoading(false);

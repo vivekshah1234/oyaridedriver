@@ -917,7 +917,7 @@ class NoRequestCart extends StatelessWidget {
                 //width: 300,
                 height: 30,
                 child: Marquee(
-                  text: 'To receiver requests, you need to go online.',
+                  text: 'To receive requests, you need to go online.',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                   scrollAxis: Axis.horizontal,
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,19 +1,17 @@
-import 'acceptedDriverModel.dart';
-
-class YourTripHistoryModel {
-  YourTripHistoryModel({
+class YourTripHistoryListModel {
+  YourTripHistoryListModel({
     required this.message,
     required this.status,
     required this.data,
   });
   late final String message;
   late final int status;
-  late final List<HistoryTrip> data;
+  late final List<TripHistoryModel> data;
 
-  YourTripHistoryModel.fromJson(Map<String, dynamic> json){
+  YourTripHistoryListModel.fromJson(Map<String, dynamic> json){
     message = json['message'];
     status = json['status'];
-    data = List.from(json['data']).map((e)=>HistoryTrip.fromJson(e)).toList();
+    data = List.from(json['data']).map((e)=>TripHistoryModel.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -25,8 +23,8 @@ class YourTripHistoryModel {
   }
 }
 
-class HistoryTrip {
-  HistoryTrip({
+class TripHistoryModel {
+  TripHistoryModel({
     required this.id,
     required this.userId,
     required this.driverId,
@@ -54,17 +52,18 @@ class HistoryTrip {
     this.driverCancellation,
     required this.price,
     required this.paymentStatus,
-    required this.paymentMode,
-    required this.paymentTransId,
+    this.paymentMode,
+    this.paymentTransId,
     required this.createdAt,
     required this.updatedAt,
     required this.userDetail,
+    required this.vehDetail,
   });
   late final int id;
   late final int userId;
   late final int driverId;
   late final int bookingId;
-  late final dynamic vehicleId;
+  late final Null vehicleId;
   late final int vehicleType;
   late final String sourceAddress;
   late final String sourceCity;
@@ -83,22 +82,23 @@ class HistoryTrip {
   late final int kilometer;
   late final String polygone;
   late final int status;
-  late final dynamic customerCancellation;
-  late final dynamic driverCancellation;
+  late final String? customerCancellation;
+  late final Null driverCancellation;
   late final String price;
   late final String paymentStatus;
-  late final String paymentMode;
-  late final String paymentTransId;
+  late final String? paymentMode;
+  late final String? paymentTransId;
   late final String createdAt;
   late final String updatedAt;
   late final UserDetail userDetail;
+  late final VehDetail vehDetail;
 
-  HistoryTrip.fromJson(Map<String, dynamic> json){
+  TripHistoryModel.fromJson(Map<String, dynamic> json){
     id = json['id'];
     userId = json['user_id'];
     driverId = json['driver_id'];
     bookingId = json['booking_id'];
-    vehicleId = json['vehicle_id'];
+    vehicleId = null;
     vehicleType = json['vehicle_type'];
     sourceAddress = json['source_address'];
     sourceCity = json['source_city'];
@@ -117,15 +117,16 @@ class HistoryTrip {
     kilometer = json['kilometer'];
     polygone = json['polygone'];
     status = json['status'];
-    customerCancellation = json['customer_cancellation'];
-    driverCancellation = json['driver_cancellation'];
+    customerCancellation = null;
+    driverCancellation = null;
     price = json['price'];
     paymentStatus = json['payment_status'];
-    paymentMode = json['payment_mode'];
-    paymentTransId = json['payment_trans_id'];
+    paymentMode = null;
+    paymentTransId = null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     userDetail = UserDetail.fromJson(json['userDetail']);
+    vehDetail = VehDetail.fromJson(json['vehDetail']);
   }
 
   Map<String, dynamic> toJson() {
@@ -162,6 +163,7 @@ class HistoryTrip {
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     _data['userDetail'] = userDetail.toJson();
+    _data['vehDetail'] = vehDetail.toJson();
     return _data;
   }
 }
@@ -184,32 +186,31 @@ class UserDetail {
     this.isVerified,
     this.signUpStep,
     required this.isAvailable,
-    required this.paymentType,
     this.verificationCode,
+    required this.paymentType,
     this.licenceExpireDate,
     required this.createdAt,
     required this.updatedAt,
-
   });
   late final int id;
   late final String firstName;
   late final String lastName;
-  late final dynamic city;
+  late final Null city;
   late final String mobileNumber;
   late final String email;
   late final String profilePic;
-  late final dynamic language;
-  late final dynamic referralCode;
+  late final Null language;
+  late final Null referralCode;
   late final String countryCode;
-  late final dynamic licencePlate;
-  late final dynamic licenceNumber;
-  late final dynamic licencePhoto;
-  late final dynamic isVerified;
-  late final dynamic signUpStep;
+  late final Null licencePlate;
+  late final Null licenceNumber;
+  late final Null licencePhoto;
+  late final Null isVerified;
+  late final Null signUpStep;
   late final int isAvailable;
+  late final Null verificationCode;
   late final int paymentType;
-  late final dynamic verificationCode;
-  late final dynamic licenceExpireDate;
+  late final Null licenceExpireDate;
   late final String createdAt;
   late final String updatedAt;
 
@@ -217,25 +218,25 @@ class UserDetail {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];
-    city = json['city'];
+    city = null;
     mobileNumber = json['mobile_number'];
     email = json['email'];
     profilePic = json['profile_pic'];
-    language = json['language'];
-    referralCode = json['referral_code'];
+    language = null;
+    referralCode = null;
     countryCode = json['country_code'];
-    licencePlate = json['licence_plate'];
-    licenceNumber = json['licence_number'];
-    licencePhoto = json['licence_photo'];
-    isVerified =json['is_verified'];
-    signUpStep =json['sign_up_step'];
+    licencePlate = null;
+    licenceNumber = null;
+    licencePhoto = null;
+    isVerified = null;
+    signUpStep = null;
     isAvailable = json['is_available'];
+    verificationCode = null;
     paymentType = json['payment_type'];
-    verificationCode = json['verification_code'];
-    licenceExpireDate =json['licence_expire_date'];
+    licenceExpireDate = null;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    }
+  }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
@@ -255,9 +256,50 @@ class UserDetail {
     _data['is_verified'] = isVerified;
     _data['sign_up_step'] = signUpStep;
     _data['is_available'] = isAvailable;
-    _data['payment_type'] = paymentType;
     _data['verification_code'] = verificationCode;
+    _data['payment_type'] = paymentType;
     _data['licence_expire_date'] = licenceExpireDate;
+    _data['created_at'] = createdAt;
+    _data['updated_at'] = updatedAt;
+    return _data;
+  }
+}
+
+class VehDetail {
+  VehDetail({
+    required this.id,
+    required this.name,
+    required this.price,
+    this.image,
+    required this.seat,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  late final int id;
+  late final String name;
+  late final String price;
+  late final Null image;
+  late final int seat;
+  late final String createdAt;
+  late final String updatedAt;
+
+  VehDetail.fromJson(Map<String, dynamic> json){
+    id = json['id'];
+    name = json['name'];
+    price = json['price'];
+    image = null;
+    seat = json['seat'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['name'] = name;
+    _data['price'] = price;
+    _data['image'] = image;
+    _data['seat'] = seat;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     return _data;

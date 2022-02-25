@@ -90,12 +90,13 @@ class HomeController extends GetxController {
     if (AppConstants.userToken != "userToken") {
       getAPI(ApiConstant.getTripDetails, (value) {
         if (value.code == 200) {
-          //printInfo(info:"acceptedDriverModel====="+ value.response.toString());
           Map<String, dynamic> valueMap = json.decode(value.response);
-          if (valueMap["data"] != null) {
-            acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap["data"]);
-            printInfo(info: "acceptedDriverModel=====" + acceptedDriverModel.toString());
-            if (valueMap["status"] == 200) {
+          print("a===="+valueMap["data"].runtimeType.toString());
+
+          if (valueMap["status"] == 200) {
+            printInfo(info: "inside=====");
+            if (valueMap["data"] == {}) {
+              acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap["data"]);
               printInfo(info: "status======" + acceptedDriverModel.tripData.status.toString());
               switch (acceptedDriverModel.tripData.status) {
                 case 1:
@@ -127,10 +128,12 @@ class HomeController extends GetxController {
                   break;
               }
               isLoading(false);
+            } else {
+              isLoading(false);
             }
+          } else {
             isLoading(false);
           }
-          isLoading(false);
         } else {
           isLoading(false);
           printError(info: value.response.toString());
@@ -138,9 +141,11 @@ class HomeController extends GetxController {
       });
     }
   }
+
   void onMapCreated(GoogleMapController controller) {
     mapController.complete(controller);
   }
+
   getCurrentPosition() async {
     isLoadingMap(true);
     Position position = await determinePosition();
@@ -349,7 +354,6 @@ class HomeController extends GetxController {
     }
   }
 
-
   fetchRequests() {
     reconnectSocket();
     _socket.on(SocketEvents.sendRequest, (data) {
@@ -489,13 +493,14 @@ class HomeController extends GetxController {
       polylines.clear();
       locationSubscription?.cancel();
       locationSubscription = null;
-       currentAppState(0);
+      currentAppState(0);
       allInitMethods();
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
     }
     isLoadingDriver(false);
   }
+
   pickedUp(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "picked up ===" + map.toString());

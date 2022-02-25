@@ -11,7 +11,7 @@ import 'package:oyaridedriver/Models/YourTripHistoryModel.dart';
 import 'package:timelines/timelines.dart';
 
 class TripDetailScreen extends StatefulWidget {
-  final HistoryTrip tripDetails;
+  final TripHistoryModel tripDetails;
 
   const TripDetailScreen({required this.tripDetails});
 

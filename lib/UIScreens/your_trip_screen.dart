@@ -232,12 +232,12 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                     color: AllColors.blackColor,
                                     bold: _normalFontWeight,
                                     italic: false),
-                                textWidget(
-                                    txt: controller.historyTripList[index].paymentMode.toUpperCase(),
-                                    fontSize: ScreenUtil().setSp(_mediumFontSize),
-                                    color: AllColors.blackColor,
-                                    bold: _mediumFontWeight,
-                                    italic: false),
+                                // textWidget(
+                                //     txt: controller.historyTripList[index].paymentMode!.toUpperCase(),
+                                //     fontSize: ScreenUtil().setSp(_mediumFontSize),
+                                //     color: AllColors.blackColor,
+                                //     bold: _mediumFontWeight,
+                                //     italic: false),
                               ],
                             ),
                           ],
