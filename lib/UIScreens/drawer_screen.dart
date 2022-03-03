@@ -11,7 +11,7 @@ import 'package:oyaridedriver/UIScreens/chat_list_screen.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/settings_screen.dart';
 import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
-import 'package:oyaridedriver/UIScreens/your_trip_screen.dart';
+import 'package:oyaridedriver/UIScreens/your_trip_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'document_management_screen.dart';

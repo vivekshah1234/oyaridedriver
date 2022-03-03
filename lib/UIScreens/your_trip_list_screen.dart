@@ -36,7 +36,8 @@ class _YourTripScreenState extends State<YourTripScreen> {
 
   @override
   void initState() {
-    yourTripController.getTripHistory();
+    printInfo(info: _focusedDay.toString().substring(0, 10));
+    yourTripController.getTripHistory(_focusedDay.toString().substring(0, 10));
 
     super.initState();
   }
@@ -50,19 +51,10 @@ class _YourTripScreenState extends State<YourTripScreen> {
       body: GetX<YourTripController>(
           init: YourTripController(),
           builder: (YourTripController controller) {
-            if (controller.isLoading.value) {
-              return Center(child: greenLoadingWidget());
-            }
-            if( controller.historyTripList.isEmpty){
-              return  Center(
-                child: textWidget(
-                    txt: "You do not have any trip history.",
-                    fontSize: ScreenUtil().setSp(_largeFontSize),
-                    color: AllColors.blueColor,
-                    bold: FontWeight.normal,
-                    italic: false),
-              );
-            }
+            // if (controller.isLoading.value) {
+            //   return Center(child: greenLoadingWidget());
+            // }
+
             return Column(
               children: [
                 calendarWidget(),
@@ -76,12 +68,32 @@ class _YourTripScreenState extends State<YourTripScreen> {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [totalJobs(), totalEarn()],
+                          children: [
+                            totalJobs(controller.totalJob.value.toString()),
+                            totalEarn(controller.totalEarn.toStringAsFixed(1))
+                          ],
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        Expanded(child: tripListview(controller))
+                        controller.isLoading.value ? Center(child: greenLoadingWidget()) : Container(),
+                        controller.historyTripList.isEmpty && !controller.isLoading.value
+                            ? //   return Center(
+                            Column(
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height * 0.20,
+                                  ),
+                                  Text("You do not have any trip history on this day.",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(_largeFontSize),
+                                        color: AllColors.blueColor,
+                                        fontWeight: FontWeight.normal,
+                                      )),
+                                ],
+                              )
+                            : Expanded(child: tripListview(controller))
                       ],
                     ),
                   ),
@@ -92,7 +104,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
     );
   }
 
-  Widget totalJobs() {
+  Widget totalJobs(String totalJobs) {
     return Container(
       decoration: BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
@@ -115,7 +127,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                   bold: FontWeight.normal,
                   italic: false),
               textWidget(
-                  txt: "1,432",
+                  txt: totalJobs,
                   fontSize: ScreenUtil().setSp(_largeFontSize),
                   color: AllColors.whiteColor,
                   bold: _largeFontWeight,
@@ -127,7 +139,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
     );
   }
 
-  Widget totalEarn() {
+  Widget totalEarn(String totalEarn) {
     return Container(
       decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.only(left: 7, right: 25, top: 10, bottom: 10),
@@ -136,10 +148,9 @@ class _YourTripScreenState extends State<YourTripScreen> {
           CircleAvatar(
               backgroundColor: AllColors.whiteColor,
               radius: 18,
-              child: Icon(
-                Icons.attach_money,
-                color: AllColors.greenColor,
-                size: 27,
+              child: Text(
+                "₦",
+                style: TextStyle(fontSize: ScreenUtil().setSp(_largeFontSize), color: AllColors.blackColor),
               )),
           const SizedBox(
             width: 10,
@@ -154,7 +165,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                   bold: _normalFontWeight,
                   italic: false),
               textWidget(
-                  txt: "\$ 2500",
+                  txt: totalEarn,
                   fontSize: ScreenUtil().setSp(_largeFontSize),
                   color: AllColors.whiteColor,
                   bold: _largeFontWeight,
@@ -191,165 +202,195 @@ class _YourTripScreenState extends State<YourTripScreen> {
                 ],
               ),
               margin: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Container(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
                           children: [
-                            textWidget(
-                                txt: controller.historyTripList[index].createdAt.substring(0, 10),
-                                fontSize: ScreenUtil().setSp(_mediumFontSize),
-                                color: AllColors.blackColor,
-                                bold: _normalFontWeight,
-                                italic: false),
-                            textWidget(
-                                txt: "\$${controller.historyTripList[index].price}",
-                                fontSize: ScreenUtil().setSp(_mediumFontSize),
-                                color: AllColors.blackColor,
-                                bold: _mediumFontWeight,
-                                italic: false),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            textWidget(
-                                txt: "Seden Car",
-                                fontSize: ScreenUtil().setSp(_mediumFontSize),
-                                color: AllColors.blackColor,
-                                bold: _mediumFontWeight,
-                                italic: false),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 textWidget(
-                                    txt: "Payment : ",
-                                    fontSize: _mediumFontSize,
+                                    txt: controller.historyTripList[index].createdAt.substring(0, 10),
+                                    fontSize: ScreenUtil().setSp(_mediumFontSize),
                                     color: AllColors.blackColor,
                                     bold: _normalFontWeight,
                                     italic: false),
-                                // textWidget(
-                                //     txt: controller.historyTripList[index].paymentMode!.toUpperCase(),
-                                //     fontSize: ScreenUtil().setSp(_mediumFontSize),
-                                //     color: AllColors.blackColor,
-                                //     bold: _mediumFontWeight,
-                                //     italic: false),
+                                textWidget(
+                                    txt: "₦${controller.historyTripList[index].price}",
+                                    fontSize: ScreenUtil().setSp(_mediumFontSize),
+                                    color: AllColors.blackColor,
+                                    bold: _mediumFontWeight,
+                                    italic: false),
                               ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(controller.historyTripList[index].vehicleDetail.vehicleModel,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: ScreenUtil().setSp(_mediumFontSize),
+                                        color: AllColors.blackColor,
+                                        fontWeight: _mediumFontWeight,
+                                      )),
+                                ),
+                                Row(
+                                  children: [
+                                    textWidget(
+                                        txt: "Payment : ",
+                                        fontSize: _mediumFontSize,
+                                        color: AllColors.blackColor,
+                                        bold: _normalFontWeight,
+                                        italic: false),
+                                    textWidget(
+                                        txt: controller.historyTripList[index].paymentMode.toString() == "null"
+                                            ? "CASH"
+                                            : "CASH",
+                                        fontSize: ScreenUtil().setSp(_mediumFontSize),
+                                        color: AllColors.blackColor,
+                                        bold: _mediumFontWeight,
+                                        italic: false),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ).putPadding(0, 0, 7, 7),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        RatingBar.builder(
+                          initialRating: 3,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          itemSize: 16,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: AllColors.greenColor,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+                          },
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Divider(
+                          color: Colors.grey.shade400,
+                          height: 2,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Column(
+                          children: [
+                            TimelineTile(
+                              nodeAlign: TimelineNodeAlign.start,
+                              contents: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    textWidget(
+                                        txt: "Source Location",
+                                        fontSize: ScreenUtil().setSp(_smallFontSize),
+                                        color: AllColors.greyColor,
+                                        bold: _normalFontWeight,
+                                        italic: false),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    textWidget(
+                                        txt: controller.historyTripList[index].sourceAddress,
+                                        fontSize: ScreenUtil().setSp(_smallFontSize),
+                                        color: AllColors.greyColor,
+                                        bold: _normalFontWeight,
+                                        italic: false),
+                                  ],
+                                ),
+                              ),
+                              node: TimelineNode(
+                                  indicator: ContainerIndicator(
+                                      child: CircleAvatar(
+                                    backgroundColor: AllColors.greenColor,
+                                    radius: 4,
+                                  )),
+                                  endConnector: const DashedLineConnector(
+                                    color: AllColors.greyColor,
+                                  )),
+                            ),
+                            TimelineTile(
+                              nodeAlign: TimelineNodeAlign.start,
+                              contents: Container(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    textWidget(
+                                        txt: "Destination Location",
+                                        fontSize: ScreenUtil().setSp(_smallFontSize),
+                                        color: AllColors.greyColor,
+                                        bold: _normalFontWeight,
+                                        italic: false),
+                                    const SizedBox(
+                                      height: 3,
+                                    ),
+                                    textWidget(
+                                        txt: controller.historyTripList[index].destinationAddress,
+                                        fontSize: ScreenUtil().setSp(_smallFontSize),
+                                        color: AllColors.greyColor,
+                                        bold: _normalFontWeight,
+                                        italic: false),
+                                  ],
+                                ),
+                              ),
+                              node: TimelineNode(
+                                startConnector: const DashedLineConnector(
+                                  color: AllColors.greyColor,
+                                ),
+                                indicator: ContainerIndicator(
+                                    child: CircleAvatar(
+                                  backgroundColor: AllColors.blueColor,
+                                  radius: 4,
+                                )),
+                              ),
                             ),
                           ],
                         ),
                       ],
-                    ).putPadding(0, 0, 7, 7),
-                    const SizedBox(
-                      height: 5,
                     ),
-                    RatingBar.builder(
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      itemSize: 16,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: AllColors.greenColor,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Divider(
-                      color: Colors.grey.shade400,
-                      height: 2,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Column(
-                      children: [
-                        TimelineTile(
-                          nodeAlign: TimelineNodeAlign.start,
-                          contents: Container(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                textWidget(
-                                    txt: "Source Location",
-                                    fontSize: ScreenUtil().setSp(_smallFontSize),
-                                    color: AllColors.greyColor,
-                                    bold: _normalFontWeight,
-                                    italic: false),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                textWidget(
-                                    txt: controller.historyTripList[index].sourceAddress,
-                                    fontSize: ScreenUtil().setSp(_smallFontSize),
-                                    color: AllColors.greyColor,
-                                    bold: _normalFontWeight,
-                                    italic: false),
-                              ],
+                  ),
+                  controller.historyTripList[index].status == 8
+                      ? Container(
+                          decoration: BoxDecoration(
+                              color: AllColors.blueColor,
+                              borderRadius: const BorderRadius.only(
+                                  bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15))),
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          //   margin: const EdgeInsets.only(bottom: 10),
+                          child: Center(
+                            child: Text(
+                              "This trip has been cancelled.",
+                              style: TextStyle(
+                                  color: AllColors.greenColor, fontSize: _smallFontSize, fontWeight: _mediumFontWeight),
                             ),
                           ),
-                          node: TimelineNode(
-                              indicator: ContainerIndicator(
-                                  child: CircleAvatar(
-                                backgroundColor: AllColors.greenColor,
-                                radius: 4,
-                              )),
-                              endConnector: const DashedLineConnector(
-                                color: AllColors.greyColor,
-                              )),
-                        ),
-                        TimelineTile(
-                          nodeAlign: TimelineNodeAlign.start,
-                          contents: Container(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                textWidget(
-                                    txt: "Destination Location",
-                                    fontSize: ScreenUtil().setSp(_smallFontSize),
-                                    color: AllColors.greyColor,
-                                    bold: _normalFontWeight,
-                                    italic: false),
-                                const SizedBox(
-                                  height: 3,
-                                ),
-                                textWidget(
-                                    txt: controller.historyTripList[index].destinationAddress,
-                                    fontSize: ScreenUtil().setSp(_smallFontSize),
-                                    color: AllColors.greyColor,
-                                    bold: _normalFontWeight,
-                                    italic: false),
-                              ],
-                            ),
-                          ),
-                          node: TimelineNode(
-                            startConnector: const DashedLineConnector(
-                              color: AllColors.greyColor,
-                            ),
-                            indicator: ContainerIndicator(
-                                child: CircleAvatar(
-                              backgroundColor: AllColors.blueColor,
-                              radius: 4,
-                            )),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                        )
+                      : Container(),
+                ],
               ),
             ),
           );
@@ -362,13 +403,34 @@ class _YourTripScreenState extends State<YourTripScreen> {
       lastDay: kLastDay,
       focusedDay: _focusedDay,
       daysOfWeekVisible: true,
+      calendarStyle: const CalendarStyle(markerSize: 35, rangeHighlightColor: Colors.red),
       startingDayOfWeek: StartingDayOfWeek.sunday,
       calendarFormat: _calendarFormat,
-      calendarBuilders: CalendarBuilders(singleMarkerBuilder: (context, dateTime, _) {
-        return Container(
-          color: Colors.green,
-        );
-      }),
+      headerStyle: const HeaderStyle(
+          formatButtonVisible: false,
+          titleCentered: true,
+          leftChevronMargin: EdgeInsets.only(left: 50),
+          rightChevronMargin: EdgeInsets.only(right: 50),
+          titleTextStyle: TextStyle(color: AllColors.blackColor, fontSize: 20)),
+      availableGestures: AvailableGestures.horizontalSwipe,
+      calendarBuilders: CalendarBuilders(
+        selectedBuilder: (context, date, events) => Container(
+            margin: const EdgeInsets.all(5.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: AllColors.greenColor, borderRadius: BorderRadius.circular(10)),
+            child: Text(
+              date.day.toString(),
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800),
+            )),
+        todayBuilder: (context, date, events) => Container(
+            margin: const EdgeInsets.all(5.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(10.0)),
+            child: Text(
+              date.day.toString(),
+              style: const TextStyle(color: Colors.white),
+            )),
+      ),
       selectedDayPredicate: (day) {
         // Use `selectedDayPredicate` to determine which day is currently selected.
         // If this returns true, then `day` will be marked as selected.
@@ -380,10 +442,12 @@ class _YourTripScreenState extends State<YourTripScreen> {
       onDaySelected: (selectedDay, focusedDay) {
         if (!isSameDay(_selectedDay, selectedDay)) {
           // Call `setState()` when updating the selected day
+          printInfo(info: "Selected Date=====" + selectedDay.toString());
           setState(() {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
+          yourTripController.getTripHistory(selectedDay.toString().substring(0, 10));
         }
       },
       onPageChanged: (focusedDay) {

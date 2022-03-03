@@ -52,18 +52,14 @@ class HomeController extends GetxController {
   late LatLng lastMapPositionPrivious;
   RxBool isLoadingMap = true.obs;
   Set<Marker> markers = {};
-
-  //Set<Polyline> polyLine = <Polyline>{};
-
   List<LatLng> polyLineCoordinates = <LatLng>[];
-
   StreamSubscription<LocationData>? locationSubscription;
-
   Location locationTracker = Location();
   RxBool isAddingMarkerAndPolyline = false.obs;
 
   @override
   void onInit() {
+
     allInitMethods();
     super.onInit();
   }
@@ -76,9 +72,8 @@ class HomeController extends GetxController {
 
   getBackgroundDetails() async {
     isLoading(true);
-
     bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
-    print("expire token====" + hasExpired.toString());
+    printInfo(info: "expire token====" + hasExpired.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (hasExpired == true) {
       //refreshToken
@@ -88,52 +83,64 @@ class HomeController extends GetxController {
     }
 
     if (AppConstants.userToken != "userToken") {
-      getAPI(ApiConstant.getTripDetails, (value) {
+      getAPI(ApiConstant.getTripDetails, (value) async {
         if (value.code == 200) {
           Map<String, dynamic> valueMap = json.decode(value.response);
-          print("a===="+valueMap["data"].runtimeType.toString());
-
           if (valueMap["status"] == 200) {
-            printInfo(info: "inside=====");
-            if (valueMap["data"] == {}) {
+            if (valueMap["data"] != null) {
               acceptedDriverModel = AcceptedDriverModel.fromJson(valueMap["data"]);
               printInfo(info: "status======" + acceptedDriverModel.tripData.status.toString());
               switch (acceptedDriverModel.tripData.status) {
                 case 1:
                   break;
                 case 2:
-                  Map<String, dynamic> map = {
-                    "trip_id": acceptedDriverModel.tripData.id,
-                  };
-                  reachedAtLoc(map);
+                  currentAppState(2);
+                  double sourceLatitude = double.parse(acceptedDriverModel.tripData.sourceLatitude);
+                  double sourceLongitude = double.parse(acceptedDriverModel.tripData.sourceLongitude);
+                  double destinationLatitude = double.parse(acceptedDriverModel.tripData.destinationLatitude);
+                  double destinationLongitude = double.parse(acceptedDriverModel.tripData.destinationLongitude);
+                  allMapTracking(
+                      sourceLatitude: sourceLatitude,
+                      sourceLongitude: sourceLongitude,
+                      destinationLatitude: destinationLatitude,
+                      destinationLongitude: destinationLongitude);
                   break;
                 case 3:
-                  Map<String, dynamic> map = {
-                    "trip_id": acceptedDriverModel.tripData.id,
-                  };
-                  dropAtLoc(map);
-
+                  currentAppState(4);
+                  double sourceLatitude = double.parse(acceptedDriverModel.tripData.sourceLatitude);
+                  double sourceLongitude = double.parse(acceptedDriverModel.tripData.sourceLongitude);
+                  double destinationLatitude = double.parse(acceptedDriverModel.tripData.destinationLatitude);
+                  double destinationLongitude = double.parse(acceptedDriverModel.tripData.destinationLongitude);
+                  allMapTracking(
+                      sourceLatitude: sourceLatitude,
+                      sourceLongitude: sourceLongitude,
+                      destinationLatitude: destinationLatitude,
+                      destinationLongitude: destinationLongitude);
                   break;
                 case 4:
                   break;
                 case 5:
-                  Map<String, dynamic> map = {
-                    "trip_id": acceptedDriverModel.tripData.id,
-                  };
-                  pickedUp(map);
+                  currentAppState(3);
+                  double sourceLatitude = double.parse(acceptedDriverModel.tripData.sourceLatitude);
+                  double sourceLongitude = double.parse(acceptedDriverModel.tripData.sourceLongitude);
+                  double destinationLatitude = double.parse(acceptedDriverModel.tripData.destinationLatitude);
+                  double destinationLongitude = double.parse(acceptedDriverModel.tripData.destinationLongitude);
+                  allMapTracking(
+                      sourceLatitude: sourceLatitude,
+                      sourceLongitude: sourceLongitude,
+                      destinationLatitude: destinationLatitude,
+                      destinationLongitude: destinationLongitude);
                   break;
                 case 6:
                   break;
                 case 7:
+                  currentAppState(5);
                   break;
               }
               isLoading(false);
-            } else {
-              isLoading(false);
             }
-          } else {
-            isLoading(false);
           }
+          isLoading(false);
         } else {
           isLoading(false);
           printError(info: value.response.toString());
@@ -142,12 +149,38 @@ class HomeController extends GetxController {
     }
   }
 
+  allMapTracking(
+      {required double sourceLatitude,
+      required double sourceLongitude,
+      required double destinationLatitude,
+      required double destinationLongitude}) async {
+    Position position = await determinePosition();
+    latitude = position.latitude;
+    longitude = position.longitude;
+    listofTasks = [
+      TaskModel("1", "one", latitude, longitude, sourceLatitude, sourceLongitude),
+      TaskModel("2", "two", sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude)
+    ];
+   setMarker(
+        source: LatLng(sourceLatitude, sourceLongitude),
+        destination: LatLng(destinationLatitude, destinationLongitude));
+
+    setPolylineMyLocToUserSourceLoc();
+    startLiveTrackingWithSocket(
+        id: AppConstants.userID,
+        sourceLatitude: sourceLatitude,
+        sourceLongitude: sourceLongitude,
+        destinationLatitude: destinationLatitude,
+        destinationLongitude: destinationLongitude);
+  }
+
   void onMapCreated(GoogleMapController controller) {
     mapController.complete(controller);
   }
 
   getCurrentPosition() async {
     isLoadingMap(true);
+
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
@@ -161,22 +194,28 @@ class HomeController extends GetxController {
       target: lastMapPositionPrivious,
       zoom: 14.4746,
     );
+
+
     Map<String, dynamic> map = {};
     locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
       locationSubscription?.cancel();
       locationSubscription = null;
     }).listen((newLocalData) async {
+      printInfo(info:"new data==="+ newLocalData.longitude.toString());
+
       map["latitude"] = newLocalData.latitude;
       map["longitude"] = newLocalData.longitude;
       map["userId"] = AppConstants.userID;
+
       updateLocation2(map);
     });
-
     addMyMarker(latitude, longitude, position.heading);
+
   }
 
   addMyMarker(double latitude, double longitude, double heading) async {
+
     Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
     markers.add(Marker(
         markerId: MarkerId(MarkerPolylineId.myLocationMarker),
@@ -188,6 +227,22 @@ class HomeController extends GetxController {
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.fromBytes(imageData!)));
     isLoadingMap(false);
+
+  }
+  updateMyMarker(double latitude, double longitude, double heading) async {
+    cameraAnimate(true);
+    Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
+    markers.add(Marker(
+        markerId: MarkerId(MarkerPolylineId.myLocationMarker),
+        position: LatLng(latitude, longitude),
+        draggable: false,
+        rotation: heading,
+        zIndex: 2,
+        flat: true,
+        anchor: const Offset(0.5, 0.5),
+        icon: BitmapDescriptor.fromBytes(imageData!)));
+    cameraAnimate(false);
+
   }
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
@@ -206,7 +261,7 @@ class HomeController extends GetxController {
 
   RxBool cameraAnimate = false.obs;
 
-  startLiveTracking(
+  startLiveTrackingWithSocket(
       {required String id,
       required double sourceLatitude,
       required double sourceLongitude,
@@ -367,8 +422,6 @@ class HomeController extends GetxController {
         printInfo(info: "len===========" + requestList.length.toString());
         printInfo(info: "swipeItems===========" + swipeItems.isNotEmpty.toString());
         if (swipeItems.isNotEmpty) {
-          //   printInfo(info: "inside===");
-          //   printInfo(info: "inside===");
           isAddingData(false);
         }
       }
@@ -414,7 +467,7 @@ class HomeController extends GetxController {
 
         setPolylineMyLocToUserSourceLoc();
 
-        startLiveTracking(
+        startLiveTrackingWithSocket(
             id: AppConstants.userID,
             sourceLatitude: sourceLatitude,
             sourceLongitude: sourceLongitude,
@@ -614,7 +667,7 @@ class HomeController extends GetxController {
               name: requestList[i].userName,
               imgurl: requestList[i].profilePic,
               charge: 50.0,
-              kiloMeter: requestList[i].kilometer.toDouble(),
+              kiloMeter: requestList[i].kilometer,
               pickUpPoint: requestList[i].sourceAddress,
               destinationPoint: requestList[i].destinationAddress),
           likeAction: () {
@@ -647,6 +700,38 @@ class HomeController extends GetxController {
     requestList.clear();
     swipeItems.clear();
     isAddingData(false);
+  }
+  disconnectSocket() async {
+    printInfo(info: "Socket Connected???===" + _socket.connected.toString());
+    if (_socket.connected == false) {
+      locationSubscription!.cancel();
+      locationSubscription = null;
+      markers.clear();
+      polylines.clear();
+      final GoogleMapController _mapController = await mapController.future;
+      _mapController.dispose();
+      //  locationTracker.dispose();
+      _socket.disconnect();
+      _socket.close();
+      _socket.destroy();
+      _socket.clearListeners();
+      _socket.onDisconnect((_) => print('disconnect'));
+      printInfo(info: "Socket DisConnected???===" + _socket.disconnected.toString());
+    }
+  }
+
+
+
+  @override
+  void onReady() {
+    isLoading(true);
+    super.onReady();
+  }
+
+  @override
+  void onClose() {
+    disconnectSocket();
+    super.onClose();
   }
 }
 

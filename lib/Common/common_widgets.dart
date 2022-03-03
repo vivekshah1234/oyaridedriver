@@ -181,7 +181,7 @@ class RiderRequest extends StatelessWidget {
   final String name;
   final String imgUrl;
   final String price;
-  final double km;
+  final String km;
   final String pickUpPoint;
   final String dropOffPoint;
   final GestureTapCallback acceptOnTap;
@@ -217,7 +217,7 @@ class RiderRequest extends StatelessWidget {
       ),
       child: Column(
         children: [
-          userDetails(txt: name, imgUrl: imgUrl, kiloMeter: km, charge: price),
+          userDetails(txt: name, imgUrl: imgUrl, kiloMeter: km.toString(), charge: price),
           Column(
             children: [
               TimelineTile(
@@ -322,7 +322,7 @@ class RiderRequest extends StatelessWidget {
     );
   }
 
-  Widget userDetails({required String txt, required String imgUrl, required String charge, required double kiloMeter}) {
+  Widget userDetails({required String txt, required String imgUrl, required String charge, required String kiloMeter}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
@@ -361,7 +361,7 @@ class RiderRequest extends StatelessWidget {
             child: Column(
               children: [
                 textWidget(
-                    txt: "\$${charge.toString()}",
+                    txt: "₦${charge.toString()}",
                     fontSize: ScreenUtil().setSp(17),
                     color: AllColors.blackColor,
                     bold: FontWeight.w800,
@@ -1224,7 +1224,7 @@ class CompleteRide extends StatelessWidget {
               Column(
                 children: [
                   textWidget(
-                      txt: "\$$price", fontSize: 17, color: AllColors.blackColor, bold: FontWeight.w800, italic: false),
+                      txt: "₦$price", fontSize: 17, color: AllColors.blackColor, bold: FontWeight.w800, italic: false),
                   textWidget(
                       txt: "$kilometer km",
                       fontSize: 15,
@@ -1263,7 +1263,7 @@ class CompleteRide extends StatelessWidget {
                 textWidget(
                     txt: "Total", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
                 textWidget(
-                    txt: "\$$price", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
+                    txt: "₦$price", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false)
               ],
             ).putPadding(0, 0, 10, 10),
             const SizedBox(

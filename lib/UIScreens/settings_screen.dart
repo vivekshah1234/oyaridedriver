@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
+import 'package:oyaridedriver/UIScreens/authScreens/change_password_screen.dart';
 
 import 'drawer_screen.dart';
 import 'authScreens/edit_profile_screen.dart';
@@ -33,6 +34,19 @@ class _SettingScreenState extends State<SettingScreen> {
               },
               child: const SettingOptions("Edit Profile"),
             ),
+          ),
+          const Divider(
+            color: AllColors.greyColor,
+            height: 7,
+            thickness: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
+            child: GestureDetector(
+                onTap: () {
+                  Get.to(() => const ChangePasswordScreen());
+                },
+                child: const SettingOptions("Change Password")),
           ),
           const Divider(
             color: AllColors.greyColor,

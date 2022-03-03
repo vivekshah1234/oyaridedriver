@@ -36,7 +36,7 @@ class RequestModel {
   late final int id;
   late final int userId;
   late final dynamic driverId;
-  late final int bookingId;
+  late final String bookingId;
   late final dynamic vehicleId;
   late final int vehicleType;
   late final String sourceAddress;
@@ -53,7 +53,7 @@ class RequestModel {
   late final String destinationLatitude;
   late final String destinationLongitude;
   late final String destinationAddress;
-  late final int kilometer;
+  late final String kilometer;
   late final String polygone;
   late final int status;
   late final dynamic customerCancellation;
@@ -140,7 +140,7 @@ class Content {
   final String name;
   final String imgurl;
   final double charge;
-  final double kiloMeter;
+  final String kiloMeter;
   final String pickUpPoint;
   final String destinationPoint;
 

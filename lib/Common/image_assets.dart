@@ -33,5 +33,9 @@ class ImageAssets {
 static String driverCarIcon="assets/driverCarIcon.png";
 static String greenLocationPin="assets/locationPin.png";
 static String animatedGif="assets/gifAnimated.webp";
+
+  static String liteCarIcon = "assets/Lite.png";
+  static String familyCarIcon = "assets/Family.png";
+  static String businessCarIcon = "assets/Business.png";
 }
 String imgUrl="https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg";

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
+import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/controllers/forget_password_controller.dart';
@@ -17,15 +18,17 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _txtEmailId = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ForgetPasswordController forgetPasswordController = Get.put(ForgetPasswordController());
-
+  ForgotPasswordController forgetPasswordController = Get.put(ForgotPasswordController());
+  TextEditingController txtResetCode = TextEditingController();
+  TextEditingController txtNewPwd = TextEditingController();
+  TextEditingController txtNewRPwd = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: appBarWidget2(""),
-      body: GetX<ForgetPasswordController>(
-          init: ForgetPasswordController(),
+      body: GetX<ForgotPasswordController>(
+          init: ForgotPasswordController(),
           builder: (controller) {
             return Stack(
               children: [
@@ -57,10 +60,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     AppButton(
                         text: "SEND MAIL",
                         onPressed: () {
-                          if (_txtEmailId.text.isNotEmpty) {
-                            forgetPasswordController.sendEmail({"email": _txtEmailId.text, "role": "driver"}, context);
+                          bool isValid = isValidEmail(_txtEmailId.text);
+                          if (isValid) {
+                            forgetPasswordController.sendEmail(_txtEmailId.text, context);
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(ErrorMessage.emailError2));
+                            ScaffoldMessenger.of(context).showSnackBar(greenSnackBar("Please enter valid Email."));
                           }
                           //Get.to(()=> ChangePasswordScreen());
                         },

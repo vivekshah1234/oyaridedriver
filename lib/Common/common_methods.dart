@@ -161,7 +161,7 @@ Future<String> refreshTokenApi() async {
     var response = await http.post(uri, headers: null, body: param);
     if (response.statusCode == 200) {
       Map<String, dynamic> map = json.decode(response.body);
-      print("==response== ${response.body}");
+      print("==token response== ${response.body}");
       if (map["status"] == 200) {
         token = map["data"]["token"];
       } else {
@@ -176,7 +176,7 @@ Future<String> refreshTokenApi() async {
       destroyData();
       sp.remove("token");
       sp.remove("userData");
-      Get.offAll(() => LoginScreen());
+      Get.offAll(() => const LoginScreen());
       return "";
     }
   } catch (ex) {
@@ -185,3 +185,5 @@ Future<String> refreshTokenApi() async {
   //print("2===" + token.toString());
   return token;
 }
+
+

@@ -50,7 +50,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   @override
   void initState() {
     super.initState();
+    printInfo(info: "init called###########");
     WidgetsBinding.instance?.addObserver(this);
+
     _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
   }
 
@@ -220,7 +222,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                   initialCameraPosition:
                                       controller.cameraAnimate.value ? controller.kGooglePlex2 : controller.kGooglePlex,
                                   onMapCreated: (GoogleMapController mapController) {
-                                    controller.mapController.complete(mapController);
+                                    controller.onMapCreated(mapController);
                                   },
                                   markers: controller.markers,
                                   polylines: Set<Polyline>.of(controller.polylines.values),
@@ -229,6 +231,21 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                     visible: controller.isAddingMarkerAndPolyline.value, child: greenLoadingWidget())
                               ],
                             ),
+                      Positioned(
+                          top: MediaQuery.of(context).size.height * 0.12,
+                          right: 10,
+                          child: FloatingActionButton(
+                            onPressed: () async {
+                              Position position = await determinePosition();
+
+                              _homeController.updateMyMarker(position.latitude, position.longitude, position.heading);
+                            },
+                            backgroundColor: AllColors.whiteColor,
+                            child: Icon(
+                              Icons.my_location_outlined,
+                              color: AllColors.greenColor,
+                            ),
+                          )),
                       Positioned(
                           bottom: 0,
                           left: 0,
@@ -253,7 +270,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                       child: RiderRequest(
                                                         name: controller.requestList[index].userName,
                                                         imgUrl: controller.requestList[index].profilePic,
-                                                        km: controller.requestList[index].kilometer.toDouble(),
+                                                        km: controller.requestList[index].kilometer,
                                                         price: controller.requestList[index].price,
                                                         pickUpPoint: controller.requestList[index].sourceAddress,
                                                         dropOffPoint: controller.requestList[index].destinationAddress,
@@ -351,9 +368,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                                 Map<String, String> map = {
                                                                   "trip_id": controller.acceptedDriverModel.tripData.id
                                                                       .toString(),
-                                                                  "user_id": controller.acceptedDriverModel.userData.id.toString()
+                                                                  "driver_id": AppConstants.userID,
                                                                 };
-                                                                _homeController.cancelRider(map);
+                                                                cancelRide(map);
                                                               },
                                                               arrivedTap: () {
                                                                 Map<String, dynamic> map = {
@@ -382,11 +399,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                                   },
                                                                   cancelTap: () {
                                                                     Map<String, String> map = {
-                                                                      "trip_id": controller.acceptedDriverModel.tripData.id
+                                                                      "trip_id": controller
+                                                                          .acceptedDriverModel.tripData.id
                                                                           .toString(),
-                                                                      "user_id": controller.acceptedDriverModel.userData.id.toString()
+                                                                      "driver_id": AppConstants.userID,
                                                                     };
-                                                                    _homeController.cancelRider(map);
+                                                                    cancelRide(map);
                                                                   },
                                                                   pickedTap: () {
                                                                     Map<String, dynamic> map = {
@@ -466,12 +484,21 @@ class _MapHomeScreenState extends State<MapHomeScreen>
         });
   }
 
-  cancelRide() {
+  cancelRide(Map<String, String> map) {
     showAnimatedDialog(
       context: context,
       barrierColor: Colors.transparent,
       builder: (BuildContext context) {
-        return const CancelRide().alertCard(context);
+        return CancelRide(
+          cancelTap: () {
+            map["reason"] = cancelReason;
+            printInfo(info: map.toString());
+            Get.back();
+
+            _homeController.cancelRider(map);
+            cancelReason = 'I changed my mind.';
+          },
+        ).alertCard(context);
       },
       animationType: DialogTransitionType.slideFromBottomFade,
       curve: Curves.fastOutSlowIn,
@@ -510,6 +537,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       curve: Curves.fastOutSlowIn,
       duration: const Duration(milliseconds: 500),
     );
+  }
+
+  @override
+  void dispose() {
+    _homeController.disconnectSocket();
+    super.dispose();
   }
 
   @override

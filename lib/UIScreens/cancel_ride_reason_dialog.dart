@@ -4,16 +4,17 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 
 class CancelRide extends StatefulWidget {
-  const CancelRide({Key? key}) : super(key: key);
+  final GestureTapCallback cancelTap;
+  CancelRide({required this.cancelTap});
 
   @override
   _CancelRideState createState() => _CancelRideState();
 }
+String cancelReason = 'I changed my mind.';
 
 class _CancelRideState extends State<CancelRide> {
   final TextEditingController txtReason = TextEditingController();
 
-  String _dropDownValue = 'I changed my mind.';
 
   // List of items in our dropdown menu
   final  List<String> _items = [
@@ -30,7 +31,7 @@ class _CancelRideState extends State<CancelRide> {
       children: [
         DropdownButton(
           isExpanded: true,
-          value: _dropDownValue,
+          value: cancelReason,
           underline: Container(),
           icon: const Icon(Icons.keyboard_arrow_down),
           items: _items.map((String items) {
@@ -44,8 +45,8 @@ class _CancelRideState extends State<CancelRide> {
           }).toList(),
           onChanged: (String? newValue) {
             setState(() {
-              _dropDownValue = newValue!;
-              if (_dropDownValue == "Other") {
+              cancelReason = newValue!;
+              if (cancelReason == "Other") {
                 _isVisible = true;
               } else {
                 _isVisible = false;
@@ -67,7 +68,12 @@ class _CancelRideState extends State<CancelRide> {
                 ],
               )
             : Container(),
-        AppButton(onPressed: () {}, text: "CANCEL RIDE", color: AllColors.blueColor)
+        AppButton(onPressed: () {
+          if(cancelReason=="Other"){
+            cancelReason=txtReason.text;
+          }
+          widget.cancelTap();
+        }, text: "CANCEL RIDE", color: AllColors.blueColor)
       ],
     );
   }

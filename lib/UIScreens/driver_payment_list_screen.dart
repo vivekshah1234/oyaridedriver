@@ -49,64 +49,12 @@ class _DriverPaymentListScreenState extends State<DriverPaymentListScreen> {
             const SizedBox(
               height: 20,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Cards",
-                  style: TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w600),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    showAnimatedDialog(
-                      context: context,
-                      barrierColor: Colors.transparent,
-                      builder: (BuildContext context) {
-                        return const AddCard().alertCard(context);
-                      },
-                      animationType: DialogTransitionType.slideFromBottomFade,
-                      curve: Curves.fastOutSlowIn,
-                      duration: const Duration(milliseconds: 500),
-                    );
-                  },
-                  child: Icon(
-                    Icons.add_circle_outline_outlined,
-                    color: AllColors.blueColor,
-                  ),
-                )
-              ],
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 2,
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: MediaQuery.of(context).size.width * 0.90,
-                      child: CreditCardWidget(
-                        isHolderNameVisible: true,
-                        //isChipVisible: true,
 
-                        cardNumber: cardNumber,
-                        expiryDate: expiryDate,
-                        cardHolderName: cardHolderName,
-                        cvvCode: cvvCode,
-                        cardBgColor: AllColors.greenColor,
-                        showBackView: false,
-                        height: 180,
-                        animationDuration: const Duration(milliseconds: 1200),
-                        onCreditCardWidgetChange: (creditCardBrand) {}, //true when you want to show cvv(back) view
-                      ),
-                    );
-                  }),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  "History",
+                  "Payment History",
                   style: TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -115,7 +63,7 @@ class _DriverPaymentListScreenState extends State<DriverPaymentListScreen> {
               child: ListView.builder(
                   itemCount: 10,
                   shrinkWrap: false,
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     return Container(
                       padding: EdgeInsets.only(top: 5, bottom: 5),
