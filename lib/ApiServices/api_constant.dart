@@ -5,10 +5,8 @@ class ApiConstant {
   static String resetPassword = "auth/reset-password";
   static String refreshToken = "auth/refresh-token";
   static String addDeviceInfo = "/user/device";
-
   static String changePassword = "/user/change-password";
   static String forgotPassword = "/auth/forgot-password";
-
   static String userStatus="/user/online-status";
   static String updateLocation="/user/update-location";
   static String getVehicle="/user/vehicle";

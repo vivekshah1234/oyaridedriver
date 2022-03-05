@@ -34,9 +34,14 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   final double _smallFontSize = 15;
 
   final FontWeight _normalFontWeight = FontWeight.normal;
+  List feedBackList = [];
 
   @override
   void initState() {
+    if (widget.tripDetails.feedBackData != null) {
+      feedBackList.addAll(widget.tripDetails.feedBackData!.description!.split(","));
+      print("feedback length==" + feedBackList.length.toString());
+    }
     getCurrentPosition();
     setPolyline();
     super.initState();
@@ -87,249 +92,247 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget2("Trip Details"),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _isLoading
-              ? const SizedBox(
-                  height: double.infinity,
-                  width: double.infinity,
-                )
-              :  SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: Stack(
-              children: [
-                GoogleMap(
-                  mapType: MapType.terrain,
-                  initialCameraPosition: _kGooglePlex,
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                  markers: _markers,
-                  polylines: _polyLine,
-                ),
-                Positioned(
-                    left: 10,
-                    bottom: 10,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: AllColors.blueColor,
-                          borderRadius: BorderRadius.circular(5)
-                      ),
-                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
-                      child: textWidget(
-                          txt: "Distance : ${widget.tripDetails.kilometer.toString()} KM",
-                          fontSize: _smallFontSize,
-                          color: AllColors.whiteColor,
-                          bold: _normalFontWeight, italic: false),
-                    ))
-
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.tripDetails.createdAt.substring(0, 10) +
-                          "," +
-                          widget.tripDetails.createdAt.substring(12, 19),
-                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
-                    ),
-                    Text(
-                      "₦${widget.tripDetails.price}",
-                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      widget.tripDetails.vehicleDetail.vehicleModel +
-                          "," +
-                          widget.tripDetails.vehicleDetail.vehicleManufacturer +
-                          "," +
-                          widget.tripDetails.vehicleDetail.vehicleColor,
-                      style: TextStyle(
-                          fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.greyColor),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 15),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          children: [
-                            TimelineTile(
-                              nodeAlign: TimelineNodeAlign.start,
-                              contents: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Text( "Source Location",
-                                    //       style: TextStyle(
-                                    //         fontSize: smallFontSize,
-                                    //         color: AllColors.greyColor,
-                                    //         fontWeight: normalFontWeight,)),
-                                    //   const SizedBox(
-                                    //     height: 3,
-                                    //   ),
-                                    Text(widget.tripDetails.sourceAddress,
-                                        style: TextStyle(
-                                          fontSize: _smallFontSize,
-                                          color: AllColors.greyColor,
-                                          fontWeight: _normalFontWeight,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                              node: TimelineNode(
-                                  indicator: ContainerIndicator(
-                                      child: CircleAvatar(
-                                    backgroundColor: AllColors.greenColor,
-                                    radius: 4,
-                                  )),
-                                  endConnector: const DashedLineConnector(
-                                    color: AllColors.greyColor,
-                                  )),
-                            ),
-                            TimelineTile(
-                              nodeAlign: TimelineNodeAlign.start,
-                              contents: Container(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Text(
-                                    //      "Destination Location",
-                                    //     style: TextStyle(
-                                    //       fontSize: smallFontSize,
-                                    //       color: AllColors.greyColor,
-                                    //       fontWeight: normalFontWeight,)),
-                                    // const SizedBox(
-                                    //   height: 3,
-                                    // ),
-                                    Text(widget.tripDetails.destinationAddress,
-                                        style: TextStyle(
-                                          fontSize: _smallFontSize,
-                                          color: AllColors.greyColor,
-                                          fontWeight: _normalFontWeight,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                              node: TimelineNode(
-                                startConnector: const DashedLineConnector(
-                                  color: AllColors.greyColor,
-                                ),
-                                indicator: ContainerIndicator(
-                                    child: CircleAvatar(
-                                  backgroundColor: AllColors.blueColor,
-                                  radius: 4,
-                                )),
-                              ),
-                            ),
-                          ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _isLoading
+                ? const SizedBox(
+                    height: double.infinity,
+                    width: double.infinity,
+                  )
+                : SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: Stack(
+                      children: [
+                        GoogleMap(
+                          mapType: MapType.terrain,
+                          initialCameraPosition: _kGooglePlex,
+                          onMapCreated: (GoogleMapController controller) {
+                            _controller.complete(controller);
+                          },
+                          markers: _markers,
+                          polylines: _polyLine,
                         ),
+                        Positioned(
+                            left: 10,
+                            bottom: 10,
+                            child: Container(
+                              decoration:
+                                  BoxDecoration(color: AllColors.blueColor, borderRadius: BorderRadius.circular(5)),
+                              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
+                              child: textWidget(
+                                  txt: "Distance : ${widget.tripDetails.kilometer.toString()} KM",
+                                  fontSize: _smallFontSize,
+                                  color: AllColors.whiteColor,
+                                  bold: _normalFontWeight,
+                                  italic: false),
+                            ))
+                      ],
+                    ),
+                  ),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.tripDetails.createdAt.substring(0, 10) +
+                            "," +
+                            widget.tripDetails.createdAt.substring(12, 19),
+                        style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
                       ),
-                      // Expanded(
-                      //   flex: 2,
-                      //   child: Container(
-                      //     decoration:
-                      //         BoxDecoration(color: Colors.grey.shade200, borderRadius: BorderRadius.circular(5)),
-                      //     padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5, top: 5),
-                      //     child: const Center(
-                      //         child: Text(
-                      //       "Receipt",
-                      //       style: TextStyle(),
-                      //     )),
-                      //   ),
-                      // )
+                      Text(
+                        "₦${widget.tripDetails.price}",
+                        style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
+                      ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${widget.tripDetails.userDetail.firstName} rated you",
-                      style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
-                    ),
-                    RatingBar.builder(
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      itemSize: 16,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: AllColors.greenColor,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          widget.tripDetails.vehDetail.id == 1
-              ? Expanded(
-                  child: Center(
-                  child: Image.asset(
-                    ImageAssets.liteCarIcon,
-                    scale: 10,
+                  const SizedBox(
+                    height: 5,
                   ),
-                ))
-              : widget.tripDetails.vehDetail.id == 2
-                  ? Expanded(
-                      child: Center(
-                          child: Image.asset(
-                      ImageAssets.familyCarIcon,
-                      scale: 10,
-                    )))
-                  : Expanded(
-                      child: Center(
-                          child: Image.asset(
-                      ImageAssets.businessCarIcon,
-                      scale: 15,
-                    ))),
-          widget.tripDetails.status == 8
-              ? Container(
-            decoration: BoxDecoration(
-              color: AllColors.blueColor,
-            ),
-            width: double.infinity,
-            padding: const EdgeInsets.only(
-              top: 10,
-              bottom: 10,
-            ),
-            //   margin: const EdgeInsets.only(bottom: 10),
-            child: Center(
-              child: Text(
-                "This trip has been cancelled.",
-                style:
-                TextStyle(color: AllColors.greenColor, fontSize: _smallFontSize, fontWeight: FontWeight.w700),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.tripDetails.vehicleDetail.vehicleModel +
+                            "," +
+                            widget.tripDetails.vehicleDetail.vehicleManufacturer +
+                            "," +
+                            widget.tripDetails.vehicleDetail.vehicleColor,
+                        style: TextStyle(
+                            fontWeight: _normalFontWeight, fontSize: _smallFontSize, color: AllColors.greyColor),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25, top: 15, bottom: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              TimelineTile(
+                                nodeAlign: TimelineNodeAlign.start,
+                                contents: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.tripDetails.sourceAddress,
+                                          style: TextStyle(
+                                            fontSize: _smallFontSize,
+                                            color: AllColors.greyColor,
+                                            fontWeight: _normalFontWeight,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                node: TimelineNode(
+                                    indicator: ContainerIndicator(
+                                        child: CircleAvatar(
+                                      backgroundColor: AllColors.greenColor,
+                                      radius: 4,
+                                    )),
+                                    endConnector: const DashedLineConnector(
+                                      color: AllColors.greyColor,
+                                    )),
+                              ),
+                              TimelineTile(
+                                nodeAlign: TimelineNodeAlign.start,
+                                contents: Container(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.tripDetails.destinationAddress,
+                                          style: TextStyle(
+                                            fontSize: _smallFontSize,
+                                            color: AllColors.greyColor,
+                                            fontWeight: _normalFontWeight,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                node: TimelineNode(
+                                  startConnector: const DashedLineConnector(
+                                    color: AllColors.greyColor,
+                                  ),
+                                  indicator: ContainerIndicator(
+                                      child: CircleAvatar(
+                                    backgroundColor: AllColors.blueColor,
+                                    radius: 4,
+                                  )),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${widget.tripDetails.userDetail.firstName} rated you",
+                        style: TextStyle(fontWeight: _normalFontWeight, fontSize: _smallFontSize),
+                      ),
+                      RatingBar.builder(
+                        initialRating: widget.tripDetails.feedBackData == null
+                            ? 0
+                            : double.parse(widget.tripDetails.feedBackData!.userFeedback!),
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        itemSize: 16,
+                        allowHalfRating: true,
+                        tapOnlyMode: false,
+                        ignoreGestures: true,
+                        itemCount: 5,
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: AllColors.greenColor,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ],
+                  ),
+                  widget.tripDetails.feedBackData != null && widget.tripDetails.feedBackData!.description != " "
+                      ? Container(
+                          //color: Colors.red,
+                          height: 40,
+                          child: ListView.builder(
+                              itemCount: feedBackList.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: AllColors.greenColor,
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(color: AllColors.greenColor)),
+                                  margin: const EdgeInsets.only(top: 10, right: 10),
+                                  padding: const EdgeInsets.only(bottom: 4, top: 4, left: 10, right: 10),
+                                  child: textWidget(
+                                      txt: feedBackList[index],
+                                      fontSize: 16,
+                                      color: AllColors.whiteColor,
+                                      bold: FontWeight.w500,
+                                      italic: false),
+                                );
+                              }),
+                        )
+                      : Container()
+                ],
               ),
             ),
-          )
-              : Container(),
-        ],
+            widget.tripDetails.status == 8
+                ? Container(
+                    decoration: BoxDecoration(
+                      color: AllColors.blueColor,
+                    ),
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    //   margin: const EdgeInsets.only(bottom: 10),
+                    child: Center(
+                      child: Text(
+                        "This trip has been cancelled.",
+                        style: TextStyle(
+                            color: AllColors.greenColor, fontSize: _smallFontSize, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  )
+                : widget.tripDetails.vehDetail.id == 1
+                    ? Container(
+                        //  color: Colors.red,
+                        child: Center(
+                          child: Image.asset(
+                            ImageAssets.liteCarIcon,
+                            scale: 10,
+                          ),
+                        ),
+                      )
+                    : widget.tripDetails.vehDetail.id == 2
+                        ? Center(
+                            child: Image.asset(
+                            ImageAssets.familyCarIcon,
+                            scale: 10,
+                          ))
+                        : Center(
+                            child: Image.asset(
+                            ImageAssets.businessCarIcon,
+                            scale: 15,
+                          )),
+          ],
+        ),
       ),
     );
   }

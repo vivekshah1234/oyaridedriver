@@ -266,11 +266,15 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           height: 5,
                         ),
                         RatingBar.builder(
-                          initialRating: 3,
+                          initialRating: controller.historyTripList[index].feedBackData == null
+                              ? 0
+                              : double.parse(controller.historyTripList[index].feedBackData!.userFeedback!),
                           minRating: 1,
                           direction: Axis.horizontal,
                           itemSize: 16,
                           allowHalfRating: true,
+                          tapOnlyMode: false,
+                          ignoreGestures: true,
                           itemCount: 5,
                           itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                           itemBuilder: (context, _) => Icon(

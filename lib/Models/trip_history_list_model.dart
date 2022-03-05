@@ -4,62 +4,64 @@ class TripHistoryListModel {
     required this.status,
     required this.data,
   });
+
   late final String message;
   late final int status;
   late final List<TripHistoryModel> data;
 
-  TripHistoryListModel.fromJson(Map<String, dynamic> json){
+  TripHistoryListModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     status = json['status'];
-    data = List.from(json['data']).map((e)=>TripHistoryModel.fromJson(e)).toList();
+    data = List.from(json['data']).map((e) => TripHistoryModel.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
     _data['message'] = message;
     _data['status'] = status;
-    _data['data'] = data.map((e)=>e.toJson()).toList();
+    _data['data'] = data.map((e) => e.toJson()).toList();
     return _data;
   }
 }
 
 class TripHistoryModel {
-  TripHistoryModel({
-    required this.id,
-    required this.userId,
-    required this.driverId,
-    required this.bookingId,
-    required this.vehicleId,
-    required this.vehicleType,
-    required this.sourceAddress,
-    required this.sourceCity,
-    required this.sourceState,
-    required this.sourceCountry,
-    required this.sourceZipcode,
-    required this.sourceLatitude,
-    required this.sourceLongitude,
-    required this.destinationCity,
-    required this.destinationState,
-    required this.destinationCountry,
-    required this.destinationZipcode,
-    required this.destinationLatitude,
-    required this.destinationLongitude,
-    required this.destinationAddress,
-    required this.kilometer,
-    required this.polygone,
-    required this.status,
-    this.customerCancellation,
-    this.driverCancellation,
-    required this.price,
-    required this.paymentStatus,
-    this.paymentMode,
-    this.paymentTransId,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.userDetail,
-    required this.vehDetail,
-    required this.vehicleDetail,
-  });
+  TripHistoryModel(
+      {required this.id,
+      required this.userId,
+      required this.driverId,
+      required this.bookingId,
+      required this.vehicleId,
+      required this.vehicleType,
+      required this.sourceAddress,
+      required this.sourceCity,
+      required this.sourceState,
+      required this.sourceCountry,
+      required this.sourceZipcode,
+      required this.sourceLatitude,
+      required this.sourceLongitude,
+      required this.destinationCity,
+      required this.destinationState,
+      required this.destinationCountry,
+      required this.destinationZipcode,
+      required this.destinationLatitude,
+      required this.destinationLongitude,
+      required this.destinationAddress,
+      required this.kilometer,
+      required this.polygone,
+      required this.status,
+      this.customerCancellation,
+      this.driverCancellation,
+      required this.price,
+      required this.paymentStatus,
+      this.paymentMode,
+      this.paymentTransId,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.userDetail,
+      required this.vehDetail,
+      required this.vehicleDetail,
+      required this.feedBackData});
+
   late final int id;
   late final int userId;
   late final int driverId;
@@ -94,8 +96,9 @@ class TripHistoryModel {
   late final UserDetail userDetail;
   late final VehDetail vehDetail;
   late final VehicleDetail vehicleDetail;
+  late final FeedBackData? feedBackData;
 
-  TripHistoryModel.fromJson(Map<String, dynamic> json){
+  TripHistoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     driverId = json['driver_id'];
@@ -119,17 +122,18 @@ class TripHistoryModel {
     kilometer = json['kilometer'];
     polygone = json['polygone'];
     status = json['status'];
-    customerCancellation =json['customer_cancellation'];
+    customerCancellation = json['customer_cancellation'];
     driverCancellation = json['driver_cancellation'];
     price = json['price'];
     paymentStatus = json['payment_status'];
     paymentMode = json['payment_mode'];
-    paymentTransId =json['payment_trans_id'];
+    paymentTransId = json['payment_trans_id'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     userDetail = UserDetail.fromJson(json['userDetail']);
     vehDetail = VehDetail.fromJson(json['vehDetail']);
     vehicleDetail = VehicleDetail.fromJson(json['vehicleDetail']);
+    feedBackData = json['feedBackData'] == null ? null : FeedBackData.fromJson(json['feedBackData']);
   }
 
   Map<String, dynamic> toJson() {
@@ -168,6 +172,7 @@ class TripHistoryModel {
     _data['userDetail'] = userDetail.toJson();
     _data['vehDetail'] = vehDetail.toJson();
     _data['vehicleDetail'] = vehicleDetail.toJson();
+    _data['feedBackData'] = _data['feedBackData'] == null ? null : feedBackData!.toJson();
     return _data;
   }
 }
@@ -196,6 +201,7 @@ class UserDetail {
     required this.createdAt,
     required this.updatedAt,
   });
+
   late final int id;
   late final String firstName;
   late final String lastName;
@@ -218,7 +224,7 @@ class UserDetail {
   late final String createdAt;
   late final String updatedAt;
 
-  UserDetail.fromJson(Map<String, dynamic> json){
+  UserDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];
@@ -281,6 +287,7 @@ class VehDetail {
     required this.createdAt,
     required this.updatedAt,
   });
+
   late final int id;
   late final String name;
   late final String price;
@@ -291,7 +298,7 @@ class VehDetail {
   late final String createdAt;
   late final String updatedAt;
 
-  VehDetail.fromJson(Map<String, dynamic> json){
+  VehDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     price = json['price'];
@@ -332,6 +339,7 @@ class VehicleDetail {
     required this.createdAt,
     required this.updatedAt,
   });
+
   late final int id;
   late final int userId;
   late final String vehicleManufacturer;
@@ -344,7 +352,7 @@ class VehicleDetail {
   late final String createdAt;
   late final String updatedAt;
 
-  VehicleDetail.fromJson(Map<String, dynamic> json){
+  VehicleDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
     vehicleManufacturer = json['vehicle_manufacturer'];
@@ -371,6 +379,36 @@ class VehicleDetail {
     _data['is_active_vehicle'] = isActiveVehicle;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
+    return _data;
+  }
+}
+
+class FeedBackData {
+  FeedBackData({
+     this.id,
+     this.tripId,
+     this.userFeedback,
+     this.description,
+  });
+
+  late final int? id;
+  late final int? tripId;
+  late final String? userFeedback;
+  late final String? description;
+
+  FeedBackData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    tripId = json['trip_id'];
+    userFeedback = json['user_feedback'];
+    description = json['description'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['id'] = id;
+    _data['trip_id'] = tripId;
+    _data['user_feedback'] = userFeedback;
+    _data['description'] = description;
     return _data;
   }
 }

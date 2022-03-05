@@ -31,20 +31,14 @@ class YourTripController extends GetxController {
     if (AppConstants.userToken != "userToken") {
       String url = ApiConstant.geTripHistory + "?date=$date";
       getAPI(url, (value) {
+       printInfo(info: value.response.toString());
         if (value.code == 200) {
           Map<String, dynamic> valueMap = json.decode(value.response);
           if (valueMap["status"] == 200) {
             TripHistoryListModel yourTripHistoryListModel = TripHistoryListModel.fromJson(valueMap);
 
             historyTripList.addAll(yourTripHistoryListModel.data);
-            // totalJob(historyTripList.length);
-            // if(historyTripList.isNotEmpty){
-            //   for(int i=0;i<historyTripList.length;i++){
-            //     if(historyTripList[i].paymentStatus=="1"){
-            //     totalEarn=totalEarn+double.parse(historyTripList[i].price);
-            //     }
-            //   }
-            //  }
+
             isLoading(false);
           } else {
             isLoading(false);
