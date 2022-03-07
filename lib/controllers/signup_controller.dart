@@ -7,6 +7,7 @@ import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Models/login_modal.dart';
 import 'package:oyaridedriver/Models/sign_up_model.dart';
+import 'package:oyaridedriver/UIScreens/document_sent_screen.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
@@ -120,16 +121,17 @@ class SignUpController extends GetxController {
               SignUpModel signUpModel = SignUpModel.fromJson(valueMap);
 
               prefs.setInt("registerFormNo", 4);
-              //  Get.offAll(() => const LoginScreen());
-
-              Map<String, String> _map = {
-                "mobile_number": signUpModel.data.user.mobileNumber,
-                "country_code": signUpModel.data.user.countryCode,
-                "password": pwd!,
-                "role": "driver"
-              };
-              login(_map, context);
               isLoading(false);
+               Get.offAll(() => const DocumentSentScreen());
+
+              // Map<String, String> _map = {
+              //   "mobile_number": signUpModel.data.user.mobileNumber,
+              //   "country_code": signUpModel.data.user.countryCode,
+              //   "password": pwd!,
+              //   "role": "driver"
+              // };
+              // login(_map, context);
+
             } else {
               isLoading(false);
               handleError(valueMap["status"].toString(), context);

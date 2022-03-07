@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:oyaridedriver/Models/signup_modal.dart';
+import 'package:oyaridedriver/UIScreens/document_sent_screen.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
@@ -54,6 +55,7 @@ Future<void> main() async {
 
   Widget firstScreen = MyApp();
   SharedPreferences sp = await SharedPreferences.getInstance();
+
   AppConstants.userOnline = sp.getBool("userOnline") ?? true;
   AppConstants.userID = sp.getString("user_id") ?? "user_id";
   AppConstants.registerFormNo = sp.getInt("registerFormNo") ?? 0;
@@ -67,6 +69,9 @@ Future<void> main() async {
         break;
       case 3:
         firstScreen = LicenceDocumentScreen();
+        break;
+      case 4:
+        firstScreen = DocumentSentScreen();
         break;
       default:
         firstScreen = MyApp();

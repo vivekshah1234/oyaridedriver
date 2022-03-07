@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
+import 'package:oyaridedriver/controllers/check_verification_controller.dart';
 
 class DocumentSentScreen extends StatefulWidget {
   const DocumentSentScreen({Key? key}) : super(key: key);
@@ -11,6 +13,13 @@ class DocumentSentScreen extends StatefulWidget {
 }
 
 class _DocumentSentScreenState extends State<DocumentSentScreen> {
+
+  CheckVerificationController checkVerificationController=Get.put(CheckVerificationController());
+  @override
+  void initState() {
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
