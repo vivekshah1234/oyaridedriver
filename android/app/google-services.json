@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:246077239050:android:23e3223c3dc837f5c554f3",
+        "android_client_info": {
+          "package_name": "com.app.oyaridedriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246077239050-0ph7hed8gmhq0ua550t90gcr4vb7gfhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjgx8jnXS7jkm0Jp1VIztnHyj7S6-ls3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246077239050-0ph7hed8gmhq0ua550t90gcr4vb7gfhi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "246077239050-c3d366uttscsn0elkd0fm01o774prse4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oyaridedriver.AppleIOS"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:246077239050:android:da3ddc24813c1971c554f3",
         "android_client_info": {
           "package_name": "com.example.oyaridedriver"
@@ -29,6 +65,49 @@
             {
               "client_id": "246077239050-0ph7hed8gmhq0ua550t90gcr4vb7gfhi.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "246077239050-c3d366uttscsn0elkd0fm01o774prse4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oyaridedriver.AppleIOS"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246077239050:android:408be98d9d32ce19c554f3",
+        "android_client_info": {
+          "package_name": "com.example.oyariderider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246077239050-0ph7hed8gmhq0ua550t90gcr4vb7gfhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjgx8jnXS7jkm0Jp1VIztnHyj7S6-ls3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246077239050-0ph7hed8gmhq0ua550t90gcr4vb7gfhi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "246077239050-c3d366uttscsn0elkd0fm01o774prse4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oyaridedriver.AppleIOS"
+              }
             }
           ]
         }

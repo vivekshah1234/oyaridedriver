@@ -1,4 +1,4 @@
-package com.example.oyaridedriver
+package com.app.oyaridedriver
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
