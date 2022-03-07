@@ -6,6 +6,7 @@ import 'package:oyaridedriver/UIScreens/authScreens/change_password_screen.dart'
 
 import 'drawer_screen.dart';
 import 'authScreens/edit_profile_screen.dart';
+import 'help_center_screen.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -59,19 +60,6 @@ class _SettingScreenState extends State<SettingScreen> {
                 onTap: () {
                   Get.to(() => const EditProfileScreen());
                 },
-                child: const SettingOptions("Privacy Policy")),
-          ),
-          const Divider(
-            color: AllColors.greyColor,
-            height: 7,
-            thickness: 1,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
-            child: GestureDetector(
-                onTap: () {
-                  Get.to(() => const EditProfileScreen());
-                },
                 child: const SettingOptions("Terms and Conditions")),
           ),
           const Divider(
@@ -83,7 +71,7 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: const EdgeInsets.only(left: 30.0, top: 20, bottom: 20),
             child: GestureDetector(
                 onTap: () {
-                  Get.to(() => const EditProfileScreen());
+                  Get.to(() => const HelpCenterScreen());
                 },
                 child: const SettingOptions("Help")),
           ),

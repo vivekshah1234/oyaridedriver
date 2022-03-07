@@ -392,9 +392,9 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.7,
               ),
-              decoration: const BoxDecoration(
-                //    color: AllColors.bgColorOFTextField,
-                borderRadius: BorderRadius.only(
+              decoration:  BoxDecoration(
+                    color: Colors.grey.shade200,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   // bottomLeft: Radius.circular(10),
                   topRight: Radius.circular(10),

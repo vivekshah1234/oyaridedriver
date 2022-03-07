@@ -22,6 +22,7 @@ class ImageAssets {
 
   static String chatIcon="assets/chatIcon.png";
 
+  static String addHomeIcon = "assets/addHomeIcon.png";
   static String yourTripeIcon="assets/yourTripIcon.png";
 
   static String callIcon="assets/callIcon.png";

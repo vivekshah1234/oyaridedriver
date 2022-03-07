@@ -29,15 +29,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
   final List<DrawerItems> _drawerList = [
     DrawerItems(
         0,
-        ImageAssets.paymentIcon,
+        ImageAssets.addHomeIcon,
         "Home",
         const MapHomeScreen(
           isFromNotification: false,
         )),
-    DrawerItems(1, ImageAssets.phoneIcon, "Payment", const DriverPaymentListScreen()),
+    DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
     DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
     DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management", const VehicleManagementScreen()),
-    DrawerItems(4, ImageAssets.yourTripeIcon, "Document Management", const DocumentManagementScreen(true)),
     DrawerItems(5, ImageAssets.chatIcon, "Message", const ChatListScreen()),
     DrawerItems(6, ImageAssets.settingIcon, "Settings", const SettingScreen()),
     DrawerItems(7, ImageAssets.logoutIcon, "Logout", Container()),
@@ -106,7 +105,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 child: Image.asset(
                   _drawerList[index].iconData,
                   color: AllColors.whiteColor,
-                  scale: _drawerList[index].id ==1?7:5,
+                  scale: index==0 ?7:5,
                 ),
               ),
               onTap: () {
