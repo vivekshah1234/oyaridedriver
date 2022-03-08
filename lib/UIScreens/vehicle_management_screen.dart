@@ -49,7 +49,7 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                     ),
                     AppButton(
                             onPressed: () async {
-                              await Get.to(() => AddNewVehicleScreen(
+                              await Get.to(() => const AddNewVehicleScreen(
                                     toEdit: false,
                                   ));
                               _vehicleController.getVehicles();
@@ -126,21 +126,15 @@ class _VehicleManagementScreenState extends State<VehicleManagementScreen> {
                     ),
                     SizedBox(
                       width: 30,
-                      child: RadioListTile(
-                        groupValue: vehicle.isActiveVehicle,
+                      child: Radio(
                         value: index,
-                        tileColor: Colors.white,
-                        selectedTileColor: Colors.white,
-                        activeColor: AllColors.greenColor,
-                        onChanged: (val) {
-                          setState(() {
-                            // radioItemHolder = nList[i].number;
-
-                            Map<String, String> map = {"vehicle_id": vehicle.id.toString()};
-                            setState(() {});
-                            _vehicleController.changeActiveVehicle(map, context);
-                            // vehicleController.getVehicles();
-                          });
+                        groupValue: _vehicleController.activeVehicle.value,
+                        activeColor: Colors.green,
+                        onChanged: (int? val) {
+                          _vehicleController.activeVehicle.value = val!;
+                          setState(() {});
+                          Map<String, String> map = {"vehicle_id": vehicle.id.toString()};
+                          _vehicleController.changeActiveVehicle(map, context);
                         },
                       ),
                     )

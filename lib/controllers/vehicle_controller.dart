@@ -16,9 +16,10 @@ class VehicleController extends GetxController {
   List<VehicleTypes> vehicleTypes = <VehicleTypes>[].obs;
 
   RxString selectedVehicleType = "selectedVehicleType".obs;
-
+  RxInt activeVehicle = 0.obs;
   getVehicles() async {
     isLoading(true);
+    activeVehicle(0);
     vehicleList.clear();
     // postAPIWithHeader(APiC, param, callback)
     bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
@@ -32,11 +33,20 @@ class VehicleController extends GetxController {
     }
     if (AppConstants.userToken != "userToken") {
       getAPI(ApiConstant.getVehicle, (value) {
+        printInfo(info: value.response.toString());
         if (value.code == 200) {
           Map<String, dynamic> valueMap = json.decode(value.response);
           if (valueMap["status"] == 200) {
             VehicleListModel vehicleListModel = VehicleListModel.fromJson(valueMap);
             vehicleList.addAll(vehicleListModel.data);
+            if(vehicleList.isNotEmpty){
+              for(int i=0;i<vehicleList.length;i++){
+                if(vehicleList[i].isActiveVehicle==1){
+                  printInfo(info: "active vehicle index=="+i.toString());
+                  activeVehicle(i);
+                }
+              }
+            }
             isLoading(false);
           } else {
             isLoading(false);

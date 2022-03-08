@@ -18,6 +18,8 @@ class ApiConstant {
   static String getTripDetails="/user/getLastTripDetailDriver";
   static String geTripHistory="/user/getTripListDriver";
   static String getNotificationList="/user/getNotificationList";
+  static String verifyDoc="/auth/verify-doc";
+  static String getTotalEarn="/user/driver-job-earning";
 }
 
 abstract class AppConstants {

@@ -63,7 +63,7 @@ class User {
      this.licenceExpireDate,
     required this.createdAt,
     required this.updatedAt,
-    required this.unreadCount,
+     this.unreadCount,
   });
   late final int id;
   late final String firstName;
@@ -86,7 +86,7 @@ class User {
   late final dynamic licenceExpireDate;
   late final String createdAt;
   late final String updatedAt;
-  late final int unreadCount;
+  late final dynamic unreadCount;
 
   User.fromJson(Map<String, dynamic> json){
     id = json['id'];

@@ -17,7 +17,7 @@ class _DocumentSentScreenState extends State<DocumentSentScreen> {
   CheckVerificationController checkVerificationController=Get.put(CheckVerificationController());
   @override
   void initState() {
-
+    checkVerificationController.checkStatus(context);
     super.initState();
   }
   @override

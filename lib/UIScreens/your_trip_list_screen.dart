@@ -1,17 +1,17 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
-import 'package:oyaridedriver/controllers/your_trip_history_controller.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/UIScreens/trip_detail_screen.dart';
+import 'package:oyaridedriver/controllers/your_trip_history_controller.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:timelines/timelines.dart';
 
 class YourTripScreen extends StatefulWidget {
@@ -37,6 +37,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
   @override
   void initState() {
     printInfo(info: _focusedDay.toString().substring(0, 10));
+    yourTripController.getTotalEarnAndTotalJobs();
     yourTripController.getTripHistory(_focusedDay.toString().substring(0, 10));
 
     super.initState();
@@ -70,7 +71,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             totalJobs(controller.totalJob.value.toString()),
-                            totalEarn(controller.totalEarn.toStringAsFixed(1))
+                            totalEarn(controller.totalEarn.value.toString())
                           ],
                         ),
                         const SizedBox(

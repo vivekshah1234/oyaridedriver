@@ -31,7 +31,6 @@ class SignUpController extends GetxController {
             Map<String, dynamic> valueMap = json.decode(value.response);
             if (valueMap["status"] == 200) {
               // //SignUpModel signUpModel=SignUpModel.fromJson(valueMap);
-              printInfo(info: valueMap["data"]["user"]["id"].toString());
               prefs.setString("user_id", valueMap["data"]["user"]["id"].toString());
               prefs.setInt("registerFormNo", 1);
               AppConstants.userID = valueMap["data"]["user"]["id"].toString();
@@ -108,7 +107,7 @@ class SignUpController extends GetxController {
     isLoading(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    String? pwd = prefs.getString("pwd");
+
     multipartPostAPI(
         profilePic: profilePic.path,
         licencePhoto: licencePhoto.path,
@@ -119,18 +118,17 @@ class SignUpController extends GetxController {
             Map<String, dynamic> valueMap = json.decode(value.response);
             if (valueMap["status"] == 200) {
               SignUpModel signUpModel = SignUpModel.fromJson(valueMap);
-
+              prefs.setString("countryCode",  signUpModel.data.user.countryCode);
+              prefs.setString("mobileNumber",   signUpModel.data.user.mobileNumber);
               prefs.setInt("registerFormNo", 4);
+
+              saveTokenAndUserData(
+                  token: signUpModel.data.token,
+                  context: context);
+
               isLoading(false);
                Get.offAll(() => const DocumentSentScreen());
 
-              // Map<String, String> _map = {
-              //   "mobile_number": signUpModel.data.user.mobileNumber,
-              //   "country_code": signUpModel.data.user.countryCode,
-              //   "password": pwd!,
-              //   "role": "driver"
-              // };
-              // login(_map, context);
 
             } else {
               isLoading(false);
@@ -142,47 +140,13 @@ class SignUpController extends GetxController {
           }
         });
   }
-
-  login(Map<String, dynamic> map, context) async {
-    isLoading(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    postAPI(ApiConstant.login, map, (value) {
-      if (value.code == 200) {
-        Map<String, dynamic> valueMap = json.decode(value.response);
-        if (valueMap["status"] == 200) {
-          LoginModel loginModel = LoginModel.fromJson(valueMap);
-          AppConstants.userID = loginModel.data.user.id.toString();
-          if (loginModel.data.user.isAvailable == 0) {
-            AppConstants.userOnline = false;
-          } else {
-            AppConstants.userOnline = true;
-          }
-          saveTokenAndUserData(token: loginModel.data.token.toString(), user: loginModel.data.user, context: context);
-
-          Get.offAll(() => const MapHomeScreen(
-                isFromNotification: false,
-              ));
-          isLoading(false);
-        } else {
-          isLoading(false);
-          handleError(valueMap["status"].toString(), context);
-        }
-      } else {
-        isLoading(false);
-        handleError(value.response.toString(), context);
-      }
-    });
-  }
-
-  saveTokenAndUserData({required String token, required User user, context}) async {
+  saveTokenAndUserData({required String token,  context}) async {
     AppConstants.userToken = token;
-    String jsonString = jsonEncode(user);
+   // String jsonString = jsonEncode(user);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("token", AppConstants.userToken);
-    prefs.setString("userData", jsonString);
-    prefs.setBool("userOnline", true);
-    setUserData(user);
+  //setUserData(user);
     sendTokenToBackend(context);
   }
 }

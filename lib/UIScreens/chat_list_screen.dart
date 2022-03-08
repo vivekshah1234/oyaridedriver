@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
@@ -63,7 +62,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
                               return messageUserList(context, snapshot.data!.docs[index]);
                             },
                             separatorBuilder: (BuildContext con, int index) {
-                              return Divider();
+                              return const Divider();
                             }))
                     : Container()
               ],

@@ -129,6 +129,8 @@ Widget textFieldWithoutIcon({controller, labelText, errorText}) {
   return TextField(
     controller: controller,
     cursorColor: AllColors.blackColor,
+    
+    textCapitalization: TextCapitalization.sentences,
     decoration: InputDecoration(
       labelText: labelText,
       labelStyle: const TextStyle(color: AllColors.greyColor, fontSize: 13),
