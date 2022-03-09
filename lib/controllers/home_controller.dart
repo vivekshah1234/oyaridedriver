@@ -612,6 +612,11 @@ class HomeController extends GetxController {
   confirmPayment(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "dropped ===" + map.toString());
+    Map<String, String> statusChange = {};
+    statusChange["is_available"] = "1";
+    changeUserStatus(
+      statusChange,
+    );
     reconnectSocket();
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);

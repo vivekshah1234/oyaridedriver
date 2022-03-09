@@ -291,46 +291,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 ],
               ),
             ),
-            widget.tripDetails.status == 8
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: AllColors.blueColor,
-                    ),
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                    ),
-                    //   margin: const EdgeInsets.only(bottom: 10),
-                    child: Center(
-                      child: Text(
-                        "This trip has been cancelled.",
-                        style: TextStyle(
-                            color: AllColors.greenColor, fontSize: _smallFontSize, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  )
-                : widget.tripDetails.vehDetail.id == 1
-                    ? Container(
-                        //  color: Colors.red,
-                        child: Center(
-                          child: Image.asset(
-                            ImageAssets.liteCarIcon,
-                            scale: 10,
-                          ),
-                        ),
-                      )
-                    : widget.tripDetails.vehDetail.id == 2
-                        ? Center(
-                            child: Image.asset(
-                            ImageAssets.familyCarIcon,
-                            scale: 10,
-                          ))
-                        : Center(
-                            child: Image.asset(
-                            ImageAssets.businessCarIcon,
-                            scale: 15,
-                          )),
+
           ],
         ),
       ),
