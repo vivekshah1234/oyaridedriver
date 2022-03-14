@@ -21,10 +21,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
  final TextEditingController _txtLName = TextEditingController();
  final TextEditingController _txtEmail = TextEditingController();
  final TextEditingController _txtNum = TextEditingController();
- final TextEditingController _txtPwd = TextEditingController();
- final TextEditingController _txtCPwd = TextEditingController();
  final  double _mediumFontSize = 15.0;
- bool _checkBoxValue = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,54 +45,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             textField(controller: _txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
             textFieldForNum(controller: _txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
-            textField(controller: _txtPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Password"),
-            textField(controller: _txtCPwd, prefixIcon: ImageAssets.passwordIcon, labelText: "Confirm Password"),
-            const SizedBox(
-              height: 25,
-            ),
-            Row(
-              children: [
-                checkBoxFun(),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                    child: Text(
-                  "I have read and agreed the terms and conditions.",
-                  style: TextStyle(fontSize: _mediumFontSize, color: AllColors.greyColor, fontWeight: FontWeight.normal),
-                ))
-              ],
-            ),
-            const SizedBox(
+               const SizedBox(
               height: 25,
             ),
             AppButton(text: "REGISTER", onPressed: () {}, color: AllColors.greenColor).paddingSymmetric(horizontal: 30),
-            // const Expanded(
-            //     flex: 2,
-            //     child: SizedBox(
-            //       height: 25,
-            //     )),
+
           ],
         ).putPadding(0, 0, 25, 25),
       ),
-    );
-  }
-
-
-
-  Widget checkBoxFun() {
-    return Column(
-      children: <Widget>[
-        Checkbox(
-            value: _checkBoxValue,
-            activeColor: Colors.green,
-            onChanged: (newValue) {
-              setState(() {
-                _checkBoxValue = newValue!;
-              });
-              const Text('Remember me');
-            }),
-      ],
     );
   }
 

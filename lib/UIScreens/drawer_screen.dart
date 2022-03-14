@@ -14,9 +14,8 @@ import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_trip_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
-import 'document_management_screen.dart';
-import 'authScreens/login_screen.dart';
-import 'driver_payment_list_screen.dart';
+
+import 'home_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({Key? key}) : super(key: key);
@@ -34,7 +33,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         const MapHomeScreen(
           isFromNotification: false,
         )),
-    DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
+    // DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
     DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
     DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management", const VehicleManagementScreen()),
     DrawerItems(5, ImageAssets.chatIcon, "Message", const ChatListScreen()),
@@ -105,7 +104,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 child: Image.asset(
                   _drawerList[index].iconData,
                   color: AllColors.whiteColor,
-                  scale: index==0 ?7:5,
+                  scale: index == 0 ? 7 : 5,
                 ),
               ),
               onTap: () {
@@ -149,7 +148,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   sp.remove("userData");
                   sp.remove("currentRole");
 
-                  Get.offAll(() => LoginScreen());
+                  Get.offAll(() => const HomeScreen());
                 })
           ],
         ).alertCard(context);
