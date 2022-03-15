@@ -14,7 +14,7 @@ class HelpCenterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
+    //  extendBodyBehindAppBar: true,
       backgroundColor: AllColors.whiteColor,
       appBar: appBarWidget2(
         "Help Center",

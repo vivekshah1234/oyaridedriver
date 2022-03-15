@@ -14,6 +14,43 @@ class YourTripController extends GetxController {
   RxInt totalJob = 0.obs;
   RxString totalEarn = "0.0".obs;
   List<TripHistoryModel> historyTripList = <TripHistoryModel>[];
+  RxBool isLoadingToday = false.obs;
+  getTodayTripHistory(String date) async {
+    isLoadingToday(true);
+    historyTripList.clear();
+    // postAPIWithHeader(APiC, param, callback)
+    bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
+    printInfo(info: "expire token====" + hasExpired.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (hasExpired == true) {
+      //refreshToken
+      var token = await refreshTokenApi();
+      AppConstants.userToken = token;
+      prefs.setString("token", AppConstants.userToken);
+    }
+    if (AppConstants.userToken != "userToken") {
+      String url = ApiConstant.geTripHistory + "?date=$date";
+      getAPI(url, (value) {
+        printInfo(info: value.response.toString());
+        if (value.code == 200) {
+          Map<String, dynamic> valueMap = json.decode(value.response);
+          if (valueMap["status"] == 200) {
+            TripHistoryListModel yourTripHistoryListModel = TripHistoryListModel.fromJson(valueMap);
+
+            historyTripList.addAll(yourTripHistoryListModel.data);
+
+            isLoadingToday(false);
+          } else {
+            isLoadingToday(false);
+            printError(info: valueMap["message"].toString());
+          }
+        } else {
+          isLoadingToday(false);
+          printError(info: value.response.toString());
+        }
+      });
+    }
+  }
 
   getTripHistory(String date) async {
     isLoading(true);

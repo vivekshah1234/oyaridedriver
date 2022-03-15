@@ -44,7 +44,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             }
             return Column(
               children: [
-                searchTextField(),
+                // searchTextField(),
                 SizedBox(
                   height: 15,
                 ),
@@ -73,11 +73,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       children: [
                         ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.network(
-                              imgUrl,
-                              width: 55,
-                              height: 50,
+                            child: Image.asset(
+                              ImageAssets.dummyPersonIcon,
+                              scale: 10,
                             )),
+
                         SizedBox(
                           width: 10,
                         ),

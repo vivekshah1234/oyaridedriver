@@ -19,9 +19,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'all_colors.dart';
 import 'common_widgets.dart';
-import 'image_assets.dart';
 
-
+import 'package:get/get.dart';
 double calculateHeight(double height,context) {
   print("Screen height===" + height.toString());
   double height2=0.0;

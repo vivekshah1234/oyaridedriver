@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
+import 'package:oyaridedriver/controllers/edit_profile_controller.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({Key? key}) : super(key: key);
@@ -17,43 +20,82 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
- final TextEditingController _txtFName = TextEditingController();
- final TextEditingController _txtLName = TextEditingController();
- final TextEditingController _txtEmail = TextEditingController();
- final TextEditingController _txtNum = TextEditingController();
- final  double _mediumFontSize = 15.0;
+  final TextEditingController _txtFName = TextEditingController();
+  final TextEditingController _txtLName = TextEditingController();
+  final TextEditingController _txtEmail = TextEditingController();
+  final TextEditingController _txtNum = TextEditingController();
+  final double _mediumFontSize = 15.0;
+  String countryCode = "+39";
 
+  EditProfileController editProfileController = Get.put(EditProfileController());
+
+  @override
+  void initState() {
+    _txtFName.text = AppConstants.fullName.split(" ")[0];
+    _txtLName.text = AppConstants.fullName.split(" ")[1];
+    _txtEmail.text = AppConstants.email;
+    countryCode = AppConstants.countryCode;
+    _txtNum.text = AppConstants.mobileNo;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWidget2("Edit Profile"),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(child: profilePic()),
-            Row(
+      body: GetX<EditProfileController>(
+          init: EditProfileController(),
+          builder: (controller) {
+            return Stack(
+              alignment: Alignment.center,
               children: [
-                Expanded(
-                    child:
-                        textField(controller: _txtFName, prefixIcon: ImageAssets.personIcon, labelText: "First Name")),
-                const SizedBox(
-                  width: 7,
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Center(child: profilePic()),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: textField(
+                                  controller: _txtFName, prefixIcon: ImageAssets.personIcon, labelText: "First Name")),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Expanded(child: textFieldWithoutIcon(controller: _txtLName, labelText: "Last Name")),
+                        ],
+                      ),
+                      textField(controller: _txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
+                      textFieldForNum(
+                          controller: _txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      AppButton(text: "UPDATE", onPressed: updateProfile, color: AllColors.greenColor)
+                          .paddingSymmetric(horizontal: 30),
+                    ],
+                  ).putPadding(0, 0, 25, 25),
                 ),
-                Expanded(child: textFieldWithoutIcon(controller: _txtLName, labelText: "Last Name")),
+                Visibility(visible: controller.isLoading.value, child: greenLoadingWidget())
               ],
-            ),
-            textField(controller: _txtEmail, prefixIcon: ImageAssets.emailIcon, labelText: "Email"),
-            textFieldForNum(controller: _txtNum, labelText: "Phone Number", prefixIcon: ImageAssets.phoneIcon),
-               const SizedBox(
-              height: 25,
-            ),
-            AppButton(text: "REGISTER", onPressed: () {}, color: AllColors.greenColor).paddingSymmetric(horizontal: 30),
-
-          ],
-        ).putPadding(0, 0, 25, 25),
-      ),
+            );
+          }),
     );
+  }
+
+  updateProfile() {
+    Map<String, String> map = {
+      "id": AppConstants.userID,
+      "country_code": countryCode.toString(),
+      "mobile_number": _txtNum.text.toString(),
+      "first_name": _txtFName.text.toString(),
+      "last_name": _txtLName.text.toString(),
+      "email": _txtEmail.text.toString(),
+    };
+    if (file == null) {
+      editProfileController.updateProfile(map, context);
+    } else {
+      editProfileController.updateProfileWithImage(map: map, profilePic: file, context: context);
+    }
   }
 
   var file;
@@ -111,8 +153,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ],
     );
   }
-
-  String countryCode = "+39";
 
   Widget textFieldForNum({controller, labelText, errorText, prefixIcon}) {
     return Row(
@@ -208,7 +248,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
 
         // Set default value
-        initialSelection: '+62',
+        initialSelection: countryCode,
         // or
         // initialSelection: 'US'
         onChanged: (CountryCode? code) {
@@ -239,11 +279,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               : CircleAvatar(
                   backgroundColor: Colors.grey.shade200,
                   radius: 52,
-                  child: Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.grey.shade400,
-                    size: 42,
-                  ),
+                  backgroundImage: NetworkImage(AppConstants.profilePic),
                 ),
         ),
         Positioned(

@@ -1,9 +1,10 @@
 class ApiConstant {
+  static String baseUrl1 = "http://3.13.6.132:3900/";
   static String baseUrl = "http://3.13.6.132:3900/api";
   static String signUp = "/auth/register";
   static String login = "/auth/login";
-  static String resetPassword = "auth/reset-password";
-  static String refreshToken = "auth/refresh-token";
+  static String resetPassword = "/auth/reset-password";
+  static String refreshToken = "/auth/refresh-token";
   static String addDeviceInfo = "/user/device";
   static String changePassword = "/user/change-password";
   static String forgotPassword = "/auth/forgot-password";
@@ -20,6 +21,11 @@ class ApiConstant {
   static String getNotificationList="/user/getNotificationList";
   static String verifyDoc="/auth/verify-doc";
   static String getTotalEarn="/user/driver-job-earning";
+  static String editProfile="/user/update-profile";
+  static String duePayment="/user/driver-due-payment";
+  static String payment="/payment/payment-url";
+  static String verifyTransaction="/payment/verify-transaction";
+  static String userDetails="/user/detail";
 }
 
 abstract class AppConstants {

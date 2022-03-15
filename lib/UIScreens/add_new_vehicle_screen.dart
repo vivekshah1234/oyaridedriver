@@ -123,7 +123,7 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        AppButton(text: "ADD", onPressed: addVehicle, color: AllColors.greenColor),
+                        AppButton(text: widget.toEdit?"UPDATE":"ADD", onPressed: addVehicle, color: AllColors.greenColor),
                       ],
                     ).putPadding(20, 20, 30, 30),
                   ),

@@ -61,8 +61,10 @@ class User {
     this.verificationCode,
      this.paymentType,
      this.licenceExpireDate,
+    required this.isPaymentDue,
     required this.createdAt,
     required this.updatedAt,
+
      this.unreadCount,
   });
   late final int id;
@@ -84,6 +86,7 @@ class User {
   late final dynamic verificationCode;
   late final dynamic paymentType;
   late final dynamic licenceExpireDate;
+  late final int isPaymentDue;
   late final String createdAt;
   late final String updatedAt;
   late final dynamic unreadCount;
@@ -108,6 +111,7 @@ class User {
     verificationCode =json['verification_code'];
     paymentType = json['payment_type'];
     licenceExpireDate = json['licence_expire_date'];
+    isPaymentDue = json['is_payment_due'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     unreadCount = json['unreadCount'];
@@ -135,6 +139,7 @@ class User {
     _data['payment_type'] = paymentType;
     _data['licence_expire_date'] = licenceExpireDate;
     _data['created_at'] = createdAt;
+    _data['is_payment_due'] = isPaymentDue;
     _data['updated_at'] = updatedAt;
     _data['unreadCount'] = unreadCount;
     return _data;

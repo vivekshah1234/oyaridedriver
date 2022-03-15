@@ -1,18 +1,12 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:badges/badges.dart';
-import 'package:dotted_line/dotted_line.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:maps_toolkit/maps_toolkit.dart' as poly_util;
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
@@ -23,13 +17,13 @@ import 'package:oyaridedriver/UIScreens/ChatUI/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/UIScreens/rider_details_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
-import 'package:sized_context/src/extensions.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -52,7 +46,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     super.initState();
     printInfo(info: "init called###########");
     WidgetsBinding.instance?.addObserver(this);
-
+    _homeController.checkDriverPaymentPending();
     _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
   }
 
@@ -255,6 +249,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               : controller.currentAppState.value == 0 //&& controller.swipeItems.isEmpty
                                   ? NoRequestCart(
                                       userOnline: AppConstants.userOnline,
+                                      isBlocked: controller.isBlocked,
                                     )
                                   : Container(
                                       child: controller.currentAppState.value == 1 && !controller.isLoadingDriver.value

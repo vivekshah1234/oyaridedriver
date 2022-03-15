@@ -39,6 +39,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   @override
   void initState() {
     if (widget.tripDetails.feedBackData != null) {
+      print("aa==="+widget.tripDetails.feedBackData!.description.toString());
       feedBackList.addAll(widget.tripDetails.feedBackData!.description!.split(","));
       print("feedback length==" + feedBackList.length.toString());
     }
@@ -287,7 +288,47 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                                 );
                               }),
                         )
-                      : Container()
+                      : Container(),
+                  widget.tripDetails.status == 8
+                      ? Container(
+                    decoration: BoxDecoration(
+                      color: AllColors.blueColor,
+                    ),
+                    width: double.infinity,
+
+                    padding: const EdgeInsets.only(
+                      top: 7,
+                      bottom: 7,
+                    ),
+                    //   margin: const EdgeInsets.only(bottom: 10),
+                    child: Center(
+                      child: Text(
+                        "This trip has been cancelled.",
+                        style: TextStyle(
+                            color: AllColors.greenColor, fontSize: _smallFontSize, fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  )
+                      : widget.tripDetails.vehicleType == 1
+                      ? Center(
+                    child: Image.asset(
+                      ImageAssets.liteCarIcon,
+                      scale: 10,
+                    ),
+                  )
+                      : widget.tripDetails.vehicleType == 2
+                      ? Center(
+                    child: Image.asset(
+                      ImageAssets.familyCarIcon,
+                      scale: 10,
+                    ),
+                  )
+                      : Center(
+                    child: Image.asset(
+                      ImageAssets.businessCarIcon,
+                      scale: 10,
+                    ),
+                  )
                 ],
               ),
             ),

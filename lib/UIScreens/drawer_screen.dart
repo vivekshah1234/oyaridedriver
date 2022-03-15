@@ -15,6 +15,7 @@ import 'package:oyaridedriver/UIScreens/your_trip_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
 
+import 'driver_payment_list_screen.dart';
 import 'home_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         const MapHomeScreen(
           isFromNotification: false,
         )),
-    // DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
+     DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
     DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
     DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management", const VehicleManagementScreen()),
     DrawerItems(5, ImageAssets.chatIcon, "Message", const ChatListScreen()),

@@ -38,7 +38,7 @@ class _YourTripScreenState extends State<YourTripScreen> {
   void initState() {
     printInfo(info: _focusedDay.toString().substring(0, 10));
     yourTripController.getTotalEarnAndTotalJobs();
-    yourTripController.getTripHistory(_focusedDay.toString().substring(0, 10));
+    yourTripController.getTodayTripHistory(_focusedDay.toString().substring(0, 10));
 
     super.initState();
   }
@@ -52,9 +52,9 @@ class _YourTripScreenState extends State<YourTripScreen> {
       body: GetX<YourTripController>(
           init: YourTripController(),
           builder: (YourTripController controller) {
-            // if (controller.isLoading.value) {
-            //   return Center(child: greenLoadingWidget());
-            // }
+            if (controller.isLoadingToday.value) {
+              return Center(child: greenLoadingWidget());
+            }
 
             return Column(
               children: [
@@ -250,9 +250,10 @@ class _YourTripScreenState extends State<YourTripScreen> {
                                         bold: _normalFontWeight,
                                         italic: false),
                                     textWidget(
-                                        txt: controller.historyTripList[index].paymentMode.toString() == "null"
+                                        txt: controller.historyTripList[index].paymentMode.toString() == "null" ||
+                                                controller.historyTripList[index].paymentMode.toString() == "cash"
                                             ? "CASH"
-                                            : "CASH",
+                                            : "PAY STACK",
                                         fontSize: ScreenUtil().setSp(_mediumFontSize),
                                         color: AllColors.blackColor,
                                         bold: _mediumFontWeight,

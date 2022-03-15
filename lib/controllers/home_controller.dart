@@ -1,25 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:location/location.dart';
+import 'package:oyaridedriver/ApiServices/api_constant.dart';
+import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/allString.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
+import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/Models/acceptedDriverModel.dart';
 import 'package:oyaridedriver/Models/calculateDistanceModel.dart';
 import 'package:oyaridedriver/Models/request_model.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:get/get.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:oyaridedriver/ApiServices/api_constant.dart';
-import 'package:oyaridedriver/ApiServices/networkcall.dart';
-import 'package:oyaridedriver/Common/common_methods.dart';
+import 'package:oyaridedriver/Models/sign_up_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:swipe_cards/swipe_cards.dart';
 
 //when nothing type =0
@@ -56,10 +58,10 @@ class HomeController extends GetxController {
   StreamSubscription<LocationData>? locationSubscription;
   Location locationTracker = Location();
   RxBool isAddingMarkerAndPolyline = false.obs;
+  bool isBlocked = false;
 
   @override
   void onInit() {
-
     allInitMethods();
     super.onInit();
   }
@@ -68,6 +70,41 @@ class HomeController extends GetxController {
     getCurrentPosition();
     init(requestList);
     getBackgroundDetails();
+  }
+
+  checkDriverPaymentPending() async {
+    isLoading(true);
+    bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
+    printInfo(info: "expire token====" + hasExpired.toString());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (hasExpired == true) {
+      //refreshToken
+      var token = await refreshTokenApi();
+      AppConstants.userToken = token;
+      prefs.setString("token", AppConstants.userToken);
+    }
+
+    if (AppConstants.userToken != "userToken") {
+      getAPI(ApiConstant.userDetails, (value) async {
+        if (value.code == 200) {
+          Map<String, dynamic> valueMap = json.decode(value.response);
+          if (valueMap["status"] == 200) {
+            //  printInfo(info: "User Details======"+value.response);
+            User user = User.fromJson(valueMap["data"]);
+            if (user.isPaymentDue == 1) {
+              isBlocked = true;
+            }
+            isLoading(false);
+          } else {
+            isLoading(false);
+            printError(info: valueMap["message"].toString());
+          }
+        } else {
+          isLoading(false);
+          printError(info: value.response.toString());
+        }
+      });
+    }
   }
 
   getBackgroundDetails() async {
@@ -161,7 +198,7 @@ class HomeController extends GetxController {
       TaskModel("1", "one", latitude, longitude, sourceLatitude, sourceLongitude),
       TaskModel("2", "two", sourceLatitude, sourceLongitude, destinationLatitude, destinationLongitude)
     ];
-   setMarker(
+    setMarker(
         source: LatLng(sourceLatitude, sourceLongitude),
         destination: LatLng(destinationLatitude, destinationLongitude));
 
@@ -195,14 +232,13 @@ class HomeController extends GetxController {
       zoom: 14.4746,
     );
 
-
     Map<String, dynamic> map = {};
     locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
       locationSubscription?.cancel();
       locationSubscription = null;
     }).listen((newLocalData) async {
-      printInfo(info:"new data==="+ newLocalData.longitude.toString());
+      printInfo(info: "new data===" + newLocalData.longitude.toString());
 
       map["latitude"] = newLocalData.latitude;
       map["longitude"] = newLocalData.longitude;
@@ -211,11 +247,9 @@ class HomeController extends GetxController {
       updateLocation2(map);
     });
     addMyMarker(latitude, longitude, position.heading);
-
   }
 
   addMyMarker(double latitude, double longitude, double heading) async {
-
     Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
     markers.add(Marker(
         markerId: MarkerId(MarkerPolylineId.myLocationMarker),
@@ -227,8 +261,8 @@ class HomeController extends GetxController {
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.fromBytes(imageData!)));
     isLoadingMap(false);
-
   }
+
   updateMyMarker(double latitude, double longitude, double heading) async {
     cameraAnimate(true);
     Uint8List? imageData = await getBytesFromAsset(ImageAssets.driverCarIcon, 70);
@@ -242,7 +276,6 @@ class HomeController extends GetxController {
         anchor: const Offset(0.5, 0.5),
         icon: BitmapDescriptor.fromBytes(imageData!)));
     cameraAnimate(false);
-
   }
 
   void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
@@ -706,6 +739,7 @@ class HomeController extends GetxController {
     swipeItems.clear();
     isAddingData(false);
   }
+
   disconnectSocket() async {
     printInfo(info: "Socket Connected???===" + _socket.connected.toString());
     if (_socket.connected == false) {
@@ -724,8 +758,6 @@ class HomeController extends GetxController {
       printInfo(info: "Socket DisConnected???===" + _socket.disconnected.toString());
     }
   }
-
-
 
   @override
   void onReady() {

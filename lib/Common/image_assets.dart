@@ -42,5 +42,7 @@ static String animatedGif="assets/gifAnimated.webp";
   static String instaLogo="assets/instaLogo.jpeg";
   static String gmailLogo="assets/gmailLogo.png";
   static String callLogo="assets/callLogo.png";
+
+  static String dummyPersonIcon="assets/dummyPersonIcon.png";
 }
 String imgUrl="https://i.pinimg.com/564x/04/e1/78/04e1784fc85d72ccec586ca224ce361a.jpg";

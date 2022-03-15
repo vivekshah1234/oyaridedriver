@@ -11,6 +11,7 @@ import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sized_context/src/extensions.dart';
 import 'package:timelines/timelines.dart';
+
 import 'all_colors.dart';
 import 'image_assets.dart';
 
@@ -129,7 +130,6 @@ Widget textFieldWithoutIcon({controller, labelText, errorText}) {
   return TextField(
     controller: controller,
     cursorColor: AllColors.blackColor,
-    
     textCapitalization: TextCapitalization.sentences,
     decoration: InputDecoration(
       labelText: labelText,
@@ -906,8 +906,9 @@ Widget dividerWidget() {
 
 class NoRequestCart extends StatelessWidget {
   final bool userOnline;
+  final bool isBlocked;
 
-  NoRequestCart({required this.userOnline});
+  const NoRequestCart({Key? key, required this.userOnline, required this.isBlocked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -951,7 +952,7 @@ class NoRequestCart extends StatelessWidget {
               ),
             ],
           ),
-          padding: const EdgeInsets.only(top: 7, bottom: 20),
+          padding: const EdgeInsets.only(top: 7, bottom: 20, left: 10, right: 10),
           child: Column(
             children: [
               Container(
@@ -976,9 +977,14 @@ class NoRequestCart extends StatelessWidget {
                 height: 15,
               ),
               Text(
-                "Currently,You don't have any request.",
+                isBlocked
+                    ? "Currently, You are blocked because you still did not pay to admin, Please go to the payment section from the side menu and make payment of last 10 rides."
+                    : "Currently,You don't have any request.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, color: AllColors.blueColor, fontWeight: FontWeight.w300),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: isBlocked ? AllColors.redColor : AllColors.blueColor,
+                    fontWeight: isBlocked ? FontWeight.w500 : FontWeight.w300),
               ),
             ],
           ),
@@ -1149,14 +1155,14 @@ class WhileTravelingCart extends StatelessWidget {
 }
 
 class CompleteRide extends StatelessWidget {
-  String name, kilometer, price, bookingId,profilePic;
+  String name, kilometer, price, bookingId, profilePic;
   int paymentType;
   final GestureTapCallback confirmPayment;
 
   CompleteRide(
       {required this.name,
       required this.price,
-        required this.profilePic,
+      required this.profilePic,
       required this.kilometer,
       required this.confirmPayment,
       required this.paymentType,
