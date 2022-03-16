@@ -93,6 +93,12 @@ class HomeController extends GetxController {
             User user = User.fromJson(valueMap["data"]);
             if (user.isPaymentDue == 1) {
               isBlocked = true;
+              Map<String, String> map = {};
+              map["is_available"] = "0";
+              changeUserStatus(map);
+              AppConstants.userOnline=false;
+            }else{
+              isBlocked = false;
             }
             isLoading(false);
           } else {
@@ -654,6 +660,7 @@ class HomeController extends GetxController {
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);
       allInitMethods();
+      checkDriverPaymentPending();
       currentAppState(0);
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());

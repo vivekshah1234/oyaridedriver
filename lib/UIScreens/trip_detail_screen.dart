@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -111,6 +113,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                           initialCameraPosition: _kGooglePlex,
                           onMapCreated: (GoogleMapController controller) {
                             _controller.complete(controller);
+                          },
+                          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                            Factory<OneSequenceGestureRecognizer>(
+                                  () =>  EagerGestureRecognizer(),
+                            ),
                           },
                           markers: _markers,
                           polylines: _polyLine,

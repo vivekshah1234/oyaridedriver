@@ -130,14 +130,20 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       !AppConstants.userOnline
                           ? GestureDetector(
                               onTap: () {
+                                if(controller.isBlocked==false){
                                 if (controller.currentAppState.value == 0) {
                                   Map<String, String> map = {};
                                   map["is_available"] = "1";
                                   _homeController.changeUserStatus(map);
+
                                 } else {
                                   toast("You can not be online while you are already on a ride.");
                                 }
-                              },
+                              }else {
+                                  toast("You can not be online because you are blocked .");
+                                }
+
+                                },
                               child: Container(
                                 decoration:
                                     BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(13)),
