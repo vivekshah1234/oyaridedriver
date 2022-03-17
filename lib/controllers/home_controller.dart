@@ -314,10 +314,9 @@ class HomeController extends GetxController {
       required double destinationLongitude}) async {
     Map<String, dynamic> majoinRoomMap = {};
     majoinRoomMap["driver_id"] = id;
-    printInfo(info: "Join room===" + majoinRoomMap.toString());
     double distance = 0.0;
     markers.remove(MarkerId(MarkerPolylineId.myLocationMarker));
-    _socket.emit("joinRoom", majoinRoomMap);
+    _socket.emit(SocketEvents.joinRoom, majoinRoomMap);
     try {
       var location = await determinePosition();
       lastMapPosition = LatLng(location.latitude, location.longitude);
@@ -337,7 +336,7 @@ class HomeController extends GetxController {
         map["heading"] = newLocalData.heading;
         map["driver_id"] = id;
         map["distance"] = distance.toString();
-        _socket.emit('updateLocation', map);
+        _socket.emit(SocketEvents.updateLocation, map);
         lastMapPositionPrivious = LatLng(newLocalData.latitude!, newLocalData.longitude!);
         lastMapPosition = LatLng(newLocalData.latitude!, newLocalData.longitude!);
         updateMarkerAndCircle(newLocalData, imageData!);
@@ -418,10 +417,7 @@ class HomeController extends GetxController {
           sendIdToSocket(map);
         }
       });
-      Map<String, dynamic> majoinRoomMap = {};
-      majoinRoomMap["driver_id"] = AppConstants.userID;
-      printInfo(info: "Join room===" + majoinRoomMap.toString());
-      _socket.emit("joinRoom", majoinRoomMap);
+
       }
       _socket.onError((data) {
         printError(info: "Socket Error" + data.toString());
@@ -591,13 +587,14 @@ class HomeController extends GetxController {
     }
   }
 
-  cancelRider(Map<String, String> map) {
+  cancelRide(Map<String, String> map) {
     isLoadingDriver(true);
 //    reconnectSocket();
     try {
       _socket.emit(SocketEvents.cancelRideByBoth, map);
       markers.clear();
       polylines.clear();
+      polyLineCoordinates.clear();
       locationSubscription?.cancel();
       locationSubscription = null;
       currentAppState(0);
@@ -656,7 +653,7 @@ class HomeController extends GetxController {
     map["driver_id"] = id;
     //reconnectSocket();
     try {
-      _socket.emit("leaveRoom", map);
+      _socket.emit(SocketEvents.leaveRoom, map);
       printInfo(info: "Left the room===========");
     } on PlatformException catch (e) {
       printError(info: e.toString());

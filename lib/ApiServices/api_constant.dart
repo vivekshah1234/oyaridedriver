@@ -67,4 +67,7 @@ abstract class SocketEvents{
   static String startRideDetails="startRideDetails";
   static String paymentVerifyDriver="paymentVerifyDriver";
   static String cancelRideByBoth="cancelRideByBoth";
+  static String joinRoom="joinRoom";
+  static String leaveRoom="leaveRoom";
+  static String updateLocation="updateLocation";
 }

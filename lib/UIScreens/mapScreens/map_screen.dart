@@ -7,7 +7,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:hop_swipe_cards/hop_swipe_cards.dart';
+import 'package:hop_swipe_cards/hop_swipe_cards.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
@@ -17,14 +17,12 @@ import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/ChatUI/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
-import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
-import '../rider_details_screen.dart';
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -37,7 +35,7 @@ class MapHomeScreen extends StatefulWidget {
 }
 
 class _MapHomeScreenState extends State<MapHomeScreen>
-    with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver , TickerProviderStateMixin {
+    with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver, TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final HomeController _homeController = Get.put(HomeController());
@@ -52,6 +50,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     //
   }
 
+  CardController cardController = CardController();
+
   @override
   void onNotify(RemoteMessage message) {
     RemoteNotification? notification = message.notification;
@@ -62,7 +62,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       printInfo(info: "notifying1=========" + message.data.toString());
       Map<String, String> map = {
         "user_id": message.data["userId"],
-       // "driver_id": AppConstants.userID,
+        // "driver_id": AppConstants.userID,
       };
       _homeController.sendIdToSocket(map);
     }
@@ -267,101 +267,124 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                       child: controller.currentAppState.value == 1 && !controller.isLoadingDriver.value
                                           ? SizedBox(
                                               height: calculateHeight(MediaQuery.of(context).size.height, context),
-                                              child: SwipeCards(
-                                                matchEngine: controller.matchEngine,
-                                                itemBuilder: (BuildContext context, int index) {
-                                                  return GestureDetector(
-                                                      onTap: () {
-                                                        Get.to(() => RiderDetailScreen(controller.requestList[index]));
-                                                      },
-                                                      child: RiderRequest(
-                                                        name: controller.requestList[index].userName,
-                                                        imgUrl: controller.requestList[index].profilePic,
-                                                        km: controller.requestList[index].kilometer,
-                                                        price: controller.requestList[index].price,
-                                                        pickUpPoint: controller.requestList[index].sourceAddress,
-                                                        dropOffPoint: controller.requestList[index].destinationAddress,
-                                                        acceptOnTap: () {
-                                                          controller.matchEngine.currentItem?.like();
-                                                          Map<String, dynamic> map = {
-                                                            "trip_id": controller.requestList[index].id,
-                                                            "driver_id": AppConstants.userID
-                                                          };
-                                                          _homeController.acceptRequest(map);
-                                                          setState(() {});
-                                                        },
-                                                        ignoreOnTap: () {
-                                                          controller.matchEngine.currentItem?.nope();
-                                                          printInfo(info: "nope2");
-                                                          printInfo(info: "i=====" + index.toString());
-                                                          printInfo(
-                                                              info: "swipeItems====" +
-                                                                  controller.swipeItems.length.toString());
-                                                          if (index == controller.requestList.length - 1) {
-                                                            controller.swipeItems.clear();
-                                                            controller.requestList.clear();
-                                                            controller.allDataClear();
-                                                          }
-                                                          setState(() {});
-                                                        },
-                                                      ));
-                                                },
-                                                onStackFinished: () {
-                                                  // controller.polyLine.clear();
-                                                  controller.markers.clear();
-
-                                                  setState(() {});
-                                                },
-                                              ),
-                                              // child: HopSwipeCards(
-                                              //   noMoreSwipeCardsLeft: Center(child: Text('No more users left')),
-                                              //   totalNum: controller.requestList.length,
-                                              //   maxWidth: MediaQuery.of(context).size.width * 0.9,
-                                              //   maxHeight: MediaQuery.of(context).size.width * 0.9,
-                                              //   minWidth: MediaQuery.of(context).size.width * 0.8,
-                                              //   minHeight: MediaQuery.of(context).size.width * 0.8,
-                                              //   cardBuilder: (
-                                              //     context,
-                                              //     index,
-                                              //     a,
-                                              //   ) =>
-                                              //       RiderRequest(
-                                              //     name: controller.requestList[index].userName,
-                                              //     imgUrl: controller.requestList[index].profilePic,
-                                              //     km: controller.requestList[index].kilometer,
-                                              //     price: controller.requestList[index].price,
-                                              //     pickUpPoint: controller.requestList[index].sourceAddress,
-                                              //     dropOffPoint: controller.requestList[index].destinationAddress,
-                                              //     acceptOnTap: () {
-                                              //       controller.matchEngine.currentItem?.like();
-                                              //       Map<String, dynamic> map = {
-                                              //         "trip_id": controller.requestList[index].id,
-                                              //         "driver_id": AppConstants.userID
-                                              //       };
-                                              //       _homeController.acceptRequest(map);
-                                              //       setState(() {});
-                                              //     },
-                                              //     ignoreOnTap: () {
-                                              //       controller.matchEngine.currentItem?.nope();
-                                              //       printInfo(info: "nope2");
-                                              //       printInfo(info: "i=====" + index.toString());
-                                              //       printInfo(
-                                              //           info:
-                                              //               "swipeItems====" + controller.swipeItems.length.toString());
-                                              //       if (index == controller.requestList.length - 1) {
-                                              //         controller.swipeItems.clear();
-                                              //         controller.requestList.clear();
-                                              //         controller.allDataClear();
-                                              //       }
-                                              //       setState(() {});
-                                              //     },
-                                              //   ),
-                                              //   swipeCompleteCallback: (int index, direction) {
-                                              //     //direction gives the swipe direction after completion
+                                              // child: SwipeCards(
+                                              //   matchEngine: controller.matchEngine,
+                                              //   itemBuilder: (BuildContext context, int index) {
+                                              //     return GestureDetector(
+                                              //         onTap: () {
+                                              //           Get.to(() => RiderDetailScreen(controller.requestList[index]));
+                                              //         },
+                                              //         child: RiderRequest(
+                                              //           name: controller.requestList[index].userName,
+                                              //           imgUrl: controller.requestList[index].profilePic,
+                                              //           km: controller.requestList[index].kilometer,
+                                              //           price: controller.requestList[index].price,
+                                              //           pickUpPoint: controller.requestList[index].sourceAddress,
+                                              //           dropOffPoint: controller.requestList[index].destinationAddress,
+                                              //           acceptOnTap: () {
+                                              //             controller.matchEngine.currentItem?.like();
+                                              //             Map<String, dynamic> map = {
+                                              //               "trip_id": controller.requestList[index].id,
+                                              //               "driver_id": AppConstants.userID
+                                              //             };
+                                              //             _homeController.acceptRequest(map);
+                                              //             setState(() {});
+                                              //           },
+                                              //           ignoreOnTap: () {
+                                              //             controller.matchEngine.currentItem?.nope();
+                                              //             printInfo(info: "nope2");
+                                              //             printInfo(info: "i=====" + index.toString());
+                                              //             printInfo(
+                                              //                 info: "swipeItems====" +
+                                              //                     controller.swipeItems.length.toString());
+                                              //             if (index == controller.requestList.length - 1) {
+                                              //               controller.swipeItems.clear();
+                                              //               controller.requestList.clear();
+                                              //               controller.allDataClear();
+                                              //             }
+                                              //             setState(() {});
+                                              //           },
+                                              //         ));
                                               //   },
-                                              //   //cardController: context.watch<SubjectBloc>(),
-                                              //   currentIndexInDisplay: (index) {},
+                                              //   onStackFinished: () {
+                                              //     // controller.polyLine.clear();
+                                              //     controller.markers.clear();
+                                              //
+                                              //     setState(() {});
+                                              //   },
                                               // ),
+                                              child: HopSwipeCards(
+                                                noMoreSwipeCardsLeft: const Center(child: Text('No more users left')),
+                                                totalNum: controller.requestList.length,
+                                                maxWidth: MediaQuery.of(context).size.width * 0.9,
+                                                maxHeight: MediaQuery.of(context).size.width * 0.9,
+                                                minWidth: MediaQuery.of(context).size.width * 0.89,
+                                                minHeight: MediaQuery.of(context).size.width * 0.8,
+                                                // onRestrictLeftSwipeCallBack: (val) {
+                                                //   return true;
+                                                // },
+                                                cardBuilder: (
+                                                  context,
+                                                  index,
+                                                  a,
+                                                ) =>
+                                                    RiderRequest(
+                                                  name: controller.requestList[index].userName,
+                                                  imgUrl: controller.requestList[index].profilePic,
+                                                  km: controller.requestList[index].kilometer,
+                                                  price: controller.requestList[index].price,
+                                                  pickUpPoint: controller.requestList[index].sourceAddress,
+                                                  dropOffPoint: controller.requestList[index].destinationAddress,
+                                                  acceptOnTap: () {
+                                                    controller.matchEngine.currentItem?.like();
+                                                    Map<String, dynamic> map = {
+                                                      "trip_id": controller.requestList[index].id,
+                                                      "driver_id": AppConstants.userID
+                                                    };
+                                                    _homeController.acceptRequest(map);
+                                                    setState(() {});
+                                                  },
+                                                  ignoreOnTap: () {
+                                                    controller.matchEngine.currentItem?.nope();
+                                                    printInfo(info: "nope2");
+                                                    printInfo(info: "i=====" + index.toString());
+                                                    printInfo(
+                                                        info:
+                                                            "swipeItems====" + controller.swipeItems.length.toString());
+                                                    if (index == controller.requestList.length - 1) {
+                                                      controller.swipeItems.clear();
+                                                      controller.requestList.clear();
+                                                      controller.allDataClear();
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                ),
+                                                swipeCompleteCallback: (int index, direction) {
+                                                  printInfo(info: direction!.index.toString());
+                                                  if(direction.index==2){
+                                                    controller.matchEngine.currentItem?.nope();
+                                                    if (index == controller.requestList.length - 1) {
+                                                      controller.swipeItems.clear();
+                                                      controller.requestList.clear();
+                                                      controller.allDataClear();
+                                                    }
+                                                    setState(() {});
+                                                  }
+                                                  else if(direction.index==0){
+                                                    controller.matchEngine.currentItem?.like();
+                                                    Map<String, dynamic> map = {
+                                                      "trip_id": controller.requestList[index].id,
+                                                      "driver_id": AppConstants.userID
+                                                    };
+                                                    _homeController.acceptRequest(map);
+                                                    setState(() {});
+                                                  }
+                                                  //direction gives the swipe direction after completion
+                                                },
+                                                //cardController: context.watch<SubjectBloc>(),
+                                                currentIndexInDisplay: (index) {},
+                                                cardController: cardController,
+                                              ),
                                             )
                                           : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -556,7 +579,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
             printInfo(info: map.toString());
             Get.back();
 
-            _homeController.cancelRider(map);
+            _homeController.cancelRide(map);
             cancelReason = 'I changed my mind.';
           },
         ).alertCard(context);

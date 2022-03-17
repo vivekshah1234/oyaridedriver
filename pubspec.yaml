@@ -74,7 +74,7 @@ dependencies:
   marquee: ^2.2.0
   webview_flutter: 2.3.1
   #new swipe
-  #hop_swipe_cards: ^1.0.0+1
+  hop_swipe_cards: ^2.0.0-nullsafety.1
 
 dev_dependencies:
   flutter_test:

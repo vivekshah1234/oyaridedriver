@@ -415,6 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.3"
+  hop_swipe_cards:
+    dependency: "direct main"
+    description:
+      name: hop_swipe_cards
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0-nullsafety.1"
   http:
     dependency: "direct main"
     description:
