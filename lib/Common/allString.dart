@@ -1,4 +1,25 @@
+class AllStrings{
+  //final
+  static String ok = "Ok!";
+  static String permissionText = " we need some access!";
+  static String permissionTitle1 = "Camera";
+  static String permissionTitle2 = "Storage & Media";
+  static String permissionTitle3 = "Call";
+  static String permissionTitle4 = "Location";
 
+  static String permissionText1 = "OyaRide requires camera access to upload photos.";
+  static String permissionText2 = "OyaRide requires media and storage access to upload photos.";
+  static String permissionText3 = "Other person can reach out to you easily.";
+  static String permissionText4 ="OyaRide needs access of your location because this app will help you to reach from source to destination. Therefore, you will be ask permission to collect your location data.Background location data will also be collected to enable live tracking even when the app is closed or not in used.";
+
+  static String allowAllAccess ="Allow all access";
+
+  static String termsTitle15 = "Access Location Feature & User Background Location";
+
+
+    //  "In order to show you nearby courier/receiver/sender, OyaRide needs to know where you are. Therefore, you will be ask permission to collect your location data.Background location data will also be collected to enable live tracking even when the app is closed or not in used.";
+
+}
 class ErrorMessage {
   static String emailError = "Please enter your email.";
   static String emailError2 = "Please enter valid email.";

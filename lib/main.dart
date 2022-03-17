@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:oyaridedriver/Models/signup_modal.dart';
 import 'package:oyaridedriver/UIScreens/document_sent_screen.dart';
 import 'package:oyaridedriver/UIScreens/licence_details_screens.dart';
 import 'package:oyaridedriver/UIScreens/mapScreens/map_screen.dart';
+import 'package:oyaridedriver/UIScreens/permission_screen.dart';
 import 'package:oyaridedriver/UIScreens/personal_info_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,7 +46,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, statusBarBrightness: Brightness.dark, statusBarIconBrightness: Brightness.dark
+      statusBarColor: Colors.transparent, statusBarBrightness: Brightness.light, statusBarIconBrightness: Brightness.dark
       // transparent status bar
       ));
 
@@ -55,6 +56,14 @@ Future<void> main() async {
 
   Widget firstScreen = MyApp();
   SharedPreferences sp = await SharedPreferences.getInstance();
+  bool? allPermissionAllowed = sp.getBool("allPermission");
+  if (allPermissionAllowed == null  ) {
+    allPermissionAllowed = false;
+    firstScreen = MyApp();
+  }else if( allPermissionAllowed = true){
+    firstScreen = HomeScreen();
+  }
+
 
   AppConstants.userOnline = sp.getBool("userOnline") ?? true;
   AppConstants.userID = sp.getString("user_id") ?? "user_id";
@@ -156,7 +165,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return HomeScreen();
+    return AllPermissionPage();
   }
 
   void iOSPermission() {
@@ -218,7 +227,6 @@ Future<void> setUserData(User user) async {
   if (user.profilePic != null) {
     AppConstants.profilePic = user.profilePic;
   }
-
 
   DatabaseMethods databaseMethods = DatabaseMethods();
   try {

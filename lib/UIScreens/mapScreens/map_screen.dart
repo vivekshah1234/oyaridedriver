@@ -43,11 +43,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   @override
   void initState() {
     super.initState();
-    printInfo(info: "init called###########");
     WidgetsBinding.instance?.addObserver(this);
-    // _homeController.allInitMethods();
     _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
-    //
   }
 
   CardController cardController = CardController();
@@ -336,7 +333,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                   pickUpPoint: controller.requestList[index].sourceAddress,
                                                   dropOffPoint: controller.requestList[index].destinationAddress,
                                                   acceptOnTap: () {
-                                                    controller.matchEngine.currentItem?.like();
+                                                 //   controller.matchEngine.currentItem?.like();
                                                     Map<String, dynamic> map = {
                                                       "trip_id": controller.requestList[index].id,
                                                       "driver_id": AppConstants.userID
@@ -345,14 +342,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                     setState(() {});
                                                   },
                                                   ignoreOnTap: () {
-                                                    controller.matchEngine.currentItem?.nope();
+                                                  //  controller.matchEngine.currentItem?.nope();
                                                     printInfo(info: "nope2");
                                                     printInfo(info: "i=====" + index.toString());
-                                                    printInfo(
-                                                        info:
-                                                            "swipeItems====" + controller.swipeItems.length.toString());
+
                                                     if (index == controller.requestList.length - 1) {
-                                                      controller.swipeItems.clear();
+                                                     // controller.swipeItems.clear();
                                                       controller.requestList.clear();
                                                       controller.allDataClear();
                                                     }
@@ -362,16 +357,16 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                 swipeCompleteCallback: (int index, direction) {
                                                   printInfo(info: direction!.index.toString());
                                                   if(direction.index==2){
-                                                    controller.matchEngine.currentItem?.nope();
+
                                                     if (index == controller.requestList.length - 1) {
-                                                      controller.swipeItems.clear();
+                                                  //    controller.swipeItems.clear();
                                                       controller.requestList.clear();
                                                       controller.allDataClear();
                                                     }
                                                     setState(() {});
                                                   }
                                                   else if(direction.index==0){
-                                                    controller.matchEngine.currentItem?.like();
+                                                   // controller.matchEngine.currentItem?.like();
                                                     Map<String, dynamic> map = {
                                                       "trip_id": controller.requestList[index].id,
                                                       "driver_id": AppConstants.userID

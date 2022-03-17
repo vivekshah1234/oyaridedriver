@@ -30,19 +30,19 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Need camera access to take profile pictures</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Location permission</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Location permission</string>
-	<key>NSLocationUsageDescription</key>
-	<string>Location permission</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Location permission</string>
-	<key>NSMotionUsageDescription</key>
-	<string>App Requred Animation use</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need photo library access to set profile pictures</string>
+    <string>OyaRide requires camera access to upload photos.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Oyaride needs access of your location so other person can track you easily.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Oyaride needs access of your location so other person can track you easily.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
+    <key>NSMotionUsageDescription</key>
+    <string>App Requred Animation use</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Need photo library access to set profile pictures</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
