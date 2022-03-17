@@ -37,8 +37,8 @@ import 'package:swipe_cards/swipe_cards.dart';
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   late IO.Socket _socket;
-
-  final List<SwipeItem> swipeItems = <SwipeItem>[];
+  RxBool isFirstLoading = false.obs;
+   List<SwipeItem> swipeItems = <SwipeItem>[];
   late MatchEngine matchEngine;
 
   RxBool isAddingData = false.obs;
@@ -62,14 +62,19 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+    requestList.clear();
+    swipeItems.clear();
+
     allInitMethods();
     super.onInit();
   }
 
-  allInitMethods() {
-    getCurrentPosition();
+  allInitMethods() async {
+    isFirstLoading(true);
+    await getCurrentPosition();
     init(requestList);
-    getBackgroundDetails();
+    await getBackgroundDetails();
+    isFirstLoading(false);
   }
 
   checkDriverPaymentPending() async {
@@ -96,8 +101,8 @@ class HomeController extends GetxController {
               Map<String, String> map = {};
               map["is_available"] = "0";
               changeUserStatus(map);
-              AppConstants.userOnline=false;
-            }else{
+              AppConstants.userOnline = false;
+            } else {
               isBlocked = false;
             }
             isLoading(false);
@@ -184,6 +189,7 @@ class HomeController extends GetxController {
             }
           }
           isLoading(false);
+          checkDriverPaymentPending();
         } else {
           isLoading(false);
           printError(info: value.response.toString());
@@ -392,12 +398,15 @@ class HomeController extends GetxController {
   //All Socket operations
   connectToSocket({required bool isFromNotification, userid}) {
     try {
+
       _socket = IO.io(SocketEvents.socketUrl, <String, dynamic>{
         'transports': ['websocket', 'polling'],
         'forceNew': true,
         'reconnecting': true,
-        'timeout': 50000
+        'timeout': 50000,
+      //  "user_id": AppConstants.userID,
       });
+      if (_socket.connected == false) {
       _socket.connect();
       printInfo(info: _socket.connected.toString());
       _socket.on("connect", (_) {
@@ -409,26 +418,32 @@ class HomeController extends GetxController {
           sendIdToSocket(map);
         }
       });
+      Map<String, dynamic> majoinRoomMap = {};
+      majoinRoomMap["driver_id"] = AppConstants.userID;
+      printInfo(info: "Join room===" + majoinRoomMap.toString());
+      _socket.emit("joinRoom", majoinRoomMap);
+      }
       _socket.onError((data) {
         printError(info: "Socket Error" + data.toString());
       });
+
     } catch (ex) {
       printError(info: "Socket Error" + ex.toString());
     }
   }
-
-  reconnectSocket() {
-    printInfo(info: "Socket Connected???===" + _socket.connected.toString());
-    if (_socket.connected == false) {
-      _socket.connect();
-      _socket.on("connect", (_) {
-        printInfo(info: 'Socket Re-Connected===' + _socket.connected.toString());
-      });
-    }
-  }
+  //
+  // reconnectSocket() {
+  //   printInfo(info: "Socket Connected???===" + _socket.connected.toString());
+  //   if (_socket.connected == false) {
+  //     _socket.connect();
+  //     _socket.on("connect", (_) {
+  //       printInfo(info: 'Socket Re-Connected===' + _socket.connected.toString());
+  //     });
+  //   }
+  // }
 
   updateLocation2(Map<String, dynamic> map) async {
-    reconnectSocket();
+ //   reconnectSocket();
     try {
       _socket.emit(SocketEvents.updateDriverLocation, map);
     } catch (Ex) {
@@ -436,9 +451,9 @@ class HomeController extends GetxController {
     }
   }
 
-  sendIdToSocket(Map<String, dynamic> map) async {
+  sendIdToSocket(Map<String, dynamic> map)  {
     isAddingData(true);
-    reconnectSocket();
+    //reconnectSocket();
     printInfo(info: "getRequest===" + isAddingData.value.toString());
     try {
       _socket.emit(SocketEvents.getRequest, map);
@@ -449,7 +464,7 @@ class HomeController extends GetxController {
   }
 
   fetchRequests() {
-    reconnectSocket();
+   // reconnectSocket();
     _socket.on(SocketEvents.sendRequest, (data) {
       if (data != null) {
         printInfo(info: "getData===" + data.toString());
@@ -472,7 +487,7 @@ class HomeController extends GetxController {
     printInfo(info: "accept===" + map.toString());
 
     isLoadingDriver(true);
-    reconnectSocket();
+    //reconnectSocket();
     Map<String, String> statusChange = {};
     statusChange["is_available"] = "0";
     changeUserStatus(
@@ -561,7 +576,7 @@ class HomeController extends GetxController {
   reachedAtLoc(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "reached at loc===" + map.toString());
-    reconnectSocket();
+    //reconnectSocket();
     try {
       _socket.emit(SocketEvents.reachedAtLocation, map);
       _socket.on(SocketEvents.sendReachedAtLocationResponse, (data) {
@@ -578,7 +593,7 @@ class HomeController extends GetxController {
 
   cancelRider(Map<String, String> map) {
     isLoadingDriver(true);
-    reconnectSocket();
+//    reconnectSocket();
     try {
       _socket.emit(SocketEvents.cancelRideByBoth, map);
       markers.clear();
@@ -596,7 +611,7 @@ class HomeController extends GetxController {
   pickedUp(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "picked up ===" + map.toString());
-    reconnectSocket();
+    //reconnectSocket();
     try {
       _socket.emit(SocketEvents.pickUpTheRider, map);
       _socket.emit(SocketEvents.startRide, map);
@@ -615,7 +630,7 @@ class HomeController extends GetxController {
   dropAtLoc(Map<String, dynamic> map) {
     isLoadingDriver(true);
     printInfo(info: "dropped ====" + map.toString());
-    reconnectSocket();
+   // reconnectSocket();
     try {
       leaveTrackingRoom(AppConstants.userID);
       _socket.emit(SocketEvents.completeRide, map);
@@ -639,7 +654,7 @@ class HomeController extends GetxController {
   leaveTrackingRoom(String id) {
     Map<String, dynamic> map = {};
     map["driver_id"] = id;
-    reconnectSocket();
+    //reconnectSocket();
     try {
       _socket.emit("leaveRoom", map);
       printInfo(info: "Left the room===========");
@@ -656,11 +671,12 @@ class HomeController extends GetxController {
     changeUserStatus(
       statusChange,
     );
-    reconnectSocket();
+  //  reconnectSocket();
     try {
       _socket.emit(SocketEvents.paymentVerifyDriver, map);
       allInitMethods();
       checkDriverPaymentPending();
+      allDataClear();
       currentAppState(0);
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
@@ -711,7 +727,7 @@ class HomeController extends GetxController {
           content: Content(
               name: requestList[i].userName,
               imgurl: requestList[i].profilePic,
-              charge: 50.0,
+              charge: requestList[i].price,
               kiloMeter: requestList[i].kilometer,
               pickUpPoint: requestList[i].sourceAddress,
               destinationPoint: requestList[i].destinationAddress),
@@ -728,12 +744,14 @@ class HomeController extends GetxController {
             printInfo(info: "swipeItems====" + swipeItems.length.toString());
             if (i == requestList.length - 1) {
               allDataClear();
+              currentAppState(0);
             }
           },
           superlikeAction: () {
             printInfo(info: "super Like");
             if (i == requestList.length - 1) {
               allDataClear();
+              currentAppState(0);
             }
           }));
     }
@@ -742,18 +760,28 @@ class HomeController extends GetxController {
   }
 
   allDataClear() {
+    printInfo(info: "Inside All Data clear====");
     requestList.clear();
     swipeItems.clear();
+    swipeItems = <SwipeItem>[];
+    matchEngine.notifyListeners();
+    printInfo(info: "After clearing==="+swipeItems.length.toString());
+
+    currentAppState(0);
     isAddingData(false);
   }
 
   disconnectSocket() async {
     printInfo(info: "Socket Connected???===" + _socket.connected.toString());
     if (_socket.connected == false) {
-      locationSubscription!.cancel();
-      locationSubscription = null;
+      if (locationSubscription != null) {
+        locationSubscription!.cancel();
+        locationSubscription = null;
+      }
       markers.clear();
       polylines.clear();
+      requestList.clear();
+      swipeItems.clear();
       final GoogleMapController _mapController = await mapController.future;
       _mapController.dispose();
       //  locationTracker.dispose();

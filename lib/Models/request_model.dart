@@ -139,7 +139,7 @@ class RequestModel {
 class Content {
   final String name;
   final String imgurl;
-  final double charge;
+  final String charge;
   final String kiloMeter;
   final String pickUpPoint;
   final String destinationPoint;

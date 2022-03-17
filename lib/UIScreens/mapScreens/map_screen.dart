@@ -7,6 +7,7 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:hop_swipe_cards/hop_swipe_cards.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
@@ -15,7 +16,6 @@ import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/UIScreens/ChatUI/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
-import 'package:oyaridedriver/UIScreens/rider_details_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
+import '../rider_details_screen.dart';
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -36,7 +37,7 @@ class MapHomeScreen extends StatefulWidget {
 }
 
 class _MapHomeScreenState extends State<MapHomeScreen>
-    with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver {
+    with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver , TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final HomeController _homeController = Get.put(HomeController());
@@ -46,8 +47,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     super.initState();
     printInfo(info: "init called###########");
     WidgetsBinding.instance?.addObserver(this);
-    _homeController.checkDriverPaymentPending();
+    // _homeController.allInitMethods();
     _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
+    //
   }
 
   @override
@@ -60,6 +62,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
       printInfo(info: "notifying1=========" + message.data.toString());
       Map<String, String> map = {
         "user_id": message.data["userId"],
+       // "driver_id": AppConstants.userID,
       };
       _homeController.sendIdToSocket(map);
     }
@@ -72,6 +75,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     return GetX<HomeController>(
         init: HomeController(),
         builder: (controller) {
+          // if(controller.isFirstLoading.value){
+          //   return Center(child: greenLoadingWidget());
+          // }
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -86,6 +92,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 18.0),
                       child: FloatingActionButton(
+                        heroTag: "btn2",
                         onPressed: () {
                           _scaffoldKey.currentState!.openDrawer();
                         },
@@ -130,20 +137,18 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       !AppConstants.userOnline
                           ? GestureDetector(
                               onTap: () {
-                                if(controller.isBlocked==false){
-                                if (controller.currentAppState.value == 0) {
-                                  Map<String, String> map = {};
-                                  map["is_available"] = "1";
-                                  _homeController.changeUserStatus(map);
-
+                                if (controller.isBlocked == false) {
+                                  if (controller.currentAppState.value == 0) {
+                                    Map<String, String> map = {};
+                                    map["is_available"] = "1";
+                                    _homeController.changeUserStatus(map);
+                                  } else {
+                                    toast("You can not be online while you are already on a ride.");
+                                  }
                                 } else {
-                                  toast("You can not be online while you are already on a ride.");
-                                }
-                              }else {
                                   toast("You can not be online because you are blocked .");
                                 }
-
-                                },
+                              },
                               child: Container(
                                 decoration:
                                     BoxDecoration(color: AllColors.blackColor, borderRadius: BorderRadius.circular(13)),
@@ -235,6 +240,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                           top: MediaQuery.of(context).size.height * 0.12,
                           right: 10,
                           child: FloatingActionButton(
+                            heroTag: "btn1",
                             onPressed: () async {
                               Position position = await determinePosition();
 
@@ -292,6 +298,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                               info: "swipeItems====" +
                                                                   controller.swipeItems.length.toString());
                                                           if (index == controller.requestList.length - 1) {
+                                                            controller.swipeItems.clear();
+                                                            controller.requestList.clear();
                                                             controller.allDataClear();
                                                           }
                                                           setState(() {});
@@ -305,6 +313,55 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                   setState(() {});
                                                 },
                                               ),
+                                              // child: HopSwipeCards(
+                                              //   noMoreSwipeCardsLeft: Center(child: Text('No more users left')),
+                                              //   totalNum: controller.requestList.length,
+                                              //   maxWidth: MediaQuery.of(context).size.width * 0.9,
+                                              //   maxHeight: MediaQuery.of(context).size.width * 0.9,
+                                              //   minWidth: MediaQuery.of(context).size.width * 0.8,
+                                              //   minHeight: MediaQuery.of(context).size.width * 0.8,
+                                              //   cardBuilder: (
+                                              //     context,
+                                              //     index,
+                                              //     a,
+                                              //   ) =>
+                                              //       RiderRequest(
+                                              //     name: controller.requestList[index].userName,
+                                              //     imgUrl: controller.requestList[index].profilePic,
+                                              //     km: controller.requestList[index].kilometer,
+                                              //     price: controller.requestList[index].price,
+                                              //     pickUpPoint: controller.requestList[index].sourceAddress,
+                                              //     dropOffPoint: controller.requestList[index].destinationAddress,
+                                              //     acceptOnTap: () {
+                                              //       controller.matchEngine.currentItem?.like();
+                                              //       Map<String, dynamic> map = {
+                                              //         "trip_id": controller.requestList[index].id,
+                                              //         "driver_id": AppConstants.userID
+                                              //       };
+                                              //       _homeController.acceptRequest(map);
+                                              //       setState(() {});
+                                              //     },
+                                              //     ignoreOnTap: () {
+                                              //       controller.matchEngine.currentItem?.nope();
+                                              //       printInfo(info: "nope2");
+                                              //       printInfo(info: "i=====" + index.toString());
+                                              //       printInfo(
+                                              //           info:
+                                              //               "swipeItems====" + controller.swipeItems.length.toString());
+                                              //       if (index == controller.requestList.length - 1) {
+                                              //         controller.swipeItems.clear();
+                                              //         controller.requestList.clear();
+                                              //         controller.allDataClear();
+                                              //       }
+                                              //       setState(() {});
+                                              //     },
+                                              //   ),
+                                              //   swipeCompleteCallback: (int index, direction) {
+                                              //     //direction gives the swipe direction after completion
+                                              //   },
+                                              //   //cardController: context.watch<SubjectBloc>(),
+                                              //   currentIndexInDisplay: (index) {},
+                                              // ),
                                             )
                                           : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,6 +516,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                                             Map<String, dynamic> map = {
                                                                               "trip_id": controller
                                                                                   .acceptedDriverModel.tripData.id
+                                                                                  .toString(),
+                                                                              "driver_id": controller
+                                                                                  .acceptedDriverModel.tripData.driverId
                                                                                   .toString(),
                                                                               "payment_status": "1"
                                                                             };

@@ -14,7 +14,6 @@ import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_trip_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
-
 import 'driver_payment_list_screen.dart';
 import 'home_screen.dart';
 

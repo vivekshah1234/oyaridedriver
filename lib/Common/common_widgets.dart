@@ -1284,26 +1284,26 @@ class CompleteRide extends StatelessWidget {
             const SizedBox(
               height: 8,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                textWidget(
-                    txt: "Payment", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
-                textWidget(
-                    txt: paymentType == 0 ? "Cash" : "with PayStack",
-                    fontSize: 18,
-                    color: AllColors.blackColor,
-                    bold: FontWeight.w300,
-                    italic: false)
-              ],
-            ).putPadding(0, 0, 10, 10),
-            const SizedBox(
-              height: 12,
-            ),
-            const Divider(
-              height: 2,
-              color: AllColors.greyColor,
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     textWidget(
+            //         txt: "Payment", fontSize: 18, color: AllColors.blackColor, bold: FontWeight.w300, italic: false),
+            //     textWidget(
+            //         txt: paymentType == 0 ? "Cash" : "with PayStack",
+            //         fontSize: 18,
+            //         color: AllColors.blackColor,
+            //         bold: FontWeight.w300,
+            //         italic: false)
+            //   ],
+            // ).putPadding(0, 0, 10, 10),
+            // const SizedBox(
+            //   height: 12,
+            // ),
+            // const Divider(
+            //   height: 2,
+            //   color: AllColors.greyColor,
+            // ),
             const SizedBox(
               height: 8,
             ),

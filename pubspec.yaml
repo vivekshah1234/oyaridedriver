@@ -73,6 +73,8 @@ dependencies:
   fcm_config: 3.3.4
   marquee: ^2.2.0
   webview_flutter: 2.3.1
+  #new swipe
+  #hop_swipe_cards: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

@@ -51,8 +51,6 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   }
 
   getCurrentPosition() async {
-    // Position position = await Geolocator.getCurrentPosition(
-    //     desiredAccuracy: LocationAccuracy.high);
     sourceLatitude = double.parse(widget.tripDetails.sourceLatitude);
     sourceLongitude = double.parse(widget.tripDetails.sourceLongitude);
     destinationLatitude = double.parse(widget.tripDetails.destinationLatitude);
@@ -61,9 +59,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       target: LatLng(sourceLatitude, sourceLongitude),
       zoom: 14.4746,
     );
-    //.  final GoogleMapController controller = await _controller.future;
-    // await updateCameraLocation(LatLng(sourceLatitude, sourceLongitude), LatLng(destinationLatitude, destinationLongitude), controller);
-    _markers.add(Marker(
+     _markers.add(Marker(
         markerId: const MarkerId("source"),
         position: LatLng(sourceLatitude, sourceLongitude),
         icon: BitmapDescriptor.defaultMarkerWithHue(129)));
