@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
+import 'package:oyaridedriver/Common/common_widgets.dart';
+import 'package:oyaridedriver/Common/image_assets.dart';
 import 'package:oyaridedriver/Models/request_model.dart';
 import 'package:timelines/timelines.dart';
 
@@ -133,7 +134,7 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                   child: Column(
                     children: [
                       textWidget(
-                          txt: "\$60",
+                          txt: "₦${widget.requestModel.price}",
                           fontSize: ScreenUtil().setSp(17),
                           color: AllColors.blackColor,
                           bold: FontWeight.w600,
@@ -182,88 +183,110 @@ class _RiderDetailScreenState extends State<RiderDetailScreen> {
                     ],
                   ),
                 ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 15),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          children: [
-                            TimelineTile(
-                              nodeAlign: TimelineNodeAlign.start,
-                              contents: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(widget.requestModel.sourceAddress,
-                                        style: TextStyle(
-                                          fontSize: _smallFontSize,
-                                          color: AllColors.greyColor,
-                                          fontWeight: _normalFontWeight,
-                                        )),
-                                  ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 15),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              TimelineTile(
+                                nodeAlign: TimelineNodeAlign.start,
+                                contents: Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.requestModel.sourceAddress,
+                                          style: TextStyle(
+                                            fontSize: _smallFontSize,
+                                            color: AllColors.greyColor,
+                                            fontWeight: _normalFontWeight,
+                                          )),
+                                    ],
+                                  ),
                                 ),
+                                node: TimelineNode(
+                                    indicator: ContainerIndicator(
+                                        child: CircleAvatar(
+                                      backgroundColor: AllColors.greenColor,
+                                      radius: 4,
+                                    )),
+                                    endConnector: const DashedLineConnector(
+                                      color: AllColors.greyColor,
+                                    )),
                               ),
-                              node: TimelineNode(
+                              TimelineTile(
+                                nodeAlign: TimelineNodeAlign.start,
+                                contents: Container(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(widget.requestModel.destinationAddress,
+                                          style: TextStyle(
+                                            fontSize: _smallFontSize,
+                                            color: AllColors.greyColor,
+                                            fontWeight: _normalFontWeight,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                node: TimelineNode(
+                                  startConnector: const DashedLineConnector(
+                                    color: AllColors.greyColor,
+                                  ),
                                   indicator: ContainerIndicator(
                                       child: CircleAvatar(
-                                    backgroundColor: AllColors.greenColor,
+                                    backgroundColor: AllColors.blueColor,
                                     radius: 4,
                                   )),
-                                  endConnector: const DashedLineConnector(
-                                    color: AllColors.greyColor,
-                                  )),
-                            ),
-                            TimelineTile(
-                              nodeAlign: TimelineNodeAlign.start,
-                              contents: Container(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(widget.requestModel.destinationAddress,
-                                        style: TextStyle(
-                                          fontSize: _smallFontSize,
-                                          color: AllColors.greyColor,
-                                          fontWeight: _normalFontWeight,
-                                        )),
-                                  ],
                                 ),
                               ),
-                              node: TimelineNode(
-                                startConnector: const DashedLineConnector(
-                                  color: AllColors.greyColor,
-                                ),
-                                indicator: ContainerIndicator(
-                                    child: CircleAvatar(
-                                  backgroundColor: AllColors.blueColor,
-                                  radius: 4,
-                                )),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // AppButton(
-                //   text: "ACCEPT",
-                //   onPressed: () {},
-                //   color: AllColors.greenColor,
-                // ),
-                // AppButton(
-                //   onPressed: () {},
-                //   color: AllColors.blueColor,
-                //   text: "IGNORE",
-                // ),
-              ],
+                  widget.requestModel.vehicleType == 1
+                      ? Center(
+                          child: Image.asset(
+                            ImageAssets.liteCarIcon,
+                            scale: 10,
+                          ),
+                        )
+                      : widget.requestModel.vehicleType == 2
+                          ? Center(
+                              child: Image.asset(
+                                ImageAssets.familyCarIcon,
+                                scale: 10,
+                              ),
+                            )
+                          : Center(
+                              child: Image.asset(
+                                ImageAssets.businessCarIcon,
+                                scale: 10,
+                              ),
+                            )
+                  // AppButton(
+                  //   text: "ACCEPT",
+                  //   onPressed: () {},
+                  //   color: AllColors.greenColor,
+                  // ),
+                  // AppButton(
+                  //   onPressed: () {},
+                  //   color: AllColors.blueColor,
+                  //   text: "IGNORE",
+                  // ),
+                ],
+              ),
             ),
           ),
         ],

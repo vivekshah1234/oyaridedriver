@@ -318,6 +318,32 @@ class RiderRequest extends StatelessWidget {
                 SmallButton(text: "ACCEPT", color: AllColors.greenColor, onPressed: acceptOnTap),
               ],
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+             // crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Expanded(
+                 // flex: 2,
+                  child: Text(
+                    "Swipe left to reject",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AllColors.greyColor,fontSize: 12),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    "Swipe right to accept",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AllColors.greyColor,fontSize: 12),
+                  ),
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -359,7 +385,7 @@ class RiderRequest extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Column(
               children: [
                 textWidget(

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:badges/badges.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +17,10 @@ import 'package:oyaridedriver/UIScreens/ChatUI/chat_screen.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
-
 import '../../main.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
+import '../rider_details_screen.dart';
 
 class MapHomeScreen extends StatefulWidget {
   final bool isFromNotification;
@@ -72,9 +70,6 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     return GetX<HomeController>(
         init: HomeController(),
         builder: (controller) {
-          // if(controller.isFirstLoading.value){
-          //   return Center(child: greenLoadingWidget());
-          // }
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -320,12 +315,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                 // onRestrictLeftSwipeCallBack: (val) {
                                                 //   return true;
                                                 // },
-                                                cardBuilder: (
-                                                  context,
-                                                  index,
-                                                  a,
-                                                ) =>
-                                                    RiderRequest(
+                                                cardBuilder: ( context, index,  a,) =>
+                                                    GestureDetector(
+                                                      onTap: (){
+                                                        Get.to(() => RiderDetailScreen(controller.requestList[index]));
+                                                      },
+                                                      child: RiderRequest(
                                                   name: controller.requestList[index].userName,
                                                   imgUrl: controller.requestList[index].profilePic,
                                                   km: controller.requestList[index].kilometer,
@@ -334,26 +329,27 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                   dropOffPoint: controller.requestList[index].destinationAddress,
                                                   acceptOnTap: () {
                                                  //   controller.matchEngine.currentItem?.like();
-                                                    Map<String, dynamic> map = {
-                                                      "trip_id": controller.requestList[index].id,
-                                                      "driver_id": AppConstants.userID
-                                                    };
-                                                    _homeController.acceptRequest(map);
-                                                    setState(() {});
+                                                      Map<String, dynamic> map = {
+                                                        "trip_id": controller.requestList[index].id,
+                                                        "driver_id": AppConstants.userID
+                                                      };
+                                                      _homeController.acceptRequest(map);
+                                                      setState(() {});
                                                   },
                                                   ignoreOnTap: () {
                                                   //  controller.matchEngine.currentItem?.nope();
-                                                    printInfo(info: "nope2");
-                                                    printInfo(info: "i=====" + index.toString());
+                                                      printInfo(info: "nope2");
+                                                      printInfo(info: "i=====" + index.toString());
 
-                                                    if (index == controller.requestList.length - 1) {
-                                                     // controller.swipeItems.clear();
-                                                      controller.requestList.clear();
-                                                      controller.allDataClear();
-                                                    }
-                                                    setState(() {});
+                                                      if (index == controller.requestList.length - 1) {
+                                                       // controller.swipeItems.clear();
+                                                        controller.requestList.clear();
+                                                        controller.allDataClear();
+                                                      }
+                                                      setState(() {});
                                                   },
                                                 ),
+                                                    ),
                                                 swipeCompleteCallback: (int index, direction) {
                                                   printInfo(info: direction!.index.toString());
                                                   if(direction.index==2){
@@ -366,15 +362,14 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                                     setState(() {});
                                                   }
                                                   else if(direction.index==0){
-                                                   // controller.matchEngine.currentItem?.like();
                                                     Map<String, dynamic> map = {
                                                       "trip_id": controller.requestList[index].id,
                                                       "driver_id": AppConstants.userID
                                                     };
                                                     _homeController.acceptRequest(map);
-                                                    setState(() {});
+                                                     setState(() {});
                                                   }
-                                                  //direction gives the swipe direction after completion
+
                                                 },
                                                 //cardController: context.watch<SubjectBloc>(),
                                                 currentIndexInDisplay: (index) {},
@@ -386,7 +381,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    UrlLauncher.launch("tel://112");
+                                                    url_launcher.launch("tel://112");
                                                   },
                                                   child: Container(
                                                     decoration: BoxDecoration(
