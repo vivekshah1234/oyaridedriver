@@ -114,7 +114,7 @@ class TripList {
   late final int paidToAdmin;
   late final String createdAt;
   late final String updatedAt;
-  late final double adminCommision;
+  late final dynamic adminCommision;
 
   TripList.fromJson(Map<String, dynamic> json){
     id = json['id'];

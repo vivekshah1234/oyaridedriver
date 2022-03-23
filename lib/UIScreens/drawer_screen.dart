@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
+import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
+import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
@@ -14,6 +19,7 @@ import 'package:oyaridedriver/UIScreens/vehicle_management_screen.dart';
 import 'package:oyaridedriver/UIScreens/your_trip_list_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sized_context/src/extensions.dart';
+
 import 'driver_payment_list_screen.dart';
 import 'home_screen.dart';
 
@@ -33,7 +39,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         const MapHomeScreen(
           isFromNotification: false,
         )),
-     DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
+    DrawerItems(1, ImageAssets.paymentIcon, "Payment", const DriverPaymentListScreen()),
     DrawerItems(2, ImageAssets.yourTripeIcon, "Your Trip", const YourTripScreen()),
     DrawerItems(3, ImageAssets.yourTripeIcon, "Vehicle Management", const VehicleManagementScreen()),
     DrawerItems(5, ImageAssets.chatIcon, "Message", const ChatListScreen()),
@@ -139,10 +145,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 text: "Logout".toUpperCase(),
                 color: AllColors.greenColor,
                 onPressed: () async {
+                  Map<String, String> map = {};
+                  map["is_available"] = "0";
+                  await changeUserStatus(map);
                   AppConstants.userToken = "userToken";
                   SharedPreferences sp = await SharedPreferences.getInstance();
                   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
                   _firebaseMessaging.deleteToken();
+
                   destroyData();
                   sp.remove("token");
                   sp.remove("userData");
@@ -157,6 +167,39 @@ class _DrawerScreenState extends State<DrawerScreen> {
       curve: Curves.fastOutSlowIn,
       duration: const Duration(milliseconds: 500),
     );
+  }
+}
+
+changeUserStatus(Map<String, String> map) async {
+  bool hasExpired = JwtDecoder.isExpired(AppConstants.userToken);
+//  printInfo(info: "expire token====" + hasExpired.toString());
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  if (hasExpired == true) {
+    //refreshToken
+    var token = await refreshTokenApi();
+    AppConstants.userToken = token;
+    prefs.setString("token", AppConstants.userToken);
+  }
+  if (AppConstants.userToken != "userToken") {
+    postAPIWithHeader(ApiConstant.userStatus, map, (value) {
+      if (value.code == 200) {
+        Map<String, dynamic> valueMap = json.decode(value.response);
+        if (valueMap["status"] == 200) {
+          if (map["is_available"] == "1") {
+            AppConstants.userOnline = true;
+            prefs.setBool("userOnline", true);
+          } else {
+            AppConstants.userOnline = false;
+            prefs.setBool("userOnline", false);
+          }
+        } else {
+          print(valueMap["message"].toString());
+        }
+      } else {
+        //     handleError(value.error.toString(), context);
+        print(value.error.toString());
+      }
+    });
   }
 }
 

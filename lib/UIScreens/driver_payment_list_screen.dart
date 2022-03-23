@@ -110,51 +110,53 @@ class _DriverPaymentListScreenState extends State<DriverPaymentListScreen> {
                               shrinkWrap: false,
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                return Container(
-                                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        controller.tripList[index].bookingId,
-                                        style: TextStyle(color: AllColors.greenColor, fontWeight: FontWeight.w800),
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            flex: 8,
-                                            child: Text(
-                                              "${controller.tripList[index].sourceCity} to ${controller.tripList[index].destinationCity} ",
-                                              textAlign: TextAlign.start,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  color: AllColors.blackColor, fontWeight: FontWeight.w600),
+                                return Card(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          controller.tripList[index].bookingId,
+                                          style: TextStyle(color: AllColors.greenColor, fontWeight: FontWeight.w800),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: Text(
+                                                "${controller.tripList[index].sourceCity} to ${controller.tripList[index].destinationCity} ",
+                                                textAlign: TextAlign.start,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    color: AllColors.blackColor, fontWeight: FontWeight.w600),
+                                              ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              "₦${controller.tripList[index].price}",
-                                              textAlign: TextAlign.end,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  color: AllColors.blackColor, fontWeight: FontWeight.w600),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        controller.tripList[index].createdAt.substring(0, 10),
-                                        style: const TextStyle(color: AllColors.greyColor, fontWeight: FontWeight.w400),
-                                      ),
-                                    ],
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                "₦${controller.tripList[index].price}",
+                                                textAlign: TextAlign.end,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    color: AllColors.blackColor, fontWeight: FontWeight.w600),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          controller.tripList[index].createdAt.substring(0, 10),
+                                          style: const TextStyle(color: AllColors.greyColor, fontWeight: FontWeight.w400),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               }),

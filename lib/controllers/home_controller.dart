@@ -482,10 +482,9 @@ class HomeController extends GetxController {
   }
 
   acceptRequest(Map<String, dynamic> map) {
-    printInfo(info: "accept===" + map.toString());
-    requestList.clear();
     isLoadingDriver(true);
-    //reconnectSocket();
+    printInfo(info: "accept===" + map.toString());
+
     Map<String, String> statusChange = {};
     statusChange["is_available"] = "0";
     changeUserStatus(
@@ -525,6 +524,7 @@ class HomeController extends GetxController {
             sourceLongitude: sourceLongitude,
             destinationLatitude: destinationLatitude,
             destinationLongitude: destinationLongitude);
+        requestList.clear();
       });
     } catch (Ex) {
       printError(info: "Socket Error" + Ex.toString());
