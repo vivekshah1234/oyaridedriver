@@ -30,7 +30,7 @@ class NotificationModel {
     required this.notificationType,
     required this.notificationTitle,
     required this.description,
-    required this.isRead,
+   // required this.isRead,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,7 +39,7 @@ class NotificationModel {
   late final int notificationType;
   late final String notificationTitle;
   late final String description;
-  late final int isRead;
+ // late final int isRead;
   late final String createdAt;
   late final String updatedAt;
 
@@ -49,7 +49,7 @@ class NotificationModel {
     notificationType = json['notification_type'];
     notificationTitle = json['notification_title'];
     description = json['description'];
-    isRead = json['is_read'];
+  //  isRead = json['is_read'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -61,7 +61,7 @@ class NotificationModel {
     _data['notification_type'] = notificationType;
     _data['notification_title'] = notificationTitle;
     _data['description'] = description;
-    _data['is_read'] = isRead;
+   // _data['is_read'] = isRead;
     _data['created_at'] = createdAt;
     _data['updated_at'] = updatedAt;
     return _data;

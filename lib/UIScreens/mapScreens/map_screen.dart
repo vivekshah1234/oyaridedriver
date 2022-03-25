@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:badges/badges.dart';
 import 'package:fcm_config/fcm_config.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +36,14 @@ class MapHomeScreen extends StatefulWidget {
 class _MapHomeScreenState extends State<MapHomeScreen>
     with FCMNotificationMixin, FCMNotificationClickMixin, WidgetsBindingObserver, TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   final HomeController _homeController = Get.put(HomeController());
 
   @override
   void initState() {
     super.initState();
+    if (Platform.isIOS) iOSPermission();
     WidgetsBinding.instance?.addObserver(this);
     _homeController.connectToSocket(isFromNotification: widget.isFromNotification, userid: widget.userId);
   }
@@ -49,6 +52,8 @@ class _MapHomeScreenState extends State<MapHomeScreen>
 
   @override
   void onNotify(RemoteMessage message) {
+    if (Platform.isIOS) iOSPermission();
+
     RemoteNotification? notification = message.notification;
     var notificationType = message.data["notificationType"];
     showNotification(
@@ -63,6 +68,12 @@ class _MapHomeScreenState extends State<MapHomeScreen>
     }
 
     setState(() {});
+  }
+
+  void iOSPermission() {
+    _firebaseMessaging.setAutoInitEnabled(true);
+    _firebaseMessaging.getNotificationSettings();
+    _firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
   }
 
   @override

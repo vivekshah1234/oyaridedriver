@@ -268,12 +268,12 @@ class _AllPermissionPageState extends State<AllPermissionPage> {
   }
 
   Future<bool> checkMediaPermission() async {
-    PermissionStatus status = await Permission.mediaLibrary.status;
+    PermissionStatus status = await Permission.storage.status;
     if (status.isPermanentlyDenied) return openAppSettings();
-    status = await Permission.mediaLibrary.request();
+    status = await Permission.storage.request();
     printInfo(info: "ssss==" + status.toString());
     if (status.isDenied) {
-      status = await Permission.mediaLibrary.request();
+      status = await Permission.storage.request();
       return false;
     } else if (status.isGranted) {
       return true;

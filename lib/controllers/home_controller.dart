@@ -74,6 +74,7 @@ class HomeController extends GetxController {
     polyLineCoordinates.clear();
     polylines.clear();
     isFirstLoading(true);
+    connectToSocket(isFromNotification: false);
     await getCurrentPosition();
     //init(requestList);
     await getBackgroundDetails();
@@ -232,10 +233,16 @@ class HomeController extends GetxController {
 
   getCurrentPosition() async {
     isLoadingMap(true);
-
+    Map<String, dynamic> locationTrackingMap = {};
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
+    printInfo( info:"lat======"+ latitude.toString());
+    locationTrackingMap["latitude"] = latitude;
+    locationTrackingMap["longitude"] = longitude;
+    locationTrackingMap["userId"] = AppConstants.userID;
+
+    updateLocation2(locationTrackingMap);
     lastMapPosition = LatLng(latitude, longitude);
     lastMapPositionPrivious = LatLng(latitude, longitude);
     kGooglePlex = CameraPosition(
@@ -247,7 +254,7 @@ class HomeController extends GetxController {
       zoom: 14.4746,
     );
 
-    Map<String, dynamic> map = {};
+
     locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
       locationSubscription?.cancel();
@@ -255,11 +262,11 @@ class HomeController extends GetxController {
     }).listen((newLocalData) async {
       printInfo(info: "new data===" + newLocalData.longitude.toString());
 
-      map["latitude"] = newLocalData.latitude;
-      map["longitude"] = newLocalData.longitude;
-      map["userId"] = AppConstants.userID;
+      locationTrackingMap["latitude"] = newLocalData.latitude;
+      locationTrackingMap["longitude"] = newLocalData.longitude;
+      locationTrackingMap["userId"] = AppConstants.userID;
 
-      updateLocation2(map);
+      updateLocation2(locationTrackingMap);
     });
     addMyMarker(latitude, longitude, position.heading);
   }
@@ -409,9 +416,11 @@ class HomeController extends GetxController {
       });
       if (_socket.connected == false) {
         _socket.connect();
-        printInfo(info: _socket.connected.toString());
+       // printInfo(info:"Socket Connected1==="+ _socket.connected.toString());
         _socket.on("connect", (_) {
-          printInfo(info: 'Socket Connected===');
+          printInfo(info:"Socket Connected2==="+ _socket.connected.toString());
+
+          printInfo(info: 'Socket Connected3===');
           if (isFromNotification == true) {
             Map<String, dynamic> map = {
               "user_id": userid,
@@ -419,6 +428,12 @@ class HomeController extends GetxController {
             sendIdToSocket(map);
           }
         });
+      }
+      else if (_socket.connected == true && isFromNotification == true) {
+        Map<String, dynamic> map = {
+          "user_id": userid,
+        };
+        sendIdToSocket(map);
       }
       _socket.onError((data) {
         printError(info: "Socket Error" + data.toString());
@@ -441,6 +456,7 @@ class HomeController extends GetxController {
 
   updateLocation2(Map<String, dynamic> map) async {
     //   reconnectSocket();
+    printInfo( info:"checking===="+ map.toString());
     try {
       _socket.emit(SocketEvents.updateDriverLocation, map);
     } catch (Ex) {
