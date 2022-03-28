@@ -19,6 +19,7 @@ import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/controllers/home_controller.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import '../../main.dart';
+import '../../notification_handlers.dart';
 import '../cancel_ride_reason_dialog.dart';
 import '../notification_screen.dart';
 import '../rider_details_screen.dart';
@@ -95,7 +96,7 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 18.0),
                       child: FloatingActionButton(
-                        heroTag: "btn2",
+                        heroTag: "sideMenuButton",
                         onPressed: () {
                           _scaffoldKey.currentState!.openDrawer();
                         },
@@ -107,13 +108,18 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                       ),
                     ),
                     actions: [
-                      GestureDetector(
-                        onTap: () {
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FloatingActionButton(
+                          heroTag: "notificationButton",
+                          onPressed: (){
                           notificationCounterValueNotifier.value = 0;
                           Get.to(() => const NotificationScreen());
                           setState(() {});
                         },
-                        child: ValueListenableBuilder(
+                          backgroundColor: AllColors.whiteColor,
+
+                        child:ValueListenableBuilder(
                           builder: (BuildContext context, int newNotificationCounterValue, Widget? child) {
                             return Badge(
                               badgeColor: AllColors.greenColor,
@@ -121,22 +127,47 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                               badgeContent: Padding(padding: const EdgeInsets.only(top: 30.0), child: Container()),
                               showBadge: newNotificationCounterValue == 0 ? false : true,
                               //  showBadge: true,
-                              child: const CircleAvatar(
-                                backgroundColor: AllColors.whiteColor,
-                                child: Icon(
-                                  Icons.notifications_none_sharp,
-                                  size: 30,
-                                  color: AllColors.blackColor,
-                                ),
+                              child: const Icon(
+                                Icons.notifications_none_sharp,
+                                size: 30,
+                                color: AllColors.blackColor,
                               ),
                             );
                           },
                           valueListenable: notificationCounterValueNotifier,
+                        ) ,
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     notificationCounterValueNotifier.value = 0;
+                      //     Get.to(() => const NotificationScreen());
+                      //     setState(() {});
+                      //   },
+                      //   child: ValueListenableBuilder(
+                      //     builder: (BuildContext context, int newNotificationCounterValue, Widget? child) {
+                      //       return Badge(
+                      //         badgeColor: AllColors.greenColor,
+                      //         toAnimate: true,
+                      //         badgeContent: Padding(padding: const EdgeInsets.only(top: 30.0), child: Container()),
+                      //         showBadge: newNotificationCounterValue == 0 ? false : true,
+                      //         //  showBadge: true,
+                      //         child: const CircleAvatar(
+                      //           backgroundColor: AllColors.whiteColor,
+                      //           child: Icon(
+                      //             Icons.notifications_none_sharp,
+                      //             size: 30,
+                      //             color: AllColors.blackColor,
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //     valueListenable: notificationCounterValueNotifier,
+                      //   ),
+                      // ),
+                      // const SizedBox(
+                      //   width: 10,
+                      // ),
                       !AppConstants.userOnline
                           ? GestureDetector(
                               onTap: () {

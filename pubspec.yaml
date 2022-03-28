@@ -57,6 +57,8 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   permission_handler: ^8.3.0
   badges: ^2.0.1
+  marquee: ^2.2.0
+  webview_flutter: 2.3.1
  # flutter_credit_card: ^3.0.1
   #map plugins
   google_maps_flutter: ^2.1.1
@@ -71,8 +73,8 @@ dependencies:
   firebase_analytics: ^9.0.3
   flutter_local_notifications: 9.2.0
   fcm_config: 3.3.4
-  marquee: ^2.2.0
-  webview_flutter: 2.3.1
+  #flutter_fgbg: ^0.1.0
+
   #new swipe
   hop_swipe_cards: ^2.0.0-nullsafety.1
 

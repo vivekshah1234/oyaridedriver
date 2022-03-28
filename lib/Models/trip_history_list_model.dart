@@ -85,7 +85,7 @@ class TripHistoryModel {
   late final String kilometer;
   late final String polygone;
   late final int status;
-  late final String? customerCancellation;
+  late final dynamic customerCancellation;
   late final dynamic driverCancellation;
   late final String price;
   late final String paymentStatus;
@@ -182,70 +182,70 @@ class UserDetail {
     required this.id,
     required this.firstName,
     required this.lastName,
-    this.city,
+   // this.city,
     required this.mobileNumber,
     required this.email,
     required this.profilePic,
-    this.language,
-    this.referralCode,
+   // this.language,
+    //this.referralCode,
     required this.countryCode,
-    this.licencePlate,
-    this.licenceNumber,
-    this.licencePhoto,
-    this.isVerified,
-    this.signUpStep,
-    required this.isAvailable,
-    this.verificationCode,
+    // this.licencePlate,
+    // this.licenceNumber,
+    // this.licencePhoto,
+    // this.isVerified,
+    // this.signUpStep,
+    // required this.isAvailable,
+    // this.verificationCode,
     required this.paymentType,
-    this.licenceExpireDate,
-    required this.createdAt,
-    required this.updatedAt,
+    // this.licenceExpireDate,
+    // required this.createdAt,
+    // required this.updatedAt,
   });
 
   late final int id;
   late final String firstName;
   late final String lastName;
-  late final dynamic city;
+ // late final dynamic city;
   late final String mobileNumber;
   late final String email;
   late final String profilePic;
-  late final dynamic language;
-  late final dynamic referralCode;
+ // late final dynamic language;
+ // late final dynamic referralCode;
   late final String countryCode;
-  late final dynamic licencePlate;
-  late final dynamic licenceNumber;
-  late final dynamic licencePhoto;
-  late final dynamic isVerified;
-  late final dynamic signUpStep;
-  late final dynamic isAvailable;
-  late final dynamic verificationCode;
+  // late final dynamic licencePlate;
+  // late final dynamic licenceNumber;
+  // late final dynamic licencePhoto;
+  // late final dynamic isVerified;
+  // late final dynamic signUpStep;
+  // late final dynamic isAvailable;
+  // late final dynamic verificationCode;
   late final int paymentType;
-  late final dynamic licenceExpireDate;
-  late final String createdAt;
-  late final String updatedAt;
+  // late final dynamic licenceExpireDate;
+  // late final String createdAt;
+  // late final String updatedAt;
 
   UserDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     firstName = json['first_name'];
     lastName = json['last_name'];
-    city = null;
+  //  city = null;
     mobileNumber = json['mobile_number'];
     email = json['email'];
     profilePic = json['profile_pic'];
-    language = null;
-    referralCode = null;
+ //   language = null;
+  //  referralCode = null;
     countryCode = json['country_code'];
-    licencePlate = null;
-    licenceNumber = null;
-    licencePhoto = null;
-    isVerified = null;
-    signUpStep = null;
-    isAvailable = json['is_available'];
-    verificationCode = null;
+    // licencePlate = null;
+    // licenceNumber = null;
+    // licencePhoto = null;
+    // isVerified = null;
+    // signUpStep = null;
+    // isAvailable = json['is_available'];
+    // verificationCode = null;
     paymentType = json['payment_type'];
-    licenceExpireDate = null;
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    // licenceExpireDate = null;
+    // createdAt = json['created_at'];
+    // updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -253,24 +253,24 @@ class UserDetail {
     _data['id'] = id;
     _data['first_name'] = firstName;
     _data['last_name'] = lastName;
-    _data['city'] = city;
+   // _data['city'] = city;
     _data['mobile_number'] = mobileNumber;
     _data['email'] = email;
     _data['profile_pic'] = profilePic;
-    _data['language'] = language;
-    _data['referral_code'] = referralCode;
-    _data['country_code'] = countryCode;
-    _data['licence_plate'] = licencePlate;
-    _data['licence_number'] = licenceNumber;
-    _data['licence_photo'] = licencePhoto;
-    _data['is_verified'] = isVerified;
-    _data['sign_up_step'] = signUpStep;
-    _data['is_available'] = isAvailable;
-    _data['verification_code'] = verificationCode;
+  //  _data['language'] = language;
+   // _data['referral_code'] = referralCode;
+  //  _data['country_code'] = countryCode;
+    // _data['licence_plate'] = licencePlate;
+    // _data['licence_number'] = licenceNumber;
+    // _data['licence_photo'] = licencePhoto;
+    // _data['is_verified'] = isVerified;
+    // _data['sign_up_step'] = signUpStep;
+    // _data['is_available'] = isAvailable;
+    // _data['verification_code'] = verificationCode;
     _data['payment_type'] = paymentType;
-    _data['licence_expire_date'] = licenceExpireDate;
-    _data['created_at'] = createdAt;
-    _data['updated_at'] = updatedAt;
+    // _data['licence_expire_date'] = licenceExpireDate;
+    // _data['created_at'] = createdAt;
+    // _data['updated_at'] = updatedAt;
     return _data;
   }
 }

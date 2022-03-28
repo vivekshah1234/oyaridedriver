@@ -59,13 +59,14 @@ class _ChatPageState extends State<ChatPage> {
               leading: GestureDetector(
                   onTap: () async {
                     String userID = AppConstants.userID;
-
+                    Navigator.pop(context);
                     try {
                       await FirebaseFirestore.instance.collection('users').doc(userID).update({'userStatus': 0});
+
                     } catch (ex) {
                       print("Error======$ex");
                     }
-                    Navigator.pop(context);
+
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 18.0),
@@ -286,7 +287,7 @@ class ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   Future<void> sendPushMessage() async {
     final response = await Messaging.sendTo(
-        title: AppConstants.fullName,
+        title: AppConstants.fullName+" sent you a message.",
         body: textMessage.text,
         id: int.parse(AppConstants.userID),
         fcmToken: firebaseToken);

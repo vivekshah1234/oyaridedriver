@@ -86,7 +86,7 @@ class _ChatListScreenState extends State<ChatListScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
           child: ListTile(
             title: textWidget(
-                txt: name == document['chatUsers'][1].toString()
+                txt:  id == document['chatUsersID'][1].toString()
                     ? document['chatUsers'][0].toString()
                     : document['chatUsers'][1].toString(),
                 fontSize: 16,

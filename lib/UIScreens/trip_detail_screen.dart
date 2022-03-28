@@ -10,7 +10,6 @@ import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
-import 'package:oyaridedriver/Models/YourTripHistoryModel.dart';
 import 'package:oyaridedriver/Models/trip_history_list_model.dart';
 import 'package:timelines/timelines.dart';
 

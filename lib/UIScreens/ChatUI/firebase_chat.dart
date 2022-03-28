@@ -159,8 +159,8 @@ class DatabaseMethods {
         .orderBy('timestamp', descending: true)
         .get()
         .then((value) async {
-      printInfo(info: "idTO===" + value.docs[0]["idTo"]);
-      printInfo(info: "isRead==" + value.docs[0]["isRead"].toString());
+      // printInfo(info: "idTO===" + value.docs[0]["idTo"]);
+      // printInfo(info: "isRead==" + value.docs[0]["isRead"].toString());
       if (AppConstants.userID == value.docs[0]["idTo"]) {
         printInfo(info: "match");
         FirebaseFirestore.instance.collection("messages").doc(groupChatId).get().then((value) async {
@@ -185,5 +185,9 @@ class DatabaseMethods {
         }
       }
     });
+  }
+
+  changeNameInChatList(){
+
   }
 }

@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -13,6 +14,8 @@ import 'package:get/get.dart';
 import 'package:oyaridedriver/ApiServices/api_constant.dart';
 import 'package:oyaridedriver/ApiServices/networkcall.dart';
 import 'package:oyaridedriver/Common/extension_widgets.dart';
+import 'package:oyaridedriver/Models/sign_up_model.dart';
+import 'package:oyaridedriver/UIScreens/ChatUI/firebase_chat.dart';
 import 'package:oyaridedriver/UIScreens/drawer_screen.dart';
 import 'package:oyaridedriver/UIScreens/authScreens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -186,3 +189,53 @@ Future<String> refreshTokenApi() async {
 }
 
 
+
+Future<void> setUserData(User user) async {
+
+  AppConstants.fullName = user.firstName + " " + user.lastName;
+  AppConstants.mobileNo = user.mobileNumber;
+  AppConstants.email = user.email;
+  AppConstants.countryCode = user.countryCode;
+  AppConstants.userID = user.id.toString();
+
+  if (user.profilePic != null) {
+    AppConstants.profilePic = user.profilePic;
+  }
+
+  DatabaseMethods databaseMethods = DatabaseMethods();
+  try {
+    final QuerySnapshot result = await databaseMethods.getUserInfo(id: int.parse(AppConstants.userID));
+
+    final List<DocumentSnapshot> documents = result.docs;
+
+    if (documents.isEmpty) {
+      FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+      String? firebaseToken = await firebaseMessaging.getToken();
+
+      Map<String, dynamic> userData = {
+        'nickname': AppConstants.fullName,
+        'photoUrl': AppConstants.profilePic,
+        'id': AppConstants.userID,
+        "firebaseToken": firebaseToken,
+        'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+        'chattingWith': null,
+        'userStatus': 0,
+        'unReadMessages': 0
+      };
+      bool isUserExist = await databaseMethods.checkUserExist(AppConstants.userID);
+
+      if (!isUserExist) {
+        databaseMethods.addUserInfo(docId: AppConstants.userID, userData: userData);
+      } else {
+        await FirebaseFirestore.instance.collection("users").doc(AppConstants.userID).update({
+          'nickname': AppConstants.fullName,
+          'photoUrl': AppConstants.profilePic,
+          "firebaseToken": firebaseToken,
+          'createdAt': DateTime.now().millisecondsSinceEpoch.toString()
+        });
+      }
+    }
+  } catch (Exception) {
+    print("Error on firebase=====" + Exception.toString());
+  }
+}

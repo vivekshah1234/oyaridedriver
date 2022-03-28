@@ -37,184 +37,190 @@ class _AllPermissionPageState extends State<AllPermissionPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                AllStrings.ok.tr,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AllColors.greenColor, fontSize: 25, fontWeight: FontWeight.w800),
-              ),
-              Text(
-                AllStrings.permissionText.tr,
-                textAlign: TextAlign.center,
-                style:  TextStyle(color: AllColors.blueColor, fontSize: 18, fontWeight: FontWeight.w400),
-              )
-            ],
-          ),
-          Expanded(flex: 2, child: Container()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.camera,
-                color: AllColors.greenColor,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AllStrings.permissionTitle1.tr,
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      AllStrings.permissionText1.tr,
-                      // textAlign: TextAlign.center,
-                      style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ).paddingSymmetric(horizontal: 25, vertical: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.storage_outlined,
-                color: AllColors.greenColor,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AllStrings.permissionTitle2.tr,
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      AllStrings.permissionText2.tr,
-                      // textAlign: TextAlign.center,
-                      style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ).paddingSymmetric(horizontal: 25, vertical: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.call,
-                color: AllColors.greenColor,
-                size: 30,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AllStrings.permissionTitle3.tr,
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
-                    ),
-                    const   SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      AllStrings.permissionText3.tr,
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ).paddingSymmetric(horizontal: 25, vertical: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                Icons.location_pin,
-                color: AllColors.greenColor,
-                size: 30,
-              ),
-              const  SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AllStrings.permissionTitle4,
-                      // textAlign: TextAlign.center,
-                      style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
-                    ),
-                    const   SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      AllStrings.permissionText4, // textAlign: TextAlign.center,
-                      style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ).paddingSymmetric(horizontal: 25, vertical: 15),
-          Expanded(flex: 2, child: Container()),
-          AppButton(
-              text: AllStrings.allowAllAccess,
-              color: AllColors.greenColor,
-              onPressed:  () async {
-                bool permissionAllowed = await determinePosition(context);
-                printInfo(info: "Final location permission decision====" + permissionAllowed.toString());
-                if (permissionAllowed == true) {
-                  bool mediaPermissionAllowed = await checkMediaPermission();
-                  printInfo(info: "Final media permission decision====" + mediaPermissionAllowed.toString());
-                  if (mediaPermissionAllowed) {
-                    bool cameraPermissionAllowed = await checkCameraPermission();
-                    printInfo(info: "Final camera permission decision====" + mediaPermissionAllowed.toString());
-                    if (cameraPermissionAllowed) {
-                      allowedAllPermission = true;
-                      SharedPreferences sp = await SharedPreferences.getInstance();
-                      sp.setBool("allPermission", allowedAllPermission);
-                      Get.offAll(const HomeScreen());
-                    }
+      bottomNavigationBar: Container(
+        height: 50,
+        padding:EdgeInsets.only(top: 10,bottom: 10),
+        child:   AppButton(
+            text: AllStrings.allowAllAccess,
+            color: AllColors.greenColor,
+            onPressed:  () async {
+              bool permissionAllowed = await determinePosition(context);
+              printInfo(info: "Final location permission decision====" + permissionAllowed.toString());
+              if (permissionAllowed == true) {
+                bool mediaPermissionAllowed = await checkMediaPermission();
+                printInfo(info: "Final media permission decision====" + mediaPermissionAllowed.toString());
+                if (mediaPermissionAllowed) {
+                  bool cameraPermissionAllowed = await checkCameraPermission();
+                  printInfo(info: "Final camera permission decision====" + cameraPermissionAllowed.toString());
+                  if (cameraPermissionAllowed) {
+                    allowedAllPermission = true;
+                    SharedPreferences sp = await SharedPreferences.getInstance();
+                    sp.setBool("allPermission", allowedAllPermission);
+                    Get.offAll(const HomeScreen());
                   }
                 }
-              }).paddingSymmetric(horizontal: 20),
-          Expanded(flex: 1, child: Container()),
-        ],
+              }
+            }).paddingSymmetric(horizontal: 20) ,
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  AllStrings.ok.tr,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AllColors.greenColor, fontSize: 25, fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  AllStrings.permissionText.tr,
+                  textAlign: TextAlign.center,
+                  style:  TextStyle(color: AllColors.blueColor, fontSize: 18, fontWeight: FontWeight.w400),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.camera,
+                  color: AllColors.greenColor,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AllStrings.permissionTitle1.tr,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        AllStrings.permissionText1.tr,
+                        // textAlign: TextAlign.center,
+                        style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ).paddingSymmetric(horizontal: 25, vertical: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.storage_outlined,
+                  color: AllColors.greenColor,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AllStrings.permissionTitle2.tr,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        AllStrings.permissionText2.tr,
+                        // textAlign: TextAlign.center,
+                        style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ).paddingSymmetric(horizontal: 25, vertical: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.call,
+                  color: AllColors.greenColor,
+                  size: 30,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AllStrings.permissionTitle3.tr,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
+                      ),
+                      const   SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        AllStrings.permissionText3.tr,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ).paddingSymmetric(horizontal: 25, vertical: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.location_pin,
+                  color: AllColors.greenColor,
+                  size: 30,
+                ),
+                const  SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AllStrings.permissionTitle4,
+                        // textAlign: TextAlign.center,
+                        style: TextStyle(color: AllColors.greenColor, fontSize: 17, fontWeight: FontWeight.w800),
+                      ),
+                      const   SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        AllStrings.permissionText4, // textAlign: TextAlign.center,
+                        style:  TextStyle(color: AllColors.blueColor, fontSize: 15, fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ).paddingSymmetric(horizontal: 25, vertical: 15),
+
+          ],
+        ),
       ),
     );
   }
