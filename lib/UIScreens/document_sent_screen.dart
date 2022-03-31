@@ -12,11 +12,12 @@ class DocumentSentScreen extends StatefulWidget {
   _DocumentSentScreenState createState() => _DocumentSentScreenState();
 }
 
-class _DocumentSentScreenState extends State<DocumentSentScreen> {
+class _DocumentSentScreenState extends State<DocumentSentScreen> with WidgetsBindingObserver{
 
   CheckVerificationController checkVerificationController=Get.put(CheckVerificationController());
   @override
   void initState() {
+    WidgetsBinding.instance?.addObserver(this);
     checkVerificationController.checkStatus(context);
     super.initState();
   }
@@ -43,5 +44,20 @@ class _DocumentSentScreenState extends State<DocumentSentScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      //do your stuff
+      checkVerificationController.checkStatus(context);
+    }
   }
 }

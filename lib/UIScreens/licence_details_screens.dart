@@ -8,6 +8,7 @@ import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
 
 import 'package:oyaridedriver/controllers/signup_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sized_context/src/extensions.dart';
 
 class LicenceDetailScreen extends StatefulWidget {
@@ -463,5 +464,19 @@ class _LicenceDocumentScreenState extends State<LicenceDocumentScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> checkCameraPermission() async {
+    PermissionStatus status = await Permission.camera.status;
+    if (status.isPermanentlyDenied) return openAppSettings();
+    status = await Permission.camera.request();
+    printInfo(info: "ssss==" + status.toString());
+    if (status.isDenied) {
+      status = await Permission.camera.request();
+      return false;
+    } else if (status.isGranted) {
+      return true;
+    }
+    return false;
   }
 }

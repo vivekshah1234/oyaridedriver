@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>OyaRideDriver</string>
+	<string>Oyadriver</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>
@@ -29,20 +29,22 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>OyaRide require access your media library.</string>
 	<key>NSCameraUsageDescription</key>
-    <string>OyaRide requires camera access to upload photos.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Oyaride needs access of your location so other person can track you easily.</string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
-    <key>NSLocationUsageDescription</key>
-    <string>Oyaride needs access of your location so other person can track you easily.</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
-    <key>NSMotionUsageDescription</key>
-    <string>App Requred Animation use</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Need photo library access to set profile pictures</string>
+	<string>OyaRide requires camera access to upload photos.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Oyaride needs access of your location so other person can track you easily.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Oyaride needs access of your location so other person can track you easily.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Oyaride needs constant access of your location so other person can track you easily even when app is in background.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>App Requred Animation use</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Need photo library access to set profile pictures</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

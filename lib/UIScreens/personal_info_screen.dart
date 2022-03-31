@@ -6,6 +6,7 @@ import 'package:oyaridedriver/Common/all_colors.dart';
 import 'package:oyaridedriver/Common/common_methods.dart';
 import 'package:oyaridedriver/Common/common_widgets.dart';
 import 'package:oyaridedriver/Common/image_assets.dart';
+import 'package:oyaridedriver/Models/vehicle_type_model.dart';
 import 'package:oyaridedriver/UIScreens/search_city_screen.dart';
 import 'package:oyaridedriver/controllers/signup_controller.dart';
 import 'package:sized_context/src/extensions.dart';
@@ -32,6 +33,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
  final SignUpController _signUpController = Get.put(SignUpController());
   final _formKey = GlobalKey<FormState>();
+ int selectedIndex = 1;
+  @override
+  void initState() {
+    _signUpController.getVehicleType();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,6 +147,42 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                                     controller: _txtVehicleColor,
                                     errorText: ErrorMessage.vColor,
                                     labelText: "Vehicle color"),
+                                DropdownButton(
+                                  isExpanded: true,
+                                  underline: Divider(
+                                    color: Colors.grey.shade900,
+                                    height: 2,
+                                  ),
+                                  value: controller.selectedVehicleType.value,
+                                  style: const TextStyle(),
+                                  items: controller.vehicleTypes.map((value) {
+                                    return DropdownMenuItem(
+                                      value: value.name,
+                                      child: Row(
+                                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            value.name,
+                                            style: const TextStyle(color: Colors.black),
+                                          ),
+                                          Text(
+                                           "("+ value.seat.toString()+" seater"+")",
+                                            style: const TextStyle(color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (val) {
+                                    printInfo(info: val.toString());
+                                    controller.selectedVehicleType.value = val.toString();
+                                    VehicleTypes findId(String name) =>
+                                        controller.vehicleTypes.firstWhere((value) => value.name == name);
+                                    printInfo(info: findId(val.toString()).id.toString());
+                                    selectedIndex = findId(val.toString()).id;
+                                    setState(() {});
+                                  },
+                                ),
                               ],
                             ).paddingOnly(bottom: 20, left: 25, right: 5),
                             AppButton(text: "NEXT", color: AllColors.greenColor, onPressed: registerPersonalInfo)
@@ -176,7 +219,8 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
           "vehicle_model": _txtVehicleModel.text.toString(),
           "vehicle_year": _txtVehicleYear.text.toString(),
           "licence_plate": _txtLicensePlate.text.toString(),
-          "vehicle_color": _txtVehicleColor.text.toString()
+          "vehicle_color": _txtVehicleColor.text.toString(),
+          "vehicle_type_id":selectedIndex.toString(),
         };
         printInfo(info: _map.toString());
         _signUpController.register2(_map, context);

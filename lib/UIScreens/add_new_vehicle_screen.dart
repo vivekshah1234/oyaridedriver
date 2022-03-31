@@ -104,9 +104,18 @@ class _AddNewVehicleScreenState extends State<AddNewVehicleScreen> {
                           items: controller.vehicleTypes.map((value) {
                             return DropdownMenuItem(
                               value: value.name,
-                              child: Text(
-                                value.name,
-                                style: const TextStyle(color: Colors.black),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    value.name,
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    "("+ value.seat.toString()+" seater"+")",
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                ],
                               ),
                             );
                           }).toList(),
