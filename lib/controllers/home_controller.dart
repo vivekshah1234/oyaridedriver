@@ -22,7 +22,6 @@ import 'package:oyaridedriver/Models/request_model.dart';
 import 'package:oyaridedriver/Models/sign_up_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:swipe_cards/swipe_cards.dart';
 
 //when nothing type =0
 //when requests arrive  type = 1
@@ -38,8 +37,9 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   late IO.Socket _socket;
   RxBool isFirstLoading = false.obs;
+
   //List<SwipeItem> swipeItems = <SwipeItem>[];
- // late MatchEngine matchEngine;
+  // late MatchEngine matchEngine;
 
   RxBool isAddingData = false.obs;
   RxList<RequestModel> requestList = <RequestModel>[].obs;
@@ -228,7 +228,7 @@ class HomeController extends GetxController {
   }
 
   void onMapCreated(GoogleMapController controller) {
-    mapController.complete(controller);
+    // mapController.complete(controller);
   }
 
   getCurrentPosition() async {
@@ -237,7 +237,7 @@ class HomeController extends GetxController {
     Position position = await determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
-    printInfo( info:"lat======"+ latitude.toString());
+    printInfo(info: "lat======" + latitude.toString());
     locationTrackingMap["latitude"] = latitude;
     locationTrackingMap["longitude"] = longitude;
     locationTrackingMap["userId"] = AppConstants.userID;
@@ -253,7 +253,6 @@ class HomeController extends GetxController {
       target: lastMapPositionPrivious,
       zoom: 14.4746,
     );
-
 
     locationSubscription = locationTracker.onLocationChanged.handleError((onError) {
       printInfo(info: "Error=====" + onError);
@@ -416,9 +415,9 @@ class HomeController extends GetxController {
       });
       if (_socket.connected == false) {
         _socket.connect();
-       // printInfo(info:"Socket Connected1==="+ _socket.connected.toString());
+        // printInfo(info:"Socket Connected1==="+ _socket.connected.toString());
         _socket.on("connect", (_) {
-          printInfo(info:"Socket Connected2==="+ _socket.connected.toString());
+          printInfo(info: "Socket Connected2===" + _socket.connected.toString());
 
           printInfo(info: 'Socket Connected3===');
           if (isFromNotification == true) {
@@ -428,8 +427,7 @@ class HomeController extends GetxController {
             sendIdToSocket(map);
           }
         });
-      }
-      else if (_socket.connected == true && isFromNotification == true) {
+      } else if (_socket.connected == true && isFromNotification == true) {
         Map<String, dynamic> map = {
           "user_id": userid,
         };
@@ -456,7 +454,7 @@ class HomeController extends GetxController {
 
   updateLocation2(Map<String, dynamic> map) async {
     //   reconnectSocket();
-    printInfo( info:"checking===="+ map.toString());
+    printInfo(info: "checking====" + map.toString());
     try {
       _socket.emit(SocketEvents.updateDriverLocation, map);
     } catch (Ex) {
@@ -483,8 +481,16 @@ class HomeController extends GetxController {
         printInfo(info: "getData===" + data.toString());
         Map<String, dynamic> valueMap = json.decode(data);
         RequestModel requestModel = RequestModel.fromJson(valueMap);
-        requestList.add(requestModel);
-       // init(requestList);
+        bool checkDoubleData = requestList.any((item) {
+          if (item.id == requestModel.id) {
+            return true;
+          }
+          return false;
+        });
+        if (!checkDoubleData) {
+          requestList.add(requestModel);
+        }
+        // init(requestList);
         currentAppState(1);
         printInfo(info: "len===========" + requestList.length.toString());
         isAddingData(false);
@@ -784,7 +790,7 @@ class HomeController extends GetxController {
     // swipeItems.clear();
     // swipeItems = <SwipeItem>[];
     // matchEngine.notifyListeners();
-  //  printInfo(info: "After clearing===" + swipeItems.length.toString());
+    //  printInfo(info: "After clearing===" + swipeItems.length.toString());
 
     currentAppState(0);
     isAddingData(false);
@@ -800,7 +806,7 @@ class HomeController extends GetxController {
       markers.clear();
       polylines.clear();
       requestList.clear();
-    //  swipeItems.clear();
+      //  swipeItems.clear();
       final GoogleMapController _mapController = await mapController.future;
       _mapController.dispose();
       //  locationTracker.dispose();

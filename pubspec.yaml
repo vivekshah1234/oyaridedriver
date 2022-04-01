@@ -73,6 +73,7 @@ dependencies:
   firebase_analytics: ^9.0.3
   flutter_local_notifications: 9.2.0
   fcm_config: 3.3.4
+
   #flutter_fgbg: ^0.1.0
 
   #new swipe

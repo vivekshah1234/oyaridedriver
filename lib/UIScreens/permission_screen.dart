@@ -263,8 +263,9 @@ class _AllPermissionPageState extends State<AllPermissionPage> {
       // Permissions are denied forever, handle appropriately.
       permission = await Geolocator.checkPermission();
       permission = await Geolocator.requestPermission();
-      ScaffoldMessenger.of(context).showSnackBar(greenSnackBar(
-          "'Location permissions are permanently denied, we cannot request permissions.Please allow it from app info."));
+    toast(
+          "'Location permissions are permanently denied, we cannot request permissions.Please allow it from app info.");
+      openAppSettings();
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
@@ -275,27 +276,29 @@ class _AllPermissionPageState extends State<AllPermissionPage> {
 
   Future<bool> checkMediaPermission() async {
     PermissionStatus status = await Permission.storage.status;
-    if (status.isPermanentlyDenied) return openAppSettings();
+
     status = await Permission.storage.request();
     printInfo(info: "ssss==" + status.toString());
-    if (status.isDenied) {
-      status = await Permission.storage.request();
-      return false;
-    } else if (status.isGranted) {
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
+    if (status.isGranted) {
       return true;
     }
     return false;
   }
 
+
+
   Future<bool> checkCameraPermission() async {
     PermissionStatus status = await Permission.camera.status;
-    if (status.isPermanentlyDenied) return openAppSettings();
+
     status = await Permission.camera.request();
-    printInfo(info: "ssss==" + status.toString());
-    if (status.isDenied) {
-      status = await Permission.camera.request();
-      return false;
-    } else if (status.isGranted) {
+    if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
+    printInfo(info: "Camera permission==" + status.toString());
+    if (status.isGranted) {
       return true;
     }
     return false;

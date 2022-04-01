@@ -76,7 +76,7 @@ Future<void> main() async {
   if (allPermissionAllowed == null) {
     allPermissionAllowed = false;
     firstScreen = MyApp();
-  } else if (allPermissionAllowed = true) {
+  } else if (allPermissionAllowed == true) {
     firstScreen = const HomeScreen();
   }
 

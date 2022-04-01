@@ -7,10 +7,10 @@ class AllStrings{
   static String permissionTitle3 = "Call";
   static String permissionTitle4 = "Location";
 
-  static String permissionText1 = "OyaRide requires camera access to upload photos.";
-  static String permissionText2 = "OyaRide requires media and storage access to upload photos.";
+  static String permissionText1 = "Oyadrive requires camera access to upload profile picture and licence photo.";
+  static String permissionText2 = "Oyadrive requires media and storage access to upload profile picture and licence photo.";
   static String permissionText3 = "Other person can reach out to you easily.";
-  static String permissionText4 ="OyaRide needs access of your location because this app will help you to reach from source to destination. Therefore, you will be ask permission to collect your location data.Background location data will also be collected to enable live tracking even when the app is closed or not in used.";
+  static String permissionText4 ="Oyadrive needs access of your location because this app will help you to reach from source to destination. Therefore, you will be ask permission to collect your location data.Background location data will also be collected to enable live tracking even when the app is closed or not in used.";
 
   static String allowAllAccess ="Allow all access";
 

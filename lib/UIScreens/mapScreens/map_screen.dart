@@ -260,9 +260,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
                                   mapType: MapType.terrain,
                                   initialCameraPosition:
                                       controller.cameraAnimate.value ? controller.kGooglePlex2 : controller.kGooglePlex,
-                                  onMapCreated: (GoogleMapController mapController) {
-                                    controller.onMapCreated(mapController);
-                                  },
+                                  // onMapCreated: (GoogleMapController mapController) {
+                                  //   controller.onMapCreated(mapController);
+                                  // },
                                   markers: controller.markers,
                                   polylines: Set<Polyline>.of(controller.polylines.values),
                                 ),
@@ -670,9 +670,9 @@ class _MapHomeScreenState extends State<MapHomeScreen>
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       //do your stuff
-      _homeController.connectToSocket(isFromNotification: false);
-      final GoogleMapController controller = await _homeController.mapController.future;
-      _homeController.onMapCreated(controller);
+      //_homeController.connectToSocket(isFromNotification: false);
+      // final GoogleMapController controller = await _homeController.mapController.future;
+      // _homeController.onMapCreated(controller);
     }
   }
 }
