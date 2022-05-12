@@ -64,12 +64,12 @@ dependencies:
   google_maps_flutter: ^2.1.1
   flutter_polyline_points: 1.0.0
   location:
-  geolocator: 8.0.1
+  geolocator: 8.2.0
   geocoding: 2.0.1
   maps_toolkit: ^2.0.0
   #firebase plugins
-  cloud_firestore: ^3.1.4
-  firebase_messaging: ^11.2.3
+  cloud_firestore: ^3.1.11
+  firebase_messaging: ^11.2.12
   firebase_analytics: ^9.0.3
   flutter_local_notifications: 9.2.0
   fcm_config: 3.3.4
